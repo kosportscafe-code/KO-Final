@@ -10,9 +10,10 @@ interface Show {
   price: number;
   description: string;
   image: string;
+  maxSeats: number | null;
 }
 
-const PUBLIC_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTx32xyf0jqRfuee1o4mI8wBtsHStvc-CLtr17IpzvTWeHP7Zd91fTkdPvHfhBClrvweh4dSBLZFGhM/pub?output=csv";
+const PUBLIC_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1wAzoqtqTOqr8ZCSZHVsny5URpehSBVI6IOAz4hhxdfE/gviz/tq?tqx=out:csv&gid=0";
 
 const StandupShows: React.FC = () => {
   const [shows, setShows] = useState<Show[]>([]);
@@ -62,7 +63,8 @@ const StandupShows: React.FC = () => {
             time: cols[2]?.replace(/^"|"$/g, '').trim() || 'TBA',
             price: parseInt(cols[3]?.replace(/\D/g, '') || '0', 10),
             description: cols[4]?.replace(/^"|"$/g, '').trim() || '',
-            image: `https://images.unsplash.com/photo-1527224857830-43a7eaa58c5f?auto=format&fit=crop&w=800&q=80&rand=${index}`
+            image: cols[5]?.replace(/^"|"$/g, '').trim() || `https://images.unsplash.com/photo-1527224857830-43a7eaa58c5f?auto=format&fit=crop&w=800&q=80&rand=${index}`,
+            maxSeats: parseInt(cols[6]?.replace(/\D/g, ''), 10) || null
           };
         });
 
@@ -155,7 +157,7 @@ const StandupShows: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="font-serif text-4xl md:text-5xl text-obsidian mb-6">
-            \uD83C\uDFA4 Live Standup Shows
+            🎤 Live Standup Shows
           </h2>
           <p className="text-stone-500 max-w-2xl mx-auto font-sans">
             Grab a drink and get ready for a night of non-stop laughter. Check out our upcoming live comedy events!
@@ -182,7 +184,7 @@ const StandupShows: React.FC = () => {
                 <div className="h-48 overflow-hidden relative">
                   <img src={show.image} alt={show.title} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-obsidian">
-                    \u20B9{show.price} / Seat
+                    ₹{show.price} / Seat
                   </div>
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
@@ -261,19 +263,25 @@ const StandupShows: React.FC = () => {
 
                     <div className="flex gap-4 items-end">
                       <div className="flex-1 border-b border-stone-300 py-3">
-                        <label className="block text-xs uppercase tracking-wider text-stone-500 mb-1">Number of Seats</label>
+                        <label className="block text-xs uppercase tracking-wider text-stone-500 mb-1">
+                          Number of Seats {selectedShow.maxSeats ? `(Max ${selectedShow.maxSeats})` : ''}
+                        </label>
                         <input 
                           required
                           type="number" 
                           min="1"
+                          max={selectedShow.maxSeats || undefined}
                           value={seats}
-                          onChange={(e) => setSeats(parseInt(e.target.value) || 1)}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value) || 1;
+                            setSeats(selectedShow.maxSeats && val > selectedShow.maxSeats ? selectedShow.maxSeats : val);
+                          }}
                           className="w-full bg-transparent text-obsidian focus:outline-none"
                         />
                       </div>
                       <div className="flex-1 border-b border-stone-300 py-3 text-right">
                         <label className="block text-xs uppercase tracking-wider text-stone-500 mb-1">Total Amount</label>
-                        <span className="text-xl font-medium text-obsidian">\u20B9{seats * selectedShow.price}</span>
+                        <span className="text-xl font-medium text-obsidian">₹{seats * selectedShow.price}</span>
                       </div>
                     </div>
 

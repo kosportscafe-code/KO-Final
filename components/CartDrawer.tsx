@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trash2, ChevronRight, Check } from 'lucide-react';
+import { X, Trash2, ChevronRight, Check, MapPin } from 'lucide-react';
 import { formatCurrency } from '../utils/helpers';
 import { WEBHOOK_URL } from '../constants';
 
@@ -20,9 +20,32 @@ const CartDrawer: React.FC = () => {
   const [phone, setPhone] = useState('');
   const [address, setAddress] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
+  const [locationStatus, setLocationStatus] = useState<'idle' | 'fetching' | 'captured' | 'denied'>('idle');
+  const [locationObj, setLocationObj] = useState<{lat: number, lng: number} | null>(null);
 
   // Cast motion to any to avoid TypeScript errors with missing props in current environment
   const Motion = motion as any;
+
+  const handleGetLocation = () => {
+    setLocationStatus('fetching');
+    if (!navigator.geolocation) {
+      setLocationStatus('denied');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setLocationObj({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
+        });
+        setLocationStatus('captured');
+      },
+      (error) => {
+        setLocationStatus('denied');
+      },
+      { timeout: 10000 }
+    );
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,27 +67,11 @@ const CartDrawer: React.FC = () => {
     message += `\uD83D\uDCCD Delivery Address: ${address}\n`;
     message += `\uD83D\uDCDE Contact Number: ${phone}\n`;
 
-    const getLocation = (): Promise<string> => {
-      return new Promise((resolve) => {
-        if (!navigator.geolocation) {
-          resolve("\uD83D\uDCCD Location: Not shared");
-          return;
-        }
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            resolve(`\uD83D\uDCCD Live Location:\nhttps://www.google.com/maps?q=${latitude},${longitude}`);
-          },
-          (error) => {
-            resolve("\uD83D\uDCCD Location: Not shared");
-          },
-          { timeout: 5000 }
-        );
-      });
-    };
-
-    const locationText = await getLocation();
-    message += `\n${locationText}`;
+    if (locationStatus === 'captured' && locationObj) {
+      message += `\n\uD83D\uDCCD Live Location:\nhttps://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}`;
+    } else {
+      message += `\n\uD83D\uDCCD Location: Not shared`;
+    }
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
@@ -78,6 +85,8 @@ const CartDrawer: React.FC = () => {
     setName('');
     setPhone('');
     setAddress('');
+    setLocationStatus('idle');
+    setLocationObj(null);
   };
 
   return (
@@ -190,6 +199,30 @@ const CartDrawer: React.FC = () => {
                       className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
                     />
                     
+                    {/* Geolocation Section */}
+                    <div className="pt-2 pb-2">
+                      <div className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-100">
+                        <div className="flex items-center gap-3">
+                          <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-stone-400'}`} />
+                          <span className="text-sm font-medium text-stone-600">
+                            {locationStatus === 'idle' && "Share your live location"}
+                            {locationStatus === 'fetching' && "Fetching location..."}
+                            {locationStatus === 'captured' && "Location captured \u2705"}
+                            {locationStatus === 'denied' && "Location not shared"}
+                          </span>
+                        </div>
+                        {locationStatus !== 'captured' && locationStatus !== 'fetching' && (
+                          <button 
+                            type="button" 
+                            onClick={handleGetLocation}
+                            className="text-xs uppercase tracking-wider font-semibold text-bronze hover:text-obsidian transition-colors"
+                          >
+                            Get Location
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    
                     <div className="flex justify-between items-center py-4">
                       <span className="text-stone-500 font-serif text-lg">Total</span>
                       <span className="text-2xl font-sans text-obsidian font-medium">{formatCurrency(cartTotal)}</span>
@@ -200,7 +233,7 @@ const CartDrawer: React.FC = () => {
                       disabled={status === 'sending'}
                       className="w-full bg-obsidian text-white py-4 font-sans uppercase tracking-widest text-xs hover:bg-stone-800 transition-colors flex justify-center items-center gap-2 disabled:opacity-70"
                     >
-                      {status === 'sending' ? 'Fetching location...' : 'Order on WhatsApp'}
+                      {status === 'sending' ? 'Redirecting...' : 'Order on WhatsApp'}
                       {!status.startsWith('send') && <ChevronRight className="w-4 h-4" />}
                     </button>
                   </form>
