@@ -18,7 +18,7 @@ const CartDrawer: React.FC = () => {
 
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
-  const [table, setTable] = useState('');
+  const [address, setAddress] = useState('');
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle');
 
   // Cast motion to any to avoid TypeScript errors with missing props in current environment
@@ -26,42 +26,58 @@ const CartDrawer: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!name.trim() || !phone.trim() || !address.trim()) {
+      alert("Please fill in all details before placing the order.");
+      return;
+    }
+
     setStatus('sending');
 
-    const orderData = {
-      customer: { name, phone, table },
-      items: cart.map(item => ({
-        name: item.name,
-        size: item.selectedSize,
-        price: item.price,
-        qty: item.quantity,
-        total: item.price * item.quantity
-      })),
-      grandTotal: cartTotal,
-      timestamp: new Date().toISOString()
+    let message = `Hello, I would like to place an order:\n\n\uD83D\uDED2 Order Details:\n`;
+    
+    cart.forEach(item => {
+      message += `- ${item.name} (Qty: ${item.quantity}) - \u20B9${item.price * item.quantity}\n`;
+    });
+
+    message += `\n\uD83D\uDCB0 Total: \u20B9${cartTotal}\n\n`;
+    message += `\uD83D\uDCCD Delivery Address: ${address}\n`;
+    message += `\uD83D\uDCDE Contact Number: ${phone}\n`;
+
+    const getLocation = (): Promise<string> => {
+      return new Promise((resolve) => {
+        if (!navigator.geolocation) {
+          resolve("\uD83D\uDCCD Location: Not shared");
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            resolve(`\uD83D\uDCCD Live Location:\nhttps://www.google.com/maps?q=${latitude},${longitude}`);
+          },
+          (error) => {
+            resolve("\uD83D\uDCCD Location: Not shared");
+          },
+          { timeout: 5000 }
+        );
+      });
     };
 
-    try {
-      // Send to Make.com or similar
-      await fetch(WEBHOOK_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(orderData)
-      });
-      
-      setStatus('success');
-      setTimeout(() => {
-        clearCart();
-        toggleDrawer(false);
-        setStatus('idle');
-        setName('');
-        setPhone('');
-        setTable('');
-      }, 3000);
-    } catch (err) {
-      console.error(err);
-      setStatus('error');
-    }
+    const locationText = await getLocation();
+    message += `\n${locationText}`;
+
+    const encodedMessage = encodeURIComponent(message);
+    const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
+
+    alert("Redirecting to WhatsApp to place your order");
+    window.location.href = whatsappUrl;
+    
+    clearCart();
+    toggleDrawer(false);
+    setStatus('idle');
+    setName('');
+    setPhone('');
+    setAddress('');
   };
 
   return (
@@ -149,23 +165,22 @@ const CartDrawer: React.FC = () => {
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="flex gap-4">
-                      <input 
-                        required
-                        type="text" 
-                        placeholder="Name" 
-                        value={name}
-                        onChange={e => setName(e.target.value)}
-                        className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
-                      />
-                       <input 
-                        type="text" 
-                        placeholder="Table #" 
-                        value={table}
-                        onChange={e => setTable(e.target.value)}
-                        className="w-20 bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
-                      />
-                    </div>
+                    <input 
+                      required
+                      type="text" 
+                      placeholder="Customer Name" 
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
+                    />
+                    <input 
+                      required
+                      type="text" 
+                      placeholder="Delivery Address" 
+                      value={address}
+                      onChange={e => setAddress(e.target.value)}
+                      className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
+                    />
                     <input 
                       required
                       type="tel" 
@@ -185,7 +200,7 @@ const CartDrawer: React.FC = () => {
                       disabled={status === 'sending'}
                       className="w-full bg-obsidian text-white py-4 font-sans uppercase tracking-widest text-xs hover:bg-stone-800 transition-colors flex justify-center items-center gap-2 disabled:opacity-70"
                     >
-                      {status === 'sending' ? 'Processing...' : 'Place Order'}
+                      {status === 'sending' ? 'Fetching location...' : 'Order on WhatsApp'}
                       {!status.startsWith('send') && <ChevronRight className="w-4 h-4" />}
                     </button>
                   </form>

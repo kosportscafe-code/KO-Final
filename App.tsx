@@ -6,6 +6,7 @@ import AboutStory from './components/AboutStory';
 import Menu from './components/Menu';
 import Gallery from './components/Gallery';
 import AIAtelier from './components/AIAtelier';
+import StandupShows from './components/StandupShows';
 import Footer from './components/Footer';
 import CartDrawer from './components/CartDrawer';
 
@@ -20,6 +21,7 @@ function App() {
           <Menu />
           <Gallery />
           <AIAtelier />
+          <StandupShows />
         </main>
         <Footer />
         <CartDrawer />
