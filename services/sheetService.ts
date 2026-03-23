@@ -10,7 +10,10 @@ export const fetchMenuData = async (): Promise<MenuItem[]> => {
   }
 
   try {
-    const response = await fetch(GOOGLE_SHEET_CSV_URL);
+    const url = GOOGLE_SHEET_CSV_URL.includes('?') 
+      ? `${GOOGLE_SHEET_CSV_URL}&t=${new Date().getTime()}`
+      : `${GOOGLE_SHEET_CSV_URL}?t=${new Date().getTime()}`;
+    const response = await fetch(url);
     if (!response.ok) throw new Error('Failed to fetch sheet');
 
     const csvText = await response.text();

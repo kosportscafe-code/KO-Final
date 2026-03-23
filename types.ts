@@ -10,7 +10,7 @@ export interface MenuItem {
 
 export interface CartItem extends MenuItem {
   cartId: string;
-  selectedSize: 'Regular' | 'Medium';
+  selectedSize: 'Regular' | 'Medium' | 'Half' | 'Full';
   price: number;
   quantity: number;
 }

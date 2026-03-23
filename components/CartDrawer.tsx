@@ -50,6 +50,10 @@ const CartDrawer: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Calculate taxes
+    const taxAmount = Math.round(cartTotal * 0.05); // 5% total tax
+    const grandTotal = cartTotal + taxAmount;
+    
     if (!name.trim() || !phone.trim() || !address.trim()) {
       alert("Please fill in all details before placing the order.");
       return;
@@ -63,7 +67,10 @@ const CartDrawer: React.FC = () => {
       message += `- ${item.name} (Qty: ${item.quantity}) - \u20B9${item.price * item.quantity}\n`;
     });
 
-    message += `\n\uD83D\uDCB0 Total: \u20B9${cartTotal}\n\n`;
+    message += `\nSubtotal: \u20B9${cartTotal}\n`;
+    message += `Taxes (2.5% CGST + 2.5% SGST): \u20B9${taxAmount}\n`;
+    message += `\uD83D\uDCB0 Grand Total: \u20B9${grandTotal}\n\n`;
+    message += `*Note: 2.5% SGST + 2.5% CGST added in the bill when order is placed.*\n\n`;
     message += `\uD83D\uDCCD Delivery Address: ${address}\n`;
     message += `\uD83D\uDCDE Contact Number: ${phone}\n`;
 
@@ -223,9 +230,22 @@ const CartDrawer: React.FC = () => {
                       </div>
                     </div>
                     
-                    <div className="flex justify-between items-center py-4">
-                      <span className="text-stone-500 font-serif text-lg">Total</span>
-                      <span className="text-2xl font-sans text-obsidian font-medium">{formatCurrency(cartTotal)}</span>
+                    <div className="space-y-2 py-4">
+                      <div className="flex justify-between items-center text-sm text-stone-500">
+                        <span>Subtotal</span>
+                        <span>{formatCurrency(cartTotal)}</span>
+                      </div>
+                      <div className="flex justify-between items-center text-sm text-stone-500">
+                        <span>Taxes (5%)</span>
+                        <span>{formatCurrency(Math.round(cartTotal * 0.05))}</span>
+                      </div>
+                      <div className="flex justify-between items-center pt-2 border-t border-stone-200 mt-2">
+                        <span className="text-stone-500 font-serif text-lg">Grand Total</span>
+                        <span className="text-2xl font-sans text-obsidian font-medium">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
+                      </div>
+                      <p className="text-[10px] text-stone-400 text-center italic leading-tight px-4 pb-2">
+                        2.5% SGST + 2.5% CGST added in the bill when order is placed.
+                      </p>
                     </div>
 
                     <button 

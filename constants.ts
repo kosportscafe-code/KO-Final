@@ -16,11 +16,11 @@ export const CONTACT_WEBSITE = "www.kosportscafe.com";
 export const FALLBACK_MENU: MenuItem[] = [
   // Sandwiches
   { id: 's1', category: 'Sandwiches', name: 'Bombay Masala', description: '', priceReg: 59, image: 'https://lh3.googleusercontent.com/geofoodgmb/AC9zUhOTSciUwahlcrGujTT8zmPiP2Qz7ke7NHc3OAVdbAE2qGORSKNn8xdwJqR2RcrvFfxUktaBdSWjP7kIGOUZBfeMXA=s680-w680-h510-rw' },
-  { id: 's2', category: 'Sandwiches', name: 'Veg Grilled', description: '', priceReg: 85 },
-  { id: 's3', category: 'Sandwiches', name: 'American Grilled', description: '', priceReg: 85, image: 'https://lh3.googleusercontent.com/geofoodgmb/AC9zUhOiNL3Qqzf_X7_DfGpd9_1TqDTBX2y7xxuyeM6HSM3RU8RUI57R71ywZfLPucmrEi7xLuWWuPcnjBqMtXfdRYTIOw=s680-w680-h510-rw' },
-  { id: 's4', category: 'Sandwiches', name: 'Paneer Tikka', description: '', priceReg: 135 },
-  { id: 's5', category: 'Sandwiches', name: 'Paneer Keema', description: '', priceReg: 135 },
-  { id: 's6', category: 'Sandwiches', name: 'Club Sandwich', description: '', priceReg: 125 },
+  { id: 's2', category: 'Sandwiches', name: 'Veg Grilled', description: '', priceReg: 85, priceMed: 155 },
+  { id: 's3', category: 'Sandwiches', name: 'American Grilled', description: '', priceReg: 85, priceMed: 155, image: 'https://lh3.googleusercontent.com/geofoodgmb/AC9zUhOiNL3Qqzf_X7_DfGpd9_1TqDTBX2y7xxuyeM6HSM3RU8RUI57R71ywZfLPucmrEi7xLuWWuPcnjBqMtXfdRYTIOw=s680-w680-h510-rw' },
+  { id: 's4', category: 'Sandwiches', name: 'Paneer Tikka', description: '', priceReg: 135, priceMed: 235 },
+  { id: 's5', category: 'Sandwiches', name: 'Paneer Keema', description: '', priceReg: 135, priceMed: 235 },
+  { id: 's6', category: 'Sandwiches', name: 'Champion Club', description: '', priceReg: 125, priceMed: 225 },
 
   // Rolls & Wraps
   { id: 'r1', category: 'Rolls & Wraps', name: 'Mexican Burrito Roll', description: '', priceReg: 179 },
@@ -49,19 +49,19 @@ export const FALLBACK_MENU: MenuItem[] = [
   { id: 'pv2', category: 'Pavs', name: 'Pav Bhaji', description: '', priceReg: 99, image: 'https://b.zmtcdn.com/data/dish_photos/09d/495a1e392535c7da19e1479cdab9309d.png' },
 
   // Momos
-  { id: 'm1', category: 'Momos', name: 'Veg Steamed', description: '', priceReg: 49, image: 'https://b.zmtcdn.com/data/dish_photos/a5f/5ff5a173ab70292ffd4d0265eff91a5f.png' },
-  { id: 'm2', category: 'Momos', name: 'Fried Veg', description: '', priceReg: 59 },
-  { id: 'm3', category: 'Momos', name: 'Kurkure Veg', description: '', priceReg: 89 },
-  { id: 'm4', category: 'Momos', name: 'Paneer Steamed', description: '', priceReg: 69 },
-  { id: 'm5', category: 'Momos', name: 'Paneer Fried', description: '', priceReg: 79 },
-  { id: 'm6', category: 'Momos', name: 'Kurkure Paneer', description: '', priceReg: 109 },
+  { id: 'm1', category: 'Momos', name: 'Veg Steamed', description: '', priceReg: 49, priceMed: 79, image: 'https://b.zmtcdn.com/data/dish_photos/a5f/5ff5a173ab70292ffd4d0265eff91a5f.png' },
+  { id: 'm2', category: 'Momos', name: 'Fried Veg', description: '', priceReg: 59, priceMed: 89 },
+  { id: 'm3', category: 'Momos', name: 'Kurkure Veg', description: '', priceReg: 89, priceMed: 159 },
+  { id: 'm4', category: 'Momos', name: 'Paneer Steamed', description: '', priceReg: 69, priceMed: 109 },
+  { id: 'm5', category: 'Momos', name: 'Paneer Fried', description: '', priceReg: 79, priceMed: 129 },
+  { id: 'm6', category: 'Momos', name: 'Kurkure Paneer', description: '', priceReg: 109, priceMed: 189 },
   { id: 'm7', category: 'Momos', name: 'Chili Paneer', description: '', priceReg: 219 },
   { id: 'm8', category: 'Momos', name: 'Chili Veg', description: '', priceReg: 199 },
 
   // Chinese & Noodles
-  { id: 'c1', category: 'Chinese & Noodles', name: 'Soya Sauced Pan', description: '', priceReg: 179 },
-  { id: 'c2', category: 'Chinese & Noodles', name: 'Veg Hakka Noodles', description: '', priceReg: 199 },
-  { id: 'c3', category: 'Chinese & Noodles', name: 'Veg Singapuri', description: '', priceReg: 199 },
+  { id: 'c1', category: 'Chinese & Noodles', name: 'Soya Sauced Pan Fried', description: '', priceReg: 79, priceMed: 149 },
+  { id: 'c2', category: 'Chinese & Noodles', name: 'Veg Hakka Noodles', description: '', priceReg: 99, priceMed: 185 },
+  { id: 'c3', category: 'Chinese & Noodles', name: 'Veg Singapuri', description: '', priceReg: 99, priceMed: 149 },
   { id: 'c4', category: 'Chinese & Noodles', name: 'Chili Potato', description: '', priceReg: 189 },
   { id: 'c5', category: 'Chinese & Noodles', name: 'Honey Chili Potato', description: '', priceReg: 189 },
 
@@ -88,13 +88,13 @@ export const FALLBACK_MENU: MenuItem[] = [
   { id: 't2', category: 'Thalis', name: 'Maharaja Thali', description: '1 Daal, 1 Veggie, 1 Paneer Veg, 3 Tawa Rotis, Zeera Rice, Salad, Sweet', priceReg: 249 },
 
   // Pizzas
-  { id: 'pz1', category: 'Pizzas', name: 'Margherita', description: '', priceReg: 119, image: 'https://b.zmtcdn.com/data/dish_photos/398/fd02cc5b94f0fc8159b60c7802127398.jpeg' },
-  { id: 'pz2', category: 'Pizzas', name: 'Double Cheese Margherita', description: '', priceReg: 149, image: 'https://b.zmtcdn.com/data/dish_photos/c8d/b5a48deb6be2d4e1856435c822397c8d.png' },
-  { id: 'pz3', category: 'Pizzas', name: 'Triple Threat', description: '', priceReg: 159, image: 'https://b.zmtcdn.com/data/dish_photos/3aa/119da2f728227023e28eb94ff0dcb3aa.png' },
-  { id: 'pz4', category: 'Pizzas', name: 'Paneer Power Play', description: '', priceReg: 189, image: 'https://b.zmtcdn.com/data/dish_photos/77a/b1f89421e845c5fa460a5d275718177a.png' },
-  { id: 'pz5', category: 'Pizzas', name: 'Corn & Cheese Loaded', description: '', priceReg: 129, image: 'https://b.zmtcdn.com/data/dish_photos/ee1/9dca69f138d5236c391c1f2de624aee1.png' },
-  { id: 'pz6', category: 'Pizzas', name: 'Veggie Delight Goal', description: '', priceReg: 189, image: 'https://b.zmtcdn.com/data/dish_photos/223/42a4d1961bc3dc0c36d90bc0a7766223.png' },
-  { id: 'pz7', category: 'Pizzas', name: 'Makhani Paneer', description: '', priceReg: 189, image: 'https://b.zmtcdn.com/data/dish_photos/411/b697098c796a29beb1d41038b8900411.png' },
+  { id: 'pz1', category: 'Pizzas', name: 'Margherita', description: '', priceReg: 119, priceMed: 179, image: 'https://b.zmtcdn.com/data/dish_photos/398/fd02cc5b94f0fc8159b60c7802127398.jpeg' },
+  { id: 'pz2', category: 'Pizzas', name: 'Double Cheese Margherita', description: '', priceReg: 149, priceMed: 219, image: 'https://b.zmtcdn.com/data/dish_photos/c8d/b5a48deb6be2d4e1856435c822397c8d.png' },
+  { id: 'pz3', category: 'Pizzas', name: 'Triple Threat', description: '', priceReg: 159, priceMed: 229, image: 'https://b.zmtcdn.com/data/dish_photos/3aa/119da2f728227023e28eb94ff0dcb3aa.png' },
+  { id: 'pz4', category: 'Pizzas', name: 'Paneer Power Play', description: '', priceReg: 189, priceMed: 279, image: 'https://b.zmtcdn.com/data/dish_photos/77a/b1f89421e845c5fa460a5d275718177a.png' },
+  { id: 'pz5', category: 'Pizzas', name: 'Corn & Cheese Loaded', description: '', priceReg: 129, priceMed: 189, image: 'https://b.zmtcdn.com/data/dish_photos/ee1/9dca69f138d5236c391c1f2de624aee1.png' },
+  { id: 'pz6', category: 'Pizzas', name: 'Veggie Delight Goal', description: '', priceReg: 189, priceMed: 279, image: 'https://b.zmtcdn.com/data/dish_photos/223/42a4d1961bc3dc0c36d90bc0a7766223.png' },
+  { id: 'pz7', category: 'Pizzas', name: 'Makhani Paneer', description: '', priceReg: 189, priceMed: 279, image: 'https://b.zmtcdn.com/data/dish_photos/411/b697098c796a29beb1d41038b8900411.png' },
 
   // Burgers
   { id: 'bg1', category: 'Burgers', name: 'Aloo Patty Burger', description: '', priceReg: 39, image: 'https://b.zmtcdn.com/data/dish_photos/9d2/8f0a8f2318cbb42e3d09b23da10929d2.png' },

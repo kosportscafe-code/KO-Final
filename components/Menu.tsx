@@ -22,6 +22,13 @@ const categoryImages: Record<string, string> = {
 // Placeholder image if no specific image is found
 const placeholderImage = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop';
 
+const getSizeLabels = (category: string) => {
+  if (['Sandwiches', 'Momos', 'Chinese & Noodles'].includes(category)) {
+    return { reg: 'Half', med: 'Full', fullReg: 'Half', fullMed: 'Full' };
+  }
+  return { reg: 'Reg', med: 'Med', fullReg: 'Regular', fullMed: 'Medium' };
+};
+
 interface ImageModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -33,6 +40,8 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
   const Motion = motion as any;
 
   if (!isOpen || !item) return null;
+
+  const labels = getSizeLabels(item.category);
 
   return (
     <AnimatePresence>
@@ -77,8 +86,8 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
               <div className="flex gap-4">
                 {item.priceMed ? (
                   <>
-                    <span className="font-sans text-stone-500">Regular: {formatCurrency(item.priceReg)}</span>
-                    <span className="font-sans text-obsidian font-medium">Medium: {formatCurrency(item.priceMed)}</span>
+                    <span className="font-sans text-stone-500">{labels.reg}: {formatCurrency(item.priceReg)}</span>
+                    <span className="font-sans text-obsidian font-medium">{labels.med}: {formatCurrency(item.priceMed)}</span>
                   </>
                 ) : (
                   <span className="font-sans text-xl text-obsidian font-medium">{formatCurrency(item.priceReg)}</span>
@@ -176,7 +185,9 @@ const Menu: React.FC = () => {
             layout
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-12 gap-y-16 max-w-6xl mx-auto"
           >
-            {filteredItems.map((item) => (
+            {filteredItems.map((item) => {
+              const labels = getSizeLabels(item.category);
+              return (
               <Motion.div
                 layout
                 initial={{ opacity: 0 }}
@@ -215,8 +226,8 @@ const Menu: React.FC = () => {
                       {/* Price Display Logic */}
                       {item.priceMed ? (
                         <div className="flex gap-3 text-sm font-sans">
-                          <span className="text-stone-500">Reg: {formatCurrency(item.priceReg)}</span>
-                          <span className="text-obsidian font-medium">Med: {formatCurrency(item.priceMed)}</span>
+                          <span className="text-stone-500">{labels.reg}: {formatCurrency(item.priceReg)}</span>
+                          <span className="text-obsidian font-medium">{labels.med}: {formatCurrency(item.priceMed)}</span>
                         </div>
                       ) : (
                         <span className="font-sans text-lg text-obsidian">{formatCurrency(item.priceReg)}</span>
@@ -230,24 +241,24 @@ const Menu: React.FC = () => {
 
                   <div className="flex gap-3">
                     <button
-                      onClick={() => addToCart(item, 'Regular')}
+                      onClick={() => addToCart(item, labels.fullReg as any)}
                       className="flex items-center gap-1 text-xs uppercase tracking-wider text-obsidian hover:text-bronze transition-colors"
                     >
-                      <Plus className="w-3 h-3" /> {item.priceMed ? 'Add Reg' : 'Add to Cart'}
+                      <Plus className="w-3 h-3" /> {item.priceMed ? `Add ${labels.reg}` : 'Add to Cart'}
                     </button>
 
                     {item.priceMed && (
                       <button
-                        onClick={() => addToCart(item, 'Medium')}
+                        onClick={() => addToCart(item, labels.fullMed as any)}
                         className="flex items-center gap-1 text-xs uppercase tracking-wider text-obsidian hover:text-bronze transition-colors"
                       >
-                        <Plus className="w-3 h-3" /> Add Med
+                        <Plus className="w-3 h-3" /> Add {labels.med}
                       </button>
                     )}
                   </div>
                 </div>
               </Motion.div>
-            ))}
+            )})}
           </Motion.div>
 
           {/* Download PDF Button */}

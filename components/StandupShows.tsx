@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getDriveImage } from '../utils/helpers';
 
 interface Show {
   id: string;
@@ -40,7 +41,8 @@ const StandupShows: React.FC = () => {
   useEffect(() => {
     const fetchShows = async () => {
       try {
-        const response = await fetch(PUBLIC_SHEET_CSV_URL);
+        // Add cache-busting parameter to always get the latest sheet data
+        const response = await fetch(`${PUBLIC_SHEET_CSV_URL}&t=${new Date().getTime()}`);
         if (!response.ok) throw new Error("Failed to fetch sheet");
         
         const csvText = await response.text();
@@ -56,6 +58,9 @@ const StandupShows: React.FC = () => {
           // Robust regex to split commas outside of quotes
           const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
           
+          let rawImage = cols[5]?.replace(/^"|"$/g, '').trim();
+          const finalImage = rawImage ? getDriveImage(rawImage) : `https://images.unsplash.com/photo-1527224857830-43a7eaa58c5f?auto=format&fit=crop&w=800&q=80&rand=${index}`;
+
           return {
             id: `dym-show-${index}`,
             title: cols[0]?.replace(/^"|"$/g, '').trim() || 'Upcoming Show',
@@ -63,7 +68,7 @@ const StandupShows: React.FC = () => {
             time: cols[2]?.replace(/^"|"$/g, '').trim() || 'TBA',
             price: parseInt(cols[3]?.replace(/\D/g, '') || '0', 10),
             description: cols[4]?.replace(/^"|"$/g, '').trim() || '',
-            image: cols[5]?.replace(/^"|"$/g, '').trim() || `https://images.unsplash.com/photo-1527224857830-43a7eaa58c5f?auto=format&fit=crop&w=800&q=80&rand=${index}`,
+            image: finalImage,
             maxSeats: parseInt(cols[6]?.replace(/\D/g, ''), 10) || null
           };
         });
