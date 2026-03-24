@@ -80,9 +80,17 @@ const Footer: React.FC = () => {
                 <Facebook className="w-6 h-6" />
               </a>
             </div>
-            <p className="text-xs text-stone-600 pt-8">
-              © {new Date().getFullYear()} KOS Café. All rights reserved.
-            </p>
+            <div className="pt-8 flex flex-col items-center md:items-start space-y-4">
+              <p className="text-xs text-stone-500">
+                © {new Date().getFullYear()} KOS Café. All rights reserved.
+              </p>
+              <a 
+                href="/admin" 
+                className="inline-flex items-center justify-center px-4 py-2 border border-stone-600 text-stone-300 text-xs font-bold uppercase tracking-widest hover:border-[#ff3b3b] hover:text-[#ff3b3b] transition-colors rounded"
+              >
+                Admin Login
+              </a>
+            </div>
           </div>
         </div>
       </div>

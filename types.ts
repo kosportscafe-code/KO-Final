@@ -24,6 +24,33 @@ export interface SheetRow {
   ImageURL?: string;
 }
 
+export interface BlogPost {
+  id: string;
+  slug: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  image: string;
+  category: 'Sports' | 'Standup' | 'Events' | 'Offers' | string;
+  author: string;
+  createdAt: string;
+  metaTitle?: string;
+  metaDescription?: string;
+  isEventAttached?: boolean;
+  eventDate?: string;
+  eventTime?: string;
+  eventSeatsLeft?: string | number;
+}
+
+export interface CafeEvent {
+  id: string;
+  name: string;
+  date: string;
+  time: string;
+  description: string;
+  image: string;
+}
+
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 
 // AI Studio Types moved to global scope to avoid module-scope conflicts

@@ -20,12 +20,12 @@ const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '#home' },
-    { name: 'Menu', href: '#menu' },
-    { name: 'Gallery', href: '#gallery' },
-    { name: 'The Atelier', href: '#atelier' },
-    { name: 'Our Story', href: '#story' },
-    { name: 'Book Show', href: '#shows' },
+    { name: 'Home', href: '/#home' },
+    { name: 'Menu', href: '/#menu' },
+    { name: 'Gallery', href: '/#gallery' },
+    { name: 'Events', href: '/#shows' },
+    { name: 'Our Story', href: '/#story' },
+    { name: 'Blog', href: '/blog' },
   ];
 
   const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
@@ -67,7 +67,7 @@ const Navbar: React.FC = () => {
         {/* Actions */}
         <div className="flex items-center gap-6">
           <a
-            href="#shows"
+            href="/#shows"
             className={`hidden md:block font-sans text-xs tracking-widest uppercase px-5 py-2 border transition-colors ${
               isScrolled
                 ? 'border-obsidian text-obsidian hover:bg-obsidian hover:text-white'
