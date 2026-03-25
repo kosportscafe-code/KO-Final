@@ -73,6 +73,9 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
             <img
               src={imageSrc}
               alt={item.name}
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = placeholderImage;
+              }}
               className="w-full h-full object-cover"
             />
           </div>
@@ -131,7 +134,6 @@ const Menu: React.FC = () => {
 
   const getItemImage = (item: MenuItem): string => {
     if (item.image_url) return getDriveImage(item.image_url);
-    if (categoryImages[item.category]) return categoryImages[item.category];
     return placeholderImage;
   };
 
@@ -204,6 +206,9 @@ const Menu: React.FC = () => {
                   <img
                     src={getItemImage(item)}
                     alt={item.name}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = placeholderImage;
+                    }}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   {/* Hover overlay */}

@@ -1,11 +1,19 @@
 import Papa from 'papaparse';
 import { MenuItem, SheetRow } from '../types';
 import { FALLBACK_MENU, GOOGLE_SHEET_CSV_URL } from '../constants';
+import { getAdminMenuItems, saveAdminMenu } from './menuAdminService';
 
 export const fetchMenuData = async (): Promise<MenuItem[]> => {
+  // Use admin local modifications if available
+  const localItems = getAdminMenuItems();
+  if (localItems && localItems.length > 0) {
+    return localItems;
+  }
+
   // If no URL is provided, return fallback immediately
   if (!GOOGLE_SHEET_CSV_URL) {
     console.warn("No Google Sheet URL provided, using fallback data.");
+    saveAdminMenu(FALLBACK_MENU); // Save to local storage for future admin edits
     return new Promise((resolve) => setTimeout(() => resolve(FALLBACK_MENU), 800)); // Simulate delay
   }
 
@@ -38,8 +46,10 @@ export const fetchMenuData = async (): Promise<MenuItem[]> => {
           // If no valid menu items were parsed, use fallback data
           if (menuItems.length === 0) {
             console.warn("No valid menu items found in sheet, using fallback data.");
+            saveAdminMenu(FALLBACK_MENU);
             resolve(FALLBACK_MENU);
           } else {
+            saveAdminMenu(menuItems);
             resolve(menuItems);
           }
         },
@@ -51,6 +61,7 @@ export const fetchMenuData = async (): Promise<MenuItem[]> => {
   } catch (err) {
     console.error("Error fetching menu data:", err);
     // Fallback on error to ensure app is usable
+    saveAdminMenu(FALLBACK_MENU);
     return FALLBACK_MENU;
   }
 };

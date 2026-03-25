@@ -7,10 +7,40 @@ const AdminEvents: React.FC = () => {
   const [events, setEvents] = useState<CafeEvent[]>([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentEvent, setCurrentEvent] = useState<Partial<CafeEvent>>({});
+  
+  // Media selection state
+  const [showMediaPicker, setShowMediaPicker] = useState(false);
+  const [mediaItems, setMediaItems] = useState<any[]>([]);
 
   useEffect(() => {
     loadEvents();
   }, []);
+
+  const refreshMedia = () => {
+    import('../services/mediaService').then(service => {
+        setMediaItems(service.getMediaItems());
+    });
+  };
+
+  const toggleMediaPicker = () => {
+    if (!showMediaPicker) {
+      refreshMedia();
+    }
+    setShowMediaPicker(!showMediaPicker);
+  };
+
+  const selectMediaImage = (url: string) => {
+    setCurrentEvent({ ...currentEvent, image: url });
+    setShowMediaPicker(false);
+  };
+
+  const handleCloudinaryUpload = () => {
+    import('../services/galleryService').then(service => {
+        service.openUploadWidget('events', (url) => {
+            setCurrentEvent({ ...currentEvent, image: url });
+        });
+    });
+  };
 
   const loadEvents = () => {
     setEvents(getEvents());
@@ -55,7 +85,21 @@ const AdminEvents: React.FC = () => {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setCurrentEvent({ ...currentEvent, image: reader.result as string });
+        const dataUrl = reader.result as string;
+        setCurrentEvent({ ...currentEvent, image: dataUrl });
+        
+        // Also save to media library for future use
+        import('../services/mediaService').then(service => {
+            service.saveMediaItem({
+                id: `media_${Date.now()}`,
+                filename: file.name,
+                type: file.type,
+                dataUrl,
+                uploadedAt: new Date().toISOString(),
+                sizeBytes: file.size
+            });
+            refreshMedia();
+        });
       };
       reader.readAsDataURL(file);
     }
@@ -115,14 +159,56 @@ const AdminEvents: React.FC = () => {
                 {currentEvent.image && (
                   <img src={currentEvent.image} alt="Preview" className="w-24 h-24 object-cover rounded shadow" />
                 )}
-                <div className="flex-1 bg-gray-50 border border-dashed border-gray-300 rounded-lg p-4 text-center">
-                   <input 
-                     type="file"
-                     accept="image/*"
-                     onChange={handleImageUpload}
-                     className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#ff3b3b]/10 file:text-[#ff3b3b] hover:file:bg-[#ff3b3b]/20 cursor-pointer"
-                   />
-                   <p className="text-xs text-gray-400 mt-2">Upload any image file. It will be saved securely.</p>
+                <div className="flex-1 space-y-3">
+                   <div className="flex flex-wrap gap-2">
+                       <button 
+                         onClick={toggleMediaPicker}
+                         className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                           showMediaPicker ? 'bg-gray-800 text-white' : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                         }`}
+                       >
+                         {showMediaPicker ? 'Close Library' : 'Local Library'}
+                       </button>
+                       <button 
+                         onClick={handleCloudinaryUpload}
+                         className="bg-sky-50 hover:bg-sky-100 text-sky-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-sky-200"
+                       >
+                         Select from Cloudinary
+                       </button>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                       <label className="cursor-pointer bg-green-50 hover:bg-green-100 text-green-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors border border-green-200">
+                         Upload from Computer
+                         <input 
+                           type="file"
+                           className="hidden"
+                           accept="image/*"
+                           onChange={handleImageUpload}
+                         />
+                       </label>
+                    </div>
+
+                    {/* Media Picker Modal */}
+                    {showMediaPicker && (
+                      <div className="bg-white border border-gray-200 rounded-lg p-3 mt-2 h-48 overflow-y-auto shadow-inner">
+                        <h3 className="font-semibold text-gray-800 text-xs mb-2">Local Media</h3>
+                        {mediaItems.length === 0 ? (
+                          <p className="text-[10px] text-gray-500">No media found.</p>
+                        ) : (
+                          <div className="grid grid-cols-4 gap-2">
+                            {mediaItems.map((media: any) => (
+                               <div 
+                                 key={media.id} 
+                                 onClick={() => selectMediaImage(media.dataUrl)}
+                                 className="cursor-pointer group relative aspect-square bg-gray-100 rounded overflow-hidden hover:ring-2 hover:ring-[#ff3b3b]"
+                               >
+                                 <img src={media.dataUrl} alt="" className="w-full h-full object-cover" />
+                               </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
                 </div>
               </div>
             </div>

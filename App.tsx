@@ -12,6 +12,8 @@ import AdminLayout from './components/AdminLayout';
 import AdminEvents from './pages/AdminEvents';
 import AdminBlog from './pages/AdminBlog';
 import AdminMedia from './pages/AdminMedia';
+import AdminMenu from './pages/AdminMenu';
+import GalleryPage from './pages/GalleryPage';
 
 function App() {
   return (
@@ -29,6 +31,7 @@ function App() {
             <Route path="blog" element={<AdminBlog />} />
             <Route path="events" element={<AdminEvents />} />
             <Route path="media" element={<AdminMedia />} />
+            <Route path="menu" element={<AdminMenu />} />
           </Route>
           
           <Route path="/*" element={
@@ -36,6 +39,7 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/gallery" element={<GalleryPage />} />
                 <Route path="/blog" element={<BlogListing />} />
                 <Route path="/blog/:slug" element={<BlogDetail />} />
               </Routes>
