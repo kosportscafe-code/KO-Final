@@ -63,7 +63,7 @@ const Gallery: React.FC = () => {
               >
                 <img
                   src={item.url}
-                  alt="Gallery"
+                  alt={`Real-time gallery shot: ${item.category || 'moments'} at KOS Sports Café`}
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
                 />
               </motion.div>

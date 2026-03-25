@@ -4,6 +4,7 @@ import { Search, Calendar, User, Tag, ChevronRight, PhoneCall } from 'lucide-rea
 import { getBlogPosts } from '../services/blogService';
 import { BlogPost } from '../types';
 import { WHATSAPP_NUMBER } from '../config';
+import SEO from '../components/SEO';
 
 const CATEGORIES = ['All', 'Sports', 'Standup', 'Events', 'Offers'];
 
@@ -23,6 +24,10 @@ const BlogListing: React.FC = () => {
 
   return (
     <main className="flex-grow pt-24 pb-16 bg-[#0a0a0a] text-white">
+      <SEO 
+        title="KOS Blog | Latest Sports & Cafe Updates" 
+        description="Stay updated with the latest sports news, cafe offers, standup comedy events, and community stories from KOS Sports Café."
+      />
       <div className="container mx-auto px-4 max-w-7xl">
         <h1 className="text-4xl md:text-6xl font-black mb-4 text-center tracking-tighter uppercase text-white">
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ff3b3b] to-[#ff8c00]">KO</span> Blog

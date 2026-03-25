@@ -2,10 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import GalleryGrid from '../components/GalleryGrid';
 import { Camera } from 'lucide-react';
+import SEO from '../components/SEO';
 
 const GalleryPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#ff3b3b] selection:text-white">
+      <SEO 
+        title="Gallery | KOS Sports Café" 
+        description="Explore our live gallery of food, sports events, and moments from KOS Sports Café Meerut. Updated in real-time."
+      />
       
       
       <main className="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">

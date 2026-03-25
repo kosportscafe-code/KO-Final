@@ -18,9 +18,8 @@ const Hero: React.FC = () => {
         className="absolute inset-0 z-0"
       >
         <img
-          // Using a high-quality cafe image from Unsplash
           src="/images/Hero1.jpg"
-          alt="KOS Café Interior"
+          alt="Atmospheric interior of KOS Sports Café Meerut, featuring modern seating and sports-themed decor"
           className="w-full h-[120%] object-cover opacity-100"
         />
         <div className="absolute inset-0 bg-white/0 mix-blend-overlay" />

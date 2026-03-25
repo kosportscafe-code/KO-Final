@@ -63,7 +63,7 @@ const Testimonials: React.FC = () => {
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ff3b3b]/10 border border-[#ff3b3b]/20 text-[#ff3b3b] mb-6"
           >
-            <Star size={16} fill="currentColor" />
+            <Star size={16} fill="currentColor" aria-hidden="true" />
             <span className="text-xs font-black uppercase tracking-widest">Customer Love</span>
           </motion.div>
           
@@ -98,11 +98,11 @@ const Testimonials: React.FC = () => {
               transition={{ delay: index * 0.1 }}
               className="bg-[#0f0f0f] border border-white/5 p-8 rounded-3xl hover:border-[#ff3b3b]/30 transition-all group relative"
             >
-              <Quote className="absolute top-6 right-8 text-white/5 group-hover:text-[#ff3b3b]/10 transition-colors" size={48} />
+              <Quote className="absolute top-6 right-8 text-white/5 group-hover:text-[#ff3b3b]/10 transition-colors" size={48} aria-hidden="true" />
               
               <div className="flex gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-[#ff3b3b]" fill="currentColor" />
+                  <Star key={i} size={16} className="text-[#ff3b3b]" fill="currentColor" aria-hidden="true" />
                 ))}
               </div>
 

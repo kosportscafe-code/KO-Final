@@ -27,7 +27,7 @@ const AboutStory: React.FC = () => {
                         <div className="aspect-[4/5] bg-stone-200 overflow-hidden rounded-sm">
                             <img
                                 src="/images/Hero2.jpg"
-                                alt="Cafe Interior"
+                                alt="Close-up of the elegant coffee station and interior design at KOS Sports Café"
                                 className="w-full h-full object-cover"
                             />
                         </div>

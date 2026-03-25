@@ -49,20 +49,21 @@ const Navbar: React.FC = () => {
         </a>
 
         {/* Desktop Nav */}
-        <div className="hidden md:flex items-center space-x-8">
+        <ul className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <a
-              key={link.name}
-              href={link.href}
-              className={`font-sans text-sm tracking-widest uppercase transition-colors ${isScrolled
-                ? 'text-obsidian/70 hover:text-bronze'
-                : 'text-white hover:text-cream'
-                }`}
-            >
-              {link.name}
-            </a>
+            <li key={link.name}>
+              <a
+                href={link.href}
+                className={`font-sans text-sm tracking-widest uppercase transition-colors ${isScrolled
+                  ? 'text-obsidian/70 hover:text-bronze'
+                  : 'text-white hover:text-cream'
+                  }`}
+              >
+                {link.name}
+              </a>
+            </li>
           ))}
-        </div>
+        </ul>
 
         {/* Actions */}
         <div className="flex items-center gap-6">
@@ -108,18 +109,19 @@ const Navbar: React.FC = () => {
             exit={{ height: 0, opacity: 0 }}
             className="md:hidden bg-alabaster border-t border-stone-200 overflow-hidden"
           >
-            <div className="flex flex-col p-6 space-y-4">
+            <ul className="flex flex-col p-6 space-y-4">
               {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="font-serif text-xl text-obsidian"
-                >
-                  {link.name}
-                </a>
+                <li key={link.name}>
+                  <a
+                    href={link.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="font-serif text-xl text-obsidian"
+                  >
+                    {link.name}
+                  </a>
+                </li>
               ))}
-            </div>
+            </ul>
           </Motion.div>
         )}
       </AnimatePresence>

@@ -198,11 +198,11 @@ const StandupShows: React.FC = () => {
                   
                   <div className="space-y-3 mb-8">
                     <div className="flex items-center text-sm text-stone-600">
-                      <Calendar className="w-4 h-4 mr-3 text-bronze" />
+                      <Calendar className="w-4 h-4 mr-3 text-bronze" aria-hidden="true" />
                       {show.date}
                     </div>
                     <div className="flex items-center text-sm text-stone-600">
-                      <Clock className="w-4 h-4 mr-3 text-bronze" />
+                      <Clock className="w-4 h-4 mr-3 text-bronze" aria-hidden="true" />
                       {show.time}
                     </div>
                   </div>
@@ -241,7 +241,7 @@ const StandupShows: React.FC = () => {
                   <p className="text-sm text-stone-500">{selectedShow.title}</p>
                 </div>
                 <button onClick={() => setSelectedShow(null)} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
-                  <X className="w-5 h-5 text-stone-500" />
+                  <X className="w-5 h-5 text-stone-500" aria-hidden="true" />
                 </button>
               </div>
 

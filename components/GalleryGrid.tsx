@@ -61,7 +61,7 @@ const GalleryGrid: React.FC = () => {
                   : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 shadow-sm'
               }`}
             >
-              <Filter size={14} />
+              <Filter size={14} aria-hidden="true" />
               {cat.label}
             </button>
           ))}
@@ -73,7 +73,7 @@ const GalleryGrid: React.FC = () => {
                 className="p-2.5 rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-[#ff3b3b] transition-all shadow-sm"
                 title="Refresh Gallery"
             >
-                <RefreshCw size={20} className={loading ? 'animate-spin' : ''} />
+                <RefreshCw size={20} className={loading ? 'animate-spin' : ''} aria-hidden="true" />
             </button>
             
             {isAdmin && (
@@ -81,7 +81,7 @@ const GalleryGrid: React.FC = () => {
                 onClick={handleUpload}
                 className="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all shadow-xl bg-[#ff3b3b] text-white hover:bg-[#e63535] hover:-translate-y-1 active:scale-95"
                 >
-                <Upload size={18} />
+                <Upload size={18} aria-hidden="true" />
                 Upload {filter !== 'all' ? `to ${filter}` : 'Image'}
                 </button>
             )}
@@ -91,7 +91,7 @@ const GalleryGrid: React.FC = () => {
       {/* Grid */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <Loader2 size={48} className="text-[#ff3b3b] animate-spin" />
+          <Loader2 size={48} className="text-[#ff3b3b] animate-spin" aria-hidden="true" />
           <p className="text-gray-400 font-medium animate-pulse">Fetching visuals...</p>
         </div>
       ) : items.length > 0 ? (
@@ -113,7 +113,7 @@ const GalleryGrid: React.FC = () => {
               >
                 <img
                   src={item.url}
-                  alt={item.category}
+                  alt={`Gallery image - ${item.category} at KOS Sports Café`}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   loading="lazy"
                 />
@@ -123,7 +123,7 @@ const GalleryGrid: React.FC = () => {
                   </span>
                   <div className="flex justify-between items-center">
                     <h4 className="text-white font-bold text-lg">Visual Entry</h4>
-                    <Maximize2 size={18} className="text-white/70" />
+                    <Maximize2 size={18} className="text-white/70" aria-hidden="true" />
                   </div>
                 </div>
               </motion.div>
@@ -150,14 +150,14 @@ const GalleryGrid: React.FC = () => {
               onClick={() => setSelectedImage(null)}
               className="absolute top-6 right-6 p-3 rounded-full bg-white/10 text-white hover:bg-white/20 transition-all z-[110]"
             >
-              <X size={24} />
+              <X size={24} aria-hidden="true" />
             </button>
             <motion.img
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.9, y: 20 }}
               src={selectedImage.url}
-              alt="Preview"
+              alt={`Full screen preview: ${selectedImage.category} at KOS Sports Café`}
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
             />
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-white">

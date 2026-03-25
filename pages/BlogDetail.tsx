@@ -5,6 +5,7 @@ import { getBlogPostBySlug } from '../services/blogService';
 import { BlogPost } from '../types';
 import EventCard from '../components/EventCard';
 import { WHATSAPP_NUMBER } from '../config';
+import SEO from '../components/SEO';
 
 const BlogDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -15,16 +16,6 @@ const BlogDetail: React.FC = () => {
       const foundPost = getBlogPostBySlug(slug);
       if (foundPost) {
         setPost(foundPost);
-        // Setup SEO
-        document.title = foundPost.metaTitle || `${foundPost.title} | KO Sports Cafe Blog`;
-        
-        let metaDesc = document.querySelector('meta[name="description"]');
-        if (!metaDesc) {
-          metaDesc = document.createElement('meta');
-          metaDesc.setAttribute('name', 'description');
-          document.head.appendChild(metaDesc);
-        }
-        metaDesc.setAttribute('content', foundPost.metaDescription || foundPost.excerpt || 'Checkout the latest blog post from KO Sports Cafe.');
       }
     }
     // Scroll to top when post loads
@@ -34,6 +25,7 @@ const BlogDetail: React.FC = () => {
   if (!post) {
     return (
       <main className="flex-grow pt-32 pb-16 bg-[#0a0a0a] text-white flex flex-col items-center">
+        <SEO title="Post Not Found | KOS Blog" />
         <h1 className="text-3xl font-bold mb-4">Post Not Found</h1>
         <Link to="/blog" className="text-[#ff3b3b] hover:text-[#ff8c00] flex items-center">
           <ArrowLeft className="mr-2" size={20} /> Back to Blog
@@ -51,6 +43,13 @@ const BlogDetail: React.FC = () => {
 
   return (
     <main className="flex-grow pt-24 pb-16 bg-[#0a0a0a] text-white selection:bg-[#ff3b3b] selection:text-white">
+      <SEO 
+        title={`${post.metaTitle || post.title} | KOS Blog`}
+        description={post.metaDescription || post.excerpt}
+        image={post.image}
+        url={window.location.href}
+        type="article"
+      />
       {/* Featured Image Header */}
       <div className="relative w-full h-[40vh] md:h-[60vh] max-h-[600px] mb-8 lg:mb-12">
         <div className="absolute inset-0 bg-black/50 z-10" />

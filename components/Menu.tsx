@@ -66,7 +66,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
             onClick={onClose}
             className="absolute top-4 right-4 z-10 p-2 bg-white/90 hover:bg-white rounded-full transition-colors shadow-lg"
           >
-            <X className="w-5 h-5 text-obsidian" />
+            <X className="w-5 h-5 text-obsidian" aria-hidden="true" />
           </button>
 
           {/* Image */}
@@ -256,7 +256,7 @@ const Menu: React.FC = () => {
                         onClick={() => addToCart(item, labels.fullReg as any)}
                         className="flex-1 bg-stone-50 hover:bg-obsidian hover:text-white text-obsidian py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 group/btn"
                       >
-                        <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" />
+                        <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" aria-hidden="true" />
                         <span className="text-[10px] uppercase tracking-widest font-semibold">{item.priceMed ? labels.reg : 'Add'}</span>
                       </button>
 
@@ -265,7 +265,7 @@ const Menu: React.FC = () => {
                           onClick={() => addToCart(item, labels.fullMed as any)}
                           className="flex-1 bg-obsidian text-white py-3 rounded-md hover:bg-bronze transition-all duration-300 flex items-center justify-center gap-2"
                         >
-                          <Plus className="w-4 h-4" />
+                          <Plus className="w-4 h-4" aria-hidden="true" />
                           <span className="text-[10px] uppercase tracking-widest font-semibold">{labels.med}</span>
                         </button>
                       )}
