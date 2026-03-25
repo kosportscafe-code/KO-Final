@@ -7,6 +7,7 @@ export const getDriveImage = (url: string | undefined): string => {
   
   // If it's already a direct link or placeholder
   if (url.startsWith('http') && !url.includes('drive.google.com')) return url;
+  if (url.startsWith('data:')) return url;
 
   // Regex to extract ID from standard drive share links
   const match = url.match(/[-\w]{25,}/);
