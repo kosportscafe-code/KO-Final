@@ -27,6 +27,7 @@ const BlogListing: React.FC = () => {
       <SEO 
         title="Blog & News | KOS Sports Café" 
         description="Stay updated with the latest sports news, event announcements, and culinary stories from KOS Sports Café in Meerut."
+        image="/images/menu/sandwich.jpg"
       />
       <div className="container mx-auto px-4 max-w-7xl">
         <h1 className="text-4xl md:text-6xl font-black mb-4 text-center tracking-tighter uppercase text-white">

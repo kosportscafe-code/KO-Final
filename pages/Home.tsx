@@ -29,22 +29,26 @@ const Home: React.FC = () => {
       case '/about':
         return {
           title: "About Our Story | KOS Sports Café",
-          description: "Discover the passion behind KOS Sports Café. From our world-class gaming atmosphere to our commitment to exceptional cuisine in Meerut."
+          description: "Discover the passion behind KOS Sports Café. From our world-class gaming atmosphere to our commitment to exceptional cuisine in Meerut.",
+          image: "/images/Hero2.jpg"
         };
       case '/menu':
         return {
           title: "Our Menu | KOS Sports Café",
-          description: "Explore the delicious offerings at KOS Sports Café. From signature sandwiches and pizzas to specialty drinks and thalis."
+          description: "Explore the delicious offerings at KOS Sports Café. From signature sandwiches and pizzas to specialty drinks and thalis.",
+          image: "/images/menu/bowl.jpg"
         };
       case '/contact':
         return {
           title: "Contact Us & Location | KOS Sports Café",
-          description: "Find us in Meerut! Get in touch for bookings, event inquiries, or visit us to experience the ultimate sports café vibe."
+          description: "Find us in Meerut! Get in touch for bookings, event inquiries, or visit us to experience the ultimate sports café vibe.",
+          image: "/images/Hero1.jpg"
         };
       default:
         return {
           title: "KOS Sports Café | Home",
-          description: "The ultimate gathering place for sports enthusiasts and food lovers in Meerut. Experience world-class gaming and world-class cuisine at KOS Sports Café."
+          description: "The ultimate gathering place for sports enthusiasts and food lovers in Meerut. Experience world-class gaming and world-class cuisine at KOS Sports Café.",
+          image: "/images/Hero1.jpg"
         };
     }
   };

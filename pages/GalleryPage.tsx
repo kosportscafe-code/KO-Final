@@ -10,6 +10,7 @@ const GalleryPage: React.FC = () => {
       <SEO 
         title="Gallery | KOS Sports Café" 
         description="A visual journey through KOS Sports Café. See our vibrant sports atmosphere, delicious food, and live event highlights in Meerut."
+        image="/images/Hero1.jpg"
       />
       
       
