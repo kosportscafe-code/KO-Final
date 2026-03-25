@@ -10,6 +10,7 @@ export const WEBHOOK_URL = "https://hook.us1.make.com/your-webhook-id";
 export const CAFE_NAME = "KOS Café";
 export const CONTACT_PHONE = "+91 7060 40 3965";
 export const CONTACT_WEBSITE = "www.kosportscafe.com";
+export const MENU_PDF_URL = "/images/pamphlet.webp"; // Link to the menu asset
 
 // FALLBACK DATA (Extracted from Google Business Profile & Zomato)
 // This is used if the Google Sheet connection isn't set up yet.

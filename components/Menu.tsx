@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { MenuItem } from '../types';
 import { fetchMenuData } from '../services/sheetService';
+import { FALLBACK_MENU, MENU_PDF_URL } from '../constants';
 import { formatCurrency, getDriveImage } from '../utils/helpers';
 import { useCart } from '../context/CartContext';
 import { Plus, X } from 'lucide-react';
@@ -277,9 +278,13 @@ const Menu: React.FC = () => {
 
           {/* Download PDF Button */}
           <div className="text-center mt-20">
-            <button className="text-xs uppercase tracking-widest text-stone-400 hover:text-obsidian border-b border-stone-300 pb-1 transition-colors">
+            <a 
+              href={MENU_PDF_URL} 
+              download="KOS-Cafe-Menu.webp"
+              className="text-xs uppercase tracking-widest text-stone-400 hover:text-obsidian border-b border-stone-300 pb-1 transition-colors cursor-pointer"
+            >
               Download Full Menu PDF
-            </button>
+            </a>
           </div>
         </div>
       </section>

@@ -4,6 +4,7 @@ import AboutStory from '../components/AboutStory';
 import Menu from '../components/Menu';
 import Gallery from '../components/Gallery';
 import StandupShows from '../components/StandupShows';
+import Testimonials from '../components/Testimonials';
 
 const Home: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const Home: React.FC = () => {
       <Menu />
       <Gallery />
       <StandupShows />
+      <Testimonials />
     </main>
   );
 };
