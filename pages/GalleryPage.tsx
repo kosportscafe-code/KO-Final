@@ -1,14 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import GalleryGrid from '../components/GalleryGrid';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import { Camera } from 'lucide-react';
 
 const GalleryPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#ff3b3b] selection:text-white">
-      <Navbar />
+      
       
       <main className="pt-32 pb-24 px-6 md:px-12 max-w-7xl mx-auto">
         {/* Hero Section */}
@@ -72,8 +70,6 @@ const GalleryPage: React.FC = () => {
             </div>
         </section>
       </main>
-
-      <Footer />
     </div>
   );
 };

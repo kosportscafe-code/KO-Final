@@ -4,8 +4,8 @@
  */
 
 // CLOUDINARY CONFIG
-const CLOUD_NAME = 'kos-cafe'; // Based on user request "KOS Cafe"
-const UPLOAD_PRESET = 'KOS-gallery';
+const CLOUD_NAME = 'douefch8u'; 
+const UPLOAD_PRESET = 'kosc_upload';
 
 export interface GalleryItem {
   id: string;
@@ -27,10 +27,16 @@ export const fetchGalleryImages = async (category: string = 'all'): Promise<Gall
     // We use tags for client-side listing in Cloudinary.
     // If user organizes by folders, we expect them to also have categories as tags.
     const tag = category === 'all' ? 'kosc-gallery' : `kosc-gallery-${category}`;
-    const response = await fetch(`https://res.cloudinary.com/${CLOUD_NAME}/image/list/${tag}.json`);
+    const url = `https://res.cloudinary.com/${CLOUD_NAME}/image/list/${tag}.json`;
+    console.log(`[Gallery] Syncing with Cloudinary: ${url}`);
+    const response = await fetch(url);
     
     if (!response.ok) {
-        console.warn('Cloudinary Resource List not accessible or empty. Check "Resource List" setting in Dashboard.');
+        if (response.status === 404) {
+            console.warn(`[Gallery] Resource list not found for tag: ${tag}. \n1. Go to Cloudinary Settings > Security.\n2. In "Restricted media types", uncheck "Resource list".\n3. Click Save.`);
+        } else {
+            console.warn(`[Gallery] Fetch failed with status: ${response.status}`);
+        }
         return getMockGalleryData(category);
     }
 
