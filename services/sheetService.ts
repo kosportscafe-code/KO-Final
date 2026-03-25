@@ -32,7 +32,7 @@ export const fetchMenuData = async (): Promise<MenuItem[]> => {
               description: row.Description || '',
               priceReg: parseFloat(row.PriceReg.replace(/[^0-9.]/g, '')),
               priceMed: row.PriceMed ? parseFloat(row.PriceMed.replace(/[^0-9.]/g, '')) : undefined,
-              image: row.ImageURL
+              image_url: row.ImageURL
             }));
 
           // If no valid menu items were parsed, use fallback data

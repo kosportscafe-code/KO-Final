@@ -130,7 +130,7 @@ const Menu: React.FC = () => {
   const filteredItems = items.filter(item => item.category === activeCategory);
 
   const getItemImage = (item: MenuItem): string => {
-    if (item.image) return getDriveImage(item.image);
+    if (item.image_url) return getDriveImage(item.image_url);
     if (categoryImages[item.category]) return categoryImages[item.category];
     return placeholderImage;
   };
@@ -183,22 +183,22 @@ const Menu: React.FC = () => {
           {/* Menu Grid */}
           <Motion.div
             layout
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-12 gap-y-16 max-w-6xl mx-auto"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
           >
             {filteredItems.map((item) => {
               const labels = getSizeLabels(item.category);
               return (
               <Motion.div
                 layout
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95 }}
                 key={item.id}
-                className="group flex flex-col md:flex-row gap-6 items-start"
+                className="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-stone-100 flex flex-col h-full"
               >
-                {/* Clickable Image */}
+                {/* Image Top */}
                 <div
-                  className="w-full md:w-32 h-32 flex-shrink-0 overflow-hidden rounded-sm bg-stone-100 cursor-pointer relative"
+                  className="aspect-[4/3] w-full flex-shrink-0 overflow-hidden bg-stone-50 cursor-pointer relative"
                   onClick={() => openModal(item)}
                 >
                   <img
@@ -207,54 +207,63 @@ const Menu: React.FC = () => {
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                   {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-obsidian/0 group-hover:bg-obsidian/20 transition-all duration-300 flex items-center justify-center">
-                    <span className="text-white text-xs uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-obsidian/60 px-3 py-1 rounded">
-                      View
-                    </span>
-                  </div>
+                  <div className="absolute inset-0 bg-obsidian/0 group-hover:bg-obsidian/10 transition-all duration-300"></div>
                 </div>
 
-                <div className="flex-grow w-full">
-                  <div className="flex justify-between items-baseline border-b border-stone-200 pb-2 mb-2 border-dotted">
+                <div className="p-6 flex flex-col flex-grow">
+                  <div className="flex justify-between items-start mb-3">
                     <h3
-                      className="font-serif text-xl text-obsidian cursor-pointer hover:text-bronze transition-colors"
+                      className="font-serif text-xl text-obsidian cursor-pointer hover:text-bronze transition-colors flex-grow"
                       onClick={() => openModal(item)}
                     >
                       {item.name}
                     </h3>
-                    <div className="flex gap-4">
-                      {/* Price Display Logic */}
-                      {item.priceMed ? (
-                        <div className="flex gap-3 text-sm font-sans">
-                          <span className="text-stone-500">{labels.reg}: {formatCurrency(item.priceReg)}</span>
-                          <span className="text-obsidian font-medium">{labels.med}: {formatCurrency(item.priceMed)}</span>
-                        </div>
-                      ) : (
-                        <span className="font-sans text-lg text-obsidian">{formatCurrency(item.priceReg)}</span>
-                      )}
-                    </div>
                   </div>
 
-                  <p className="font-sans text-stone-500 text-sm font-light mb-4 min-h-[40px]">
-                    {item.description}
+                  <p className="font-sans text-stone-400 text-sm font-light mb-6 line-clamp-2">
+                    {item.description || "No description available."}
                   </p>
 
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => addToCart(item, labels.fullReg as any)}
-                      className="flex items-center gap-1 text-xs uppercase tracking-wider text-obsidian hover:text-bronze transition-colors"
-                    >
-                      <Plus className="w-3 h-3" /> {item.priceMed ? `Add ${labels.reg}` : 'Add to Cart'}
-                    </button>
+                  <div className="mt-auto">
+                    <div className="flex justify-between items-end mb-4">
+                      <div className="flex flex-col">
+                        {item.priceMed ? (
+                          <div className="flex flex-col gap-1 text-sm font-sans">
+                            <span className="text-stone-400 uppercase tracking-tighter text-[10px]">{labels.reg}</span>
+                            <span className="text-obsidian font-semibold">{formatCurrency(item.priceReg)}</span>
+                          </div>
+                        ) : (
+                          <span className="font-sans text-xl text-bronze font-semibold">{formatCurrency(item.priceReg)}</span>
+                        )}
+                      </div>
+                      
+                      {item.priceMed && (
+                        <div className="flex flex-col items-end gap-1 text-sm font-sans">
+                          <span className="text-stone-400 uppercase tracking-tighter text-[10px]">{labels.med}</span>
+                          <span className="text-obsidian font-semibold">{formatCurrency(item.priceMed)}</span>
+                        </div>
+                      )}
+                    </div>
 
-                    {item.priceMed && (
+                    <div className="flex gap-2">
                       <button
-                        onClick={() => addToCart(item, labels.fullMed as any)}
-                        className="flex items-center gap-1 text-xs uppercase tracking-wider text-obsidian hover:text-bronze transition-colors"
+                        onClick={() => addToCart(item, labels.fullReg as any)}
+                        className="flex-1 bg-stone-50 hover:bg-obsidian hover:text-white text-obsidian py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 group/btn"
                       >
-                        <Plus className="w-3 h-3" /> Add {labels.med}
+                        <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" />
+                        <span className="text-[10px] uppercase tracking-widest font-semibold">{item.priceMed ? labels.reg : 'Add'}</span>
                       </button>
-                    )}
+
+                      {item.priceMed && (
+                        <button
+                          onClick={() => addToCart(item, labels.fullMed as any)}
+                          className="flex-1 bg-obsidian text-white py-3 rounded-md hover:bg-bronze transition-all duration-300 flex items-center justify-center gap-2"
+                        >
+                          <Plus className="w-4 h-4" />
+                          <span className="text-[10px] uppercase tracking-widest font-semibold">{labels.med}</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               </Motion.div>

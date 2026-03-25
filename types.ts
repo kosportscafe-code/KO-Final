@@ -5,7 +5,7 @@ export interface MenuItem {
   description: string;
   priceReg: number;
   priceMed?: number; // Some items in PDF have two prices
-  image?: string;
+  image_url?: string;
 }
 
 export interface CartItem extends MenuItem {

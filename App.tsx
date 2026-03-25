@@ -11,6 +11,7 @@ import AdminLogin from './pages/AdminLogin';
 import AdminLayout from './components/AdminLayout';
 import AdminEvents from './pages/AdminEvents';
 import AdminBlog from './pages/AdminBlog';
+import AdminMedia from './pages/AdminMedia';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route index element={<AdminBlog />} />
             <Route path="blog" element={<AdminBlog />} />
             <Route path="events" element={<AdminEvents />} />
+            <Route path="media" element={<AdminMedia />} />
           </Route>
           
           <Route path="/*" element={

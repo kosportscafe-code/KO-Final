@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, FileText, Calendar, LogOut } from 'lucide-react';
+import { LayoutDashboard, FileText, Calendar, ImageIcon, LogOut } from 'lucide-react';
 import { isAuthenticated, logout } from '../services/authService';
 
 const AdminLayout: React.FC = () => {
@@ -23,6 +23,7 @@ const AdminLayout: React.FC = () => {
   const navItems = [
     { name: 'Blog Posts', path: '/admin/blog', icon: <FileText size={20} /> },
     { name: 'Events', path: '/admin/events', icon: <Calendar size={20} /> },
+    { name: 'Media', path: '/admin/media', icon: <ImageIcon size={20} /> },
   ];
 
   return (
