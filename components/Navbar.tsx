@@ -81,8 +81,9 @@ const Navbar: React.FC = () => {
           <button
             onClick={() => toggleDrawer(true)}
             className="relative p-2 hover:bg-stone-200/50 rounded-full transition-colors"
+            aria-label="Open shopping cart"
           >
-            <ShoppingBag className="w-5 h-5 text-obsidian" strokeWidth={1.5} />
+            <ShoppingBag className="w-5 h-5 text-obsidian" strokeWidth={1.5} aria-hidden="true" />
             {totalItems > 0 && (
               <span className="absolute -top-1 -right-1 bg-bronze text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
                 {totalItems}
@@ -94,8 +95,9 @@ const Navbar: React.FC = () => {
           <button
             className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
+            {isMobileMenuOpen ? <X className="w-6 h-6" aria-hidden="true" /> : <MenuIcon className="w-6 h-6" aria-hidden="true" />}
           </button>
         </div>
       </div>
