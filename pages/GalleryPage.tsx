@@ -6,7 +6,7 @@ import SEO from '../components/SEO';
 
 const GalleryPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#ff3b3b] selection:text-white">
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-bronze selection:text-white">
       <SEO 
         title="Gallery | KOS Sports Café" 
         description="A visual journey through KOS Sports Café. See our vibrant sports atmosphere, delicious food, and live event highlights in Meerut."
@@ -20,9 +20,9 @@ const GalleryPage: React.FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ff3b3b]/10 border border-[#ff3b3b]/20 text-[#ff3b3b] mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bronze/10 border border-bronze/20 text-bronze mb-6"
           >
-            <Camera size={16} />
+            <Camera size={16} aria-hidden="true" />
             <span className="text-xs font-black uppercase tracking-widest">KOSC Visuals</span>
           </motion.div>
           
@@ -32,7 +32,7 @@ const GalleryPage: React.FC = () => {
             transition={{ delay: 0.1 }}
             className="text-5xl md:text-7xl font-black mb-6 tracking-tight"
           >
-            THE <span className="text-[#ff3b3b]">GALLERY</span>
+            THE <span className="text-bronze">GALLERY</span>
           </motion.h1>
           
           <motion.p
@@ -52,7 +52,7 @@ const GalleryPage: React.FC = () => {
         <section className="mt-32 pt-24 border-t border-white/5">
             <div className="flex justify-between items-end mb-12">
                 <div>
-                    <h2 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">SOCIAL <span className="text-[#ff3b3b]">FEED</span></h2>
+                    <h2 className="text-3xl md:text-4xl font-black mb-2 tracking-tight">SOCIAL <span className="text-bronze">FEED</span></h2>
                     <p className="text-gray-500">Latest updates from our community @KOSCSportsCafe</p>
                 </div>
                 <button className="hidden md:flex px-6 py-3 rounded-full border border-white/10 hover:bg-white/5 transition-all text-sm font-bold">

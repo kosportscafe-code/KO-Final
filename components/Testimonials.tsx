@@ -50,9 +50,9 @@ const REVIEWS: Review[] = [
 
 const Testimonials: React.FC = () => {
   return (
-    <section className="py-24 bg-[#050505] relative overflow-hidden">
+    <section className="py-24 bg-alabaster relative overflow-hidden">
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff3b3b]/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-bronze/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#ff8c00]/5 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2" />
 
       <div className="container mx-auto px-6 relative z-10">
@@ -61,7 +61,7 @@ const Testimonials: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ff3b3b]/10 border border-[#ff3b3b]/20 text-[#ff3b3b] mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bronze/10 border border-bronze/20 text-bronze mb-6"
           >
             <Star size={16} fill="currentColor" aria-hidden="true" />
             <span className="text-xs font-black uppercase tracking-widest">Customer Love</span>
@@ -72,9 +72,9 @@ const Testimonials: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="text-4xl md:text-6xl font-black text-white mb-6 tracking-tight"
+            className="text-4xl md:text-6xl font-black text-obsidian mb-6 tracking-tight"
           >
-            WHAT OUR <span className="text-[#ff3b3b]">GUESTS</span> SAY
+            WHAT OUR <span className="text-bronze italic">GUESTS</span> SAY
           </motion.h2>
           
           <motion.p
@@ -90,19 +90,19 @@ const Testimonials: React.FC = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {REVIEWS.map((review, index) => (
-            <motion.div
+            <motion.article
               key={review.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1 }}
-              className="bg-[#0f0f0f] border border-white/5 p-8 rounded-3xl hover:border-[#ff3b3b]/30 transition-all group relative"
+              className="bg-white border border-stone-100 p-8 rounded-3xl hover:border-bronze/30 transition-all group relative shadow-sm"
             >
-              <Quote className="absolute top-6 right-8 text-white/5 group-hover:text-[#ff3b3b]/10 transition-colors" size={48} aria-hidden="true" />
+              <Quote className="absolute top-6 right-8 text-stone-100 group-hover:text-bronze/10 transition-colors" size={48} aria-hidden="true" />
               
               <div className="flex gap-1 mb-6">
                 {[...Array(5)].map((_, i) => (
-                  <Star key={i} size={16} className="text-[#ff3b3b]" fill="currentColor" aria-hidden="true" />
+                  <Star key={i} size={16} className="text-bronze" fill="currentColor" aria-hidden="true" />
                 ))}
               </div>
 
@@ -111,15 +111,15 @@ const Testimonials: React.FC = () => {
               </p>
 
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#ff3b3b] to-[#ff8c00] flex items-center justify-center text-white font-black text-lg">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-bronze to-slate flex items-center justify-center text-white font-black text-lg">
                   {review.name.charAt(0)}
                 </div>
                 <div>
-                  <h4 className="text-white font-bold">{review.name}</h4>
+                  <h3 className="text-white font-bold">{review.name}</h3>
                   <p className="text-gray-500 text-xs">{review.time}</p>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
 
@@ -137,7 +137,7 @@ const Testimonials: React.FC = () => {
             className="inline-flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm font-bold uppercase tracking-widest"
           >
             Read more on Google Reviews
-            <Star size={14} className="text-[#ff3b3b]" />
+            <Star size={14} className="text-bronze" />
           </a>
         </motion.div>
       </div>

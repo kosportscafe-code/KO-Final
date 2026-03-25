@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { MenuItem } from '../types';
 import { fetchMenuData } from '../services/sheetService';
 import { FALLBACK_MENU, MENU_PDF_URL } from '../constants';
-import { formatCurrency, getDriveImage } from '../utils/helpers';
+import { formatCurrency, getDriveImage, generateAltText, getOptimizedImageUrl } from '../utils/helpers';
 import { useCart } from '../context/CartContext';
-import { Plus, X } from 'lucide-react';
+import { Plus, X, Search, ArrowUpDown, Leaf } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 // Default images for menu categories
@@ -65,6 +65,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
           <button
             onClick={onClose}
             className="absolute top-4 right-4 z-10 p-2 bg-white/90 hover:bg-white rounded-full transition-colors shadow-lg"
+            aria-label="Close image modal"
           >
             <X className="w-5 h-5 text-obsidian" aria-hidden="true" />
           </button>
@@ -73,7 +74,7 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
           <div className="aspect-[4/3] w-full overflow-hidden">
             <img
               src={imageSrc}
-              alt={item.name}
+              alt={generateAltText(imageSrc, item.name, item.category)}
               onError={(e) => {
                 (e.target as HTMLImageElement).src = placeholderImage;
               }}
@@ -112,6 +113,9 @@ const Menu: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<'default' | 'low-high' | 'high-low'>('default');
+  const [isVegOnly, setIsVegOnly] = useState(false);
   const { addToCart } = useCart();
 
   // Cast motion to any to avoid TypeScript errors with missing props in current environment
@@ -131,7 +135,22 @@ const Menu: React.FC = () => {
     loadData();
   }, []);
 
-  const filteredItems = items.filter(item => item.category === activeCategory);
+  const filteredAndSortedItems = useMemo(() => {
+    let result = items.filter(item => {
+      const matchesCategory = item.category === activeCategory;
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesVeg = !isVegOnly || item.isVeg !== false;
+      return matchesCategory && matchesSearch && matchesVeg;
+    });
+
+    if (sortBy === 'low-high') {
+      result = [...result].sort((a, b) => a.priceReg - b.priceReg);
+    } else if (sortBy === 'high-low') {
+      result = [...result].sort((a, b) => b.priceReg - a.priceReg);
+    }
+
+    return result;
+  }, [items, activeCategory, searchQuery, isVegOnly, sortBy]);
 
   const getItemImage = (item: MenuItem): string => {
     if (item.image_url) return getDriveImage(item.image_url);
@@ -147,6 +166,55 @@ const Menu: React.FC = () => {
     setIsModalOpen(false);
     setSelectedItem(null);
   };
+
+  // AIO: Dynamic Menu Schema (JSON-LD) for Head
+  useEffect(() => {
+    if (items.length > 0) {
+      const menuSchema = {
+        "@context": "https://schema.org",
+        "@type": "Menu",
+        "@id": "https://www.kosportscafe.com/menu/#main-menu",
+        "name": "KOS Sports Café Menu",
+        "mainEntityOfPage": "https://www.kosportscafe.com/menu",
+        "isPartOf": { "@id": "https://www.kosportscafe.com/#restaurant" },
+        "hasMenuSection": Object.entries(
+          items.reduce((acc, item) => {
+            if (!acc[item.category]) acc[item.category] = [];
+            acc[item.category].push(item);
+            return acc;
+          }, {} as Record<string, MenuItem[]>)
+        ).map(([category, sectionItems]) => ({
+          "@type": "MenuSection",
+          "name": category,
+          "hasMenuItem": (sectionItems as MenuItem[]).map(item => ({
+            "@type": "MenuItem",
+            "name": item.name,
+            "description": item.description,
+            "offers": {
+              "@type": "Offer",
+              "price": item.priceReg,
+              "priceCurrency": "INR",
+              "availability": item.inStock !== false ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"
+            }
+          }))
+        }))
+      };
+
+      let script = document.querySelector('script[id="menu-jsonld"]');
+      if (!script) {
+        script = document.createElement('script');
+        script.setAttribute('id', 'menu-jsonld');
+        script.setAttribute('type', 'application/ld+json');
+        document.head.appendChild(script);
+      }
+      script.textContent = JSON.stringify(menuSchema);
+    }
+    
+    return () => {
+      const script = document.querySelector('script[id="menu-jsonld"]');
+      if (script) script.remove();
+    };
+  }, [items]);
 
   if (loading) {
     return (
@@ -167,12 +235,62 @@ const Menu: React.FC = () => {
             <div className="w-16 h-[1px] bg-bronze mx-auto"></div>
           </div>
 
+          {/* Smart Controls: Search, Sort, Veg Toggle */}
+          <div className="max-w-7xl mx-auto mb-12 flex flex-col md:flex-row gap-6 items-center justify-between">
+            {/* Search Bar */}
+            <div className="relative w-full md:w-96 group">
+              <Search className={`absolute left-4 top-1/2 -translate-y-1/2 transition-colors ${searchQuery ? 'text-bronze' : 'text-stone-300'}`} size={18} />
+              <input
+                type="text"
+                placeholder="Search your favorite dish..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-3 bg-white border border-stone-200 rounded-full focus:outline-none focus:border-bronze focus:ring-1 focus:ring-bronze/20 transition-all text-obsidian placeholder-stone-300 font-sans text-sm shadow-sm"
+              />
+            </div>
+
+            <div className="flex items-center gap-6 w-full md:w-auto">
+              {/* Veg Toggle */}
+              <button 
+                onClick={() => setIsVegOnly(!isVegOnly)}
+                className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 ${
+                  isVegOnly 
+                    ? 'bg-green-50 border-green-200 text-green-700' 
+                    : 'bg-white border-stone-200 text-stone-400 hover:border-stone-300'
+                }`}
+              >
+                <div className={`w-3 h-3 rounded-full border-2 ${isVegOnly ? 'bg-green-600 border-green-800' : 'bg-transparent border-stone-300'}`} />
+                <span className="text-[10px] uppercase tracking-widest font-bold">Veg Only</span>
+              </button>
+
+              {/* Price Sort */}
+              <div className="relative flex-grow md:flex-initial">
+                <ArrowUpDown className="absolute left-4 top-1/2 -translate-y-1/2 text-stone-400" size={16} />
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="appearance-none w-full pl-11 pr-10 py-2.5 bg-white border border-stone-200 rounded-full focus:outline-none focus:border-bronze text-[10px] uppercase tracking-widest font-bold text-stone-500 cursor-pointer hover:border-stone-300 transition-all"
+                >
+                  <option value="default">Default Order</option>
+                  <option value="low-high">Price: Low to High</option>
+                  <option value="high-low">Price: High to Low</option>
+                </select>
+                <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-stone-400">
+                  <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {/* Category Nav */}
-          <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-16">
+          <nav className="flex flex-wrap justify-center gap-4 md:gap-8 mb-16" aria-label="Menu categories">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setActiveCategory(cat)}
+                aria-current={activeCategory === cat ? 'true' : undefined}
                 className={`font-sans text-sm tracking-widest uppercase transition-all duration-300 pb-1 border-b ${activeCategory === cat
                     ? 'text-bronze border-bronze'
                     : 'text-stone-400 border-transparent hover:text-stone-600'
@@ -181,110 +299,162 @@ const Menu: React.FC = () => {
                 {cat}
               </button>
             ))}
-          </div>
+          </nav>
 
           {/* Menu Grid */}
-          <Motion.div
-            layout
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
-          >
-            {filteredItems.map((item) => {
-              const labels = getSizeLabels(item.category);
-              return (
-              <Motion.div
-                layout
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.95 }}
-                key={item.id}
-                className="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-stone-100 flex flex-col h-full"
-              >
-                {/* Image Top */}
-                <div
-                  className="aspect-[4/3] w-full flex-shrink-0 overflow-hidden bg-stone-50 cursor-pointer relative"
-                  onClick={() => openModal(item)}
+          <article aria-label={`${activeCategory} Menu at KOS Sports Café`}>
+            <h3 className="sr-only">{activeCategory} Menu at KOS Sports Café</h3>
+            <Motion.ul
+              layout
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto"
+            >
+              {filteredAndSortedItems.map((item) => {
+                const labels = getSizeLabels(item.category);
+                return (
+                <Motion.li
+                  layout
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  key={item.id}
+                  className="group bg-white rounded-lg shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden border border-stone-100 flex flex-col h-full"
                 >
-                  <img
-                    src={getItemImage(item)}
-                    alt={item.name}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = placeholderImage;
-                    }}
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
-                  {/* Hover overlay */}
-                  <div className="absolute inset-0 bg-obsidian/0 group-hover:bg-obsidian/10 transition-all duration-300"></div>
-                </div>
+                  {/* Image Top */}
+                  <div
+                    className="aspect-[4/3] w-full flex-shrink-0 overflow-hidden bg-stone-50 cursor-pointer relative"
+                    onClick={() => openModal(item)}
+                  >
+                    <img
+                      src={getOptimizedImageUrl(item.image_url, 600)}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      loading="lazy"
+                      width="600"
+                      height="600"
+                    />
+                    {/* Out of Stock Overlay */}
+                    {item.inStock === false && (
+                      <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
+                        <span className="bg-obsidian text-white text-[10px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-sm shadow-xl transform -rotate-12 border border-white/20">
+                          Out of Stock
+                        </span>
+                      </div>
+                    )}
+                    {/* Hover overlay */}
+                    <div className="absolute inset-0 bg-obsidian/0 group-hover:bg-obsidian/10 transition-all duration-300"></div>
+                    
+                    {/* Popular Badge */}
+                    {item.isPopular && (
+                      <div className="absolute top-4 left-4 z-10">
+                        <span className="bg-bronze text-white text-[9px] uppercase tracking-[0.2em] font-black px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-sm border border-white/20">
+                          <span className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" />
+                          Most Popular
+                        </span>
+                      </div>
+                    )}
 
-                <div className="p-6 flex flex-col flex-grow">
-                  <div className="flex justify-between items-start mb-3">
-                    <h3
-                      className="font-serif text-xl text-obsidian cursor-pointer hover:text-bronze transition-colors flex-grow"
-                      onClick={() => openModal(item)}
-                    >
-                      {item.name}
-                    </h3>
+                    {/* Veg/Non-Veg Tag */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <div className={`w-5 h-5 bg-white/90 backdrop-blur-sm rounded-md border flex items-center justify-center ${item.isVeg !== false ? 'border-green-500' : 'border-red-500'}`}>
+                        <div className={`w-2.5 h-2.5 rounded-full ${item.isVeg !== false ? 'bg-green-600' : 'bg-red-600'}`} />
+                      </div>
+                    </div>
                   </div>
 
-                  <p className="font-sans text-stone-400 text-sm font-light mb-6 line-clamp-2">
-                    {item.description || "No description available."}
-                  </p>
+                  <div className="p-6 flex flex-col flex-grow">
+                    <div className="flex justify-between items-start mb-3">
+                      <h3
+                        className="font-serif text-xl text-obsidian cursor-pointer hover:text-bronze transition-colors flex-grow"
+                        onClick={() => openModal(item)}
+                      >
+                        {item.name}
+                      </h3>
+                    </div>
 
-                  <div className="mt-auto">
-                    <div className="flex justify-between items-end mb-4">
-                      <div className="flex flex-col">
-                        {item.priceMed ? (
-                          <div className="flex flex-col gap-1 text-sm font-sans">
-                            <span className="text-stone-400 uppercase tracking-tighter text-[10px]">{labels.reg}</span>
-                            <span className="text-obsidian font-semibold">{formatCurrency(item.priceReg)}</span>
+                    <p className="font-sans text-stone-400 text-sm font-light mb-6 line-clamp-2">
+                      {item.description || "No description available."}
+                    </p>
+
+                    <div className="mt-auto">
+                      <div className="flex justify-between items-end mb-4">
+                        <div className="flex flex-col">
+                          {item.priceMed ? (
+                            <div className="flex flex-col gap-1 text-sm font-sans">
+                              <span className="text-stone-400 uppercase tracking-tighter text-[10px]">{labels.reg}</span>
+                              <span className="text-obsidian font-semibold">{formatCurrency(item.priceReg)}</span>
+                            </div>
+                          ) : (
+                            <span className="font-sans text-xl text-bronze font-semibold">{formatCurrency(item.priceReg)}</span>
+                          )}
+                        </div>
+                        
+                        {item.priceMed && (
+                          <div className="flex flex-col items-end gap-1 text-sm font-sans">
+                            <span className="text-stone-400 uppercase tracking-tighter text-[10px]">{labels.med}</span>
+                            <span className="text-obsidian font-semibold">{formatCurrency(item.priceMed)}</span>
                           </div>
-                        ) : (
-                          <span className="font-sans text-xl text-bronze font-semibold">{formatCurrency(item.priceReg)}</span>
                         )}
                       </div>
-                      
-                      {item.priceMed && (
-                        <div className="flex flex-col items-end gap-1 text-sm font-sans">
-                          <span className="text-stone-400 uppercase tracking-tighter text-[10px]">{labels.med}</span>
-                          <span className="text-obsidian font-semibold">{formatCurrency(item.priceMed)}</span>
-                        </div>
-                      )}
-                    </div>
 
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => addToCart(item, labels.fullReg as any)}
-                        className="flex-1 bg-stone-50 hover:bg-obsidian hover:text-white text-obsidian py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 group/btn"
-                      >
-                        <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" aria-hidden="true" />
-                        <span className="text-[10px] uppercase tracking-widest font-semibold">{item.priceMed ? labels.reg : 'Add'}</span>
-                      </button>
-
-                      {item.priceMed && (
+                      <div className="flex gap-2">
                         <button
-                          onClick={() => addToCart(item, labels.fullMed as any)}
-                          className="flex-1 bg-obsidian text-white py-3 rounded-md hover:bg-bronze transition-all duration-300 flex items-center justify-center gap-2"
+                          onClick={() => item.inStock !== false && addToCart(item, labels.fullReg as any)}
+                          disabled={item.inStock === false}
+                          className={`flex-1 py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 group/btn ${
+                            item.inStock === false 
+                              ? 'bg-stone-100 text-stone-300 cursor-not-allowed' 
+                              : 'bg-stone-50 hover:bg-obsidian hover:text-white text-obsidian'
+                          }`}
+                          aria-label={`Add ${labels.fullReg} ${item.name} to cart`}
                         >
-                          <Plus className="w-4 h-4" aria-hidden="true" />
-                          <span className="text-[10px] uppercase tracking-widest font-semibold">{labels.med}</span>
+                          <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" aria-hidden="true" />
+                          <span className="text-[10px] uppercase tracking-widest font-semibold">{item.priceMed ? labels.reg : 'Add'}</span>
                         </button>
-                      )}
+
+                        {item.priceMed && (
+                          <button
+                            onClick={() => item.inStock !== false && addToCart(item, labels.fullMed as any)}
+                            disabled={item.inStock === false}
+                            className={`flex-1 py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 ${
+                              item.inStock === false 
+                                ? 'bg-stone-200 text-stone-400 cursor-not-allowed' 
+                                : 'bg-obsidian text-white hover:bg-bronze'
+                            }`}
+                            aria-label={`Add ${labels.fullMed} ${item.name} to cart`}
+                          >
+                            <Plus className="w-4 h-4" aria-hidden="true" />
+                            <span className="text-[10px] uppercase tracking-widest font-semibold">{labels.med}</span>
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Motion.div>
-            )})}
-          </Motion.div>
+                </Motion.li>
+              )})}
+            </Motion.ul>
+          </article>
 
-          {/* Download PDF Button */}
-          <div className="text-center mt-20">
-            <a 
-              href={MENU_PDF_URL} 
-              download="KOS-Cafe-Menu.webp"
-              className="text-xs uppercase tracking-widest text-stone-400 hover:text-obsidian border-b border-stone-300 pb-1 transition-colors cursor-pointer"
-            >
-              Download Full Menu PDF
-            </a>
+          {/* Download PDF and Internal Linking */}
+          <div className="text-center mt-20 space-y-8">
+            <div className="py-8 border-t border-stone-200">
+               <p className="text-stone-500 mb-4 font-sans italic">Craving something special while watching the game?</p>
+               <a 
+                 href="/events" 
+                 className="inline-block px-8 py-3 bg-obsidian text-white rounded-full font-sans text-xs tracking-widest uppercase hover:bg-bronze transition-all shadow-lg"
+               >
+                 Plan your visit: Book a table or event space
+               </a>
+            </div>
+            
+            <div>
+              <a 
+                href={MENU_PDF_URL} 
+                download="KOS-Cafe-Menu.webp"
+                className="text-xs uppercase tracking-widest text-stone-400 hover:text-obsidian border-b border-stone-300 pb-1 transition-colors cursor-pointer"
+              >
+                Download Full Menu PDF
+              </a>
+            </div>
           </div>
         </div>
       </section>

@@ -120,8 +120,12 @@ const CartDrawer: React.FC = () => {
             {/* Header */}
             <div className="p-6 flex justify-between items-center border-b border-stone-200">
               <h2 className="font-serif text-2xl text-obsidian">Your Order</h2>
-              <button onClick={() => toggleDrawer(false)} className="p-2 hover:bg-stone-200 rounded-full">
-                <X className="w-5 h-5 text-stone-500" />
+              <button 
+                onClick={() => toggleDrawer(false)} 
+                className="p-2 hover:bg-stone-200 rounded-full"
+                aria-label="Close cart"
+              >
+                <X className="w-5 h-5 text-stone-500" aria-hidden="true" />
               </button>
             </div>
 
@@ -148,18 +152,21 @@ const CartDrawer: React.FC = () => {
                           <button 
                             onClick={() => updateQuantity(item.cartId, -1)}
                             className="px-3 py-1 hover:bg-stone-200 rounded-l-full transition-colors"
+                            aria-label="Decrease quantity"
                           >-</button>
                           <span className="px-1 text-sm font-sans w-6 text-center">{item.quantity}</span>
                           <button 
                             onClick={() => updateQuantity(item.cartId, 1)}
                             className="px-3 py-1 hover:bg-stone-200 rounded-r-full transition-colors"
+                            aria-label="Increase quantity"
                           >+</button>
                         </div>
                         <button 
                           onClick={() => removeFromCart(item.cartId)}
                           className="text-stone-400 hover:text-red-400 transition-colors"
+                          aria-label={`Remove ${item.name} from cart`}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </div>
                     </div>
@@ -210,7 +217,7 @@ const CartDrawer: React.FC = () => {
                     <div className="pt-2 pb-2">
                       <div className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-100">
                         <div className="flex items-center gap-3">
-                          <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-stone-400'}`} />
+                          <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-stone-400'}`} aria-hidden="true" />
                           <span className="text-sm font-medium text-stone-600">
                             {locationStatus === 'idle' && "Share your live location"}
                             {locationStatus === 'fetching' && "Fetching location..."}
@@ -251,10 +258,11 @@ const CartDrawer: React.FC = () => {
                     <button 
                       type="submit"
                       disabled={status === 'sending'}
-                      className="w-full bg-obsidian text-white py-4 font-sans uppercase tracking-widest text-xs hover:bg-stone-800 transition-colors flex justify-center items-center gap-2 disabled:opacity-70"
+                      className="w-full bg-obsidian text-white py-4 font-sans uppercase tracking-widest text-xs hover:bg-stone-800 transition-all duration-300 flex justify-center items-center gap-2 disabled:opacity-70 active:scale-95 shadow-lg"
+                      aria-label="Confirm and send order via WhatsApp"
                     >
                       {status === 'sending' ? 'Redirecting...' : 'Order on WhatsApp'}
-                      {!status.startsWith('send') && <ChevronRight className="w-4 h-4" />}
+                      {!status.startsWith('send') && <ChevronRight className="w-4 h-4" aria-hidden="true" />}
                     </button>
                   </form>
                 )}

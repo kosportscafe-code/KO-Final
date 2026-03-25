@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Camera, ChevronRight, Loader2 } from 'lucide-react';
 import { GalleryItem, fetchGalleryImages } from '../services/galleryService';
+import { generateAltText } from '../utils/helpers';
 
 const Gallery: React.FC = () => {
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -26,12 +27,12 @@ const Gallery: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#ff3b3b]/10 border border-[#ff3b3b]/20 text-[#ff3b3b] mb-4 w-fit"
+              className="flex items-center gap-2 px-3 py-1 rounded-full bg-bronze/10 border border-bronze/20 text-bronze mb-4 w-fit"
             >
-              <Camera size={14} />
+              <Camera size={14} aria-hidden="true" />
               <span className="text-[10px] font-black uppercase tracking-[0.2em]">Visuals</span>
             </motion.div>
-            <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">SHOTS FROM THE <span className="text-[#ff3b3b]">COURT</span></h2>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight">SHOTS FROM THE <span className="text-bronze italic">COURT</span></h2>
             <p className="text-gray-400 text-lg font-medium leading-relaxed">
               Capturing the intensity of the game and the joy of the feast. Our gallery is live and updated in real-time.
             </p>
@@ -39,16 +40,16 @@ const Gallery: React.FC = () => {
           
           <Link 
             to="/gallery" 
-            className="group flex items-center gap-2 text-white font-bold hover:text-[#ff3b3b] transition-colors"
+            className="group flex items-center gap-2 text-obsidian font-bold hover:text-bronze transition-colors"
           >
             Explore Full Gallery
-            <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" aria-hidden="true" />
           </Link>
         </div>
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 size={40} className="text-[#ff3b3b] animate-spin" />
+            <Loader2 size={40} className="text-bronze animate-spin" aria-hidden="true" />
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
@@ -63,7 +64,7 @@ const Gallery: React.FC = () => {
               >
                 <img
                   src={item.url}
-                  alt={`Real-time gallery shot: ${item.category || 'moments'} at KOS Sports Café`}
+                  alt={generateAltText(item.url, `KOS Gallery preview`, item.category)}
                   className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
                 />
               </motion.div>

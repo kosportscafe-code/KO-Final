@@ -14,6 +14,8 @@ import AdminBlog from './pages/AdminBlog';
 import AdminMedia from './pages/AdminMedia';
 import AdminMenu from './pages/AdminMenu';
 import GalleryPage from './pages/GalleryPage';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 
 function App() {
   return (
@@ -41,6 +43,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<Home />} />
                 <Route path="/menu" element={<Home />} />
+                <Route path="/events" element={<Home />} />
                 <Route path="/contact" element={<Home />} />
                 <Route path="/gallery" element={<GalleryPage />} />
                 <Route path="/blog" element={<BlogListing />} />

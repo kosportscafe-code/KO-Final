@@ -148,7 +148,7 @@ const AdminMedia: React.FC = () => {
         <button
           onClick={() => fileInputRef.current?.click()}
           disabled={uploading}
-          className="flex items-center gap-2 px-5 py-2.5 bg-[#ff3b3b] text-white rounded-xl font-semibold hover:bg-[#e02d2d] transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
+          className="flex items-center gap-2 px-5 py-2.5 bg-bronze text-white rounded-xl font-semibold hover:bg-bronze/80 transition-colors shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
         >
           <Upload size={18} />
           {uploading ? 'Uploading…' : 'Upload Image'}
@@ -171,12 +171,12 @@ const AdminMedia: React.FC = () => {
         onClick={() => fileInputRef.current?.click()}
         className={`border-2 border-dashed rounded-2xl p-12 text-center cursor-pointer transition-all mb-10 select-none ${
           isDragging
-            ? 'border-[#ff3b3b] bg-[#ff3b3b]/5 scale-[1.01]'
-            : 'border-gray-200 bg-white hover:border-[#ff3b3b]/50 hover:bg-gray-50'
+            ? 'border-bronze bg-bronze/5 scale-[1.01]'
+            : 'border-gray-200 bg-white hover:border-bronze/50 hover:bg-gray-50'
         }`}
       >
-        <div className={`mx-auto mb-4 w-14 h-14 rounded-full flex items-center justify-center transition-colors ${isDragging ? 'bg-[#ff3b3b]/10' : 'bg-gray-100'}`}>
-          <ImageIcon size={28} className={isDragging ? 'text-[#ff3b3b]' : 'text-gray-400'} />
+        <div className={`mx-auto mb-4 w-14 h-14 rounded-full flex items-center justify-center transition-colors ${isDragging ? 'bg-bronze/10' : 'bg-gray-100'}`}>
+          <ImageIcon size={28} className={isDragging ? 'text-bronze' : 'text-gray-400'} />
         </div>
         <p className="font-semibold text-gray-700 text-lg">
           {isDragging ? 'Drop images here' : 'Drag & drop images here'}
@@ -218,7 +218,7 @@ const AdminMedia: React.FC = () => {
                     className={`flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-colors ${
                       copiedId === item.id
                         ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-600 hover:bg-[#ff3b3b]/10 hover:text-[#ff3b3b]'
+                        : 'bg-gray-100 text-gray-600 hover:bg-bronze/10 hover:text-bronze'
                     }`}
                   >
                     {copiedId === item.id ? <CheckCircle size={13} /> : <Copy size={13} />}

@@ -8,7 +8,7 @@ const AboutStory: React.FC = () => {
             <div className="absolute bottom-0 right-0 w-96 h-96 bg-bronze/10 rounded-full mix-blend-multiply filter blur-3xl opacity-70 translate-x-1/3 translate-y-1/3"></div>
 
             <div className="container mx-auto px-6 relative z-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+                <article className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     <div className="space-y-8">
                         <h2 className="font-serif text-4xl md:text-5xl text-obsidian leading-tight">
                             More than just a <span className="text-bronze italic">Sports Café</span>.
@@ -18,9 +18,15 @@ const AboutStory: React.FC = () => {
                         </p>
                         <div className="space-y-4 pt-4 border-t border-stone-100">
                             <h3 className="font-serif text-2xl text-obsidian">Our Mission</h3>
-                            <p className="font-sans text-sm text-stone-500">
+                            <p className="font-sans text-sm text-stone-500 mb-6">
                                 To deliver an unparalleled experience where world-class gaming meets world-class cuisine. Quality isn't just important to us—it's everything.
                             </p>
+                            <a 
+                              href="/menu" 
+                              className="inline-flex items-center text-xs uppercase tracking-widest font-black text-bronze border-b border-bronze/30 pb-1 hover:border-bronze transition-all"
+                            >
+                              Explore our diverse sports cafe menu
+                            </a>
                         </div>
                     </div>
                     <div className="relative">
@@ -39,7 +45,7 @@ const AboutStory: React.FC = () => {
                             <p className="text-center text-xs uppercase tracking-widest mt-4 text-stone-400">KOSC Team</p>
                         </div>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
     );

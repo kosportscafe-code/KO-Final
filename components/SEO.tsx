@@ -6,6 +6,7 @@ interface SEOProps {
   image?: string;
   url?: string;
   type?: string;
+  jsonLd?: object | object[];
 }
 
 const SEO: React.FC<SEOProps> = ({ 
@@ -13,7 +14,8 @@ const SEO: React.FC<SEOProps> = ({
   description = "The ultimate gathering place for sports enthusiasts and food lovers in Meerut. Experience world-class gaming and world-class cuisine at KOS Sports Café.",
   image = "/images/Hero1.jpg",
   url = "https://www.kosportscafe.com",
-  type = "website"
+  type = "website",
+  jsonLd
 }) => {
   useEffect(() => {
     // Update Document Title
@@ -65,7 +67,23 @@ const SEO: React.FC<SEOProps> = ({
       element.setAttribute('content', tag.content);
     });
 
-  }, [title, description, image, url, type]);
+    // Update JSON-LD
+    if (jsonLd) {
+      let script = document.querySelector('script[id="seo-jsonld"]');
+      if (!script) {
+        script = document.createElement('script');
+        script.setAttribute('id', 'seo-jsonld');
+        script.setAttribute('type', 'application/ld+json');
+        document.head.appendChild(script);
+      }
+      script.textContent = JSON.stringify(jsonLd);
+    } else {
+      // Remove if no longer needed
+      const script = document.querySelector('script[id="seo-jsonld"]');
+      if (script) script.remove();
+    }
+
+  }, [title, description, image, url, type, jsonLd]);
 
   return null; // This component doesn't render anything
 };

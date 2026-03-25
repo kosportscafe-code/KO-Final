@@ -126,7 +126,7 @@ const AdminEvents: React.FC = () => {
                 type="text"
                 value={currentEvent.name || ''}
                 onChange={(e) => setCurrentEvent({ ...currentEvent, name: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 placeholder="e.g. Comedy Night"
               />
             </div>
@@ -137,7 +137,7 @@ const AdminEvents: React.FC = () => {
                 type="text"
                 value={currentEvent.date || ''}
                 onChange={(e) => setCurrentEvent({ ...currentEvent, date: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 placeholder="e.g. Oct 24, 2026"
               />
             </div>
@@ -148,7 +148,7 @@ const AdminEvents: React.FC = () => {
                 type="text"
                 value={currentEvent.time || ''}
                 onChange={(e) => setCurrentEvent({ ...currentEvent, time: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 placeholder="e.g. 8:00 PM"
               />
             </div>
@@ -200,7 +200,7 @@ const AdminEvents: React.FC = () => {
                                <div 
                                  key={media.id} 
                                  onClick={() => selectMediaImage(media.dataUrl)}
-                                 className="cursor-pointer group relative aspect-square bg-gray-100 rounded overflow-hidden hover:ring-2 hover:ring-[#ff3b3b]"
+                                 className="cursor-pointer group relative aspect-square bg-gray-100 rounded overflow-hidden hover:ring-2 hover:ring-bronze"
                                >
                                  <img src={media.dataUrl} alt="" className="w-full h-full object-cover" />
                                </div>
@@ -218,7 +218,7 @@ const AdminEvents: React.FC = () => {
               <textarea 
                 value={currentEvent.description || ''}
                 onChange={(e) => setCurrentEvent({ ...currentEvent, description: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 rows={4}
                 placeholder="Describe what the event is about..."
               />
@@ -228,7 +228,7 @@ const AdminEvents: React.FC = () => {
           <div className="pt-6 border-t border-gray-200 flex justify-end">
             <button 
               onClick={handleSave}
-              className="bg-[#ff3b3b] hover:bg-red-600 text-white px-6 py-2 rounded-lg font-medium flex items-center shadow-sm"
+              className="bg-bronze hover:bg-bronze/80 text-white px-6 py-2 rounded-lg font-medium flex items-center shadow-sm"
             >
               <Save className="mr-2" size={18} /> Save Event
             </button>
@@ -247,7 +247,7 @@ const AdminEvents: React.FC = () => {
         </div>
         <button 
           onClick={handleAddNew}
-          className="px-5 py-2 bg-[#ff3b3b] hover:bg-red-600 text-white rounded-lg font-medium flex items-center shadow-sm"
+          className="px-5 py-2 bg-bronze hover:bg-bronze/80 text-white rounded-lg font-medium flex items-center shadow-sm"
         >
           <Plus className="mr-2" size={18} /> Add New Event
         </button>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-obsidian text-alabaster py-20">
+    <footer id="footer" className="bg-obsidian text-alabaster py-20">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
 
@@ -18,12 +18,12 @@ const Footer: React.FC = () => {
           </div>
 
           {/* Contact */}
-          <div className="space-y-4">
+          <address className="not-italic space-y-4">
             <h4 className="font-sans text-xs uppercase tracking-widest text-bronze">Contact Us</h4>
             <div className="flex justify-center md:justify-start items-center gap-3">
               <a
                 href="tel:+917060403965"
-                className="font-serif text-xl hover:text-bronze transition-colors"
+                className="font-serif text-xl hover:text-bronze transition-colors text-white"
               >
                 {CONTACT_PHONE}
               </a>
@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
             </div>
             <a
               href="mailto:info@kosportscafe.com"
-              className="font-sans text-stone-400 font-light text-sm hover:text-bronze transition-colors underline"
+              className="block font-sans text-stone-400 font-light text-sm hover:text-bronze transition-colors underline"
             >
               {CONTACT_WEBSITE}
             </a>
@@ -56,7 +56,7 @@ const Footer: React.FC = () => {
                 Find us on Google Maps
               </a>
             </div>
-          </div>
+          </address>
 
           {/* Social */}
           <div className="space-y-4">
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
               </p>
               <a 
                 href="/admin" 
-                className="inline-flex items-center justify-center px-4 py-2 border border-stone-600 text-stone-300 text-xs font-bold uppercase tracking-widest hover:border-[#ff3b3b] hover:text-[#ff3b3b] transition-colors rounded"
+                className="inline-flex items-center justify-center px-4 py-2 border border-stone-600 text-stone-300 text-xs font-bold uppercase tracking-widest hover:border-bronze hover:text-bronze transition-colors rounded"
               >
                 Admin Login
               </a>

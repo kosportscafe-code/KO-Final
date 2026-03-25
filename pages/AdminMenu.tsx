@@ -44,7 +44,10 @@ const AdminMenu: React.FC = () => {
       name: '',
       description: '',
       priceReg: 0,
-      image_url: ''
+      image_url: '',
+      inStock: true,
+      isVeg: true,
+      isPopular: false
     });
     setIsEditing(true);
   };
@@ -143,7 +146,7 @@ const AdminMenu: React.FC = () => {
                 type="text"
                 value={currentItem.name || ''}
                 onChange={(e) => setCurrentItem({ ...currentItem, name: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 placeholder="e.g. Bombay Masala Sandwich"
               />
             </div>
@@ -153,7 +156,7 @@ const AdminMenu: React.FC = () => {
               <select 
                 value={currentItem.category || 'Others'}
                 onChange={(e) => setCurrentItem({ ...currentItem, category: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
               >
                 {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
               </select>
@@ -165,7 +168,7 @@ const AdminMenu: React.FC = () => {
                 type="text"
                 value={currentItem.description || ''}
                 onChange={(e) => setCurrentItem({ ...currentItem, description: e.target.value })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 placeholder="Short description of the dish..."
               />
             </div>
@@ -176,7 +179,7 @@ const AdminMenu: React.FC = () => {
                 type="number"
                 value={currentItem.priceReg || ''}
                 onChange={(e) => setCurrentItem({ ...currentItem, priceReg: parseFloat(e.target.value) || 0 })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
               />
             </div>
 
@@ -186,8 +189,62 @@ const AdminMenu: React.FC = () => {
                 type="number"
                 value={currentItem.priceMed || ''}
                 onChange={(e) => setCurrentItem({ ...currentItem, priceMed: e.target.value ? parseFloat(e.target.value) : undefined })}
-                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
               />
+            </div>
+
+            <div className="flex items-center gap-3 pt-6">
+              <button
+                onClick={() => setCurrentItem({ ...currentItem, inStock: !currentItem.inStock })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                    currentItem.inStock !== false ? 'bg-bronze' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        currentItem.inStock !== false ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                />
+              </button>
+              <span className="text-sm font-medium text-gray-700">
+                {currentItem.inStock !== false ? 'In Stock' : 'Out of Stock'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3 pt-6">
+              <button
+                onClick={() => setCurrentItem({ ...currentItem, isVeg: !currentItem.isVeg })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                    currentItem.isVeg !== false ? 'bg-green-500' : 'bg-red-500'
+                }`}
+              >
+                <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        currentItem.isVeg !== false ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                />
+              </button>
+              <span className="text-sm font-medium text-gray-700">
+                {currentItem.isVeg !== false ? 'Vegetarian' : 'Non-Vegetarian'}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3 pt-6">
+              <button
+                onClick={() => setCurrentItem({ ...currentItem, isPopular: !currentItem.isPopular })}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none ${
+                    currentItem.isPopular ? 'bg-yellow-500' : 'bg-gray-200'
+                }`}
+              >
+                <span
+                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        currentItem.isPopular ? 'translate-x-6' : 'translate-x-1'
+                    }`}
+                />
+              </button>
+              <span className="text-sm font-medium text-gray-700">
+                Popular Item
+              </span>
             </div>
 
             {/* Image Selection from Media Library */}
@@ -208,7 +265,7 @@ const AdminMenu: React.FC = () => {
                         type="text"
                         value={currentItem.image_url || ''}
                         onChange={(e) => setCurrentItem({ ...currentItem, image_url: e.target.value })}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none mb-3"
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none mb-3"
                         placeholder="Paste image URL here..."
                      />
                       <div className="flex flex-wrap gap-2">
@@ -251,7 +308,7 @@ const AdminMenu: React.FC = () => {
                            <div 
                              key={media.id} 
                              onClick={() => selectMediaImage(media.dataUrl)}
-                             className="cursor-pointer group relative aspect-square bg-gray-200 rounded overflow-hidden shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-[#ff3b3b]"
+                             className="cursor-pointer group relative aspect-square bg-gray-200 rounded overflow-hidden shadow-sm hover:shadow-md transition-all border-2 border-transparent hover:border-bronze"
                            >
                              <img src={media.dataUrl} alt={media.filename} className="w-full h-full object-cover" />
                              <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
@@ -271,7 +328,7 @@ const AdminMenu: React.FC = () => {
           <div className="pt-6 border-t border-gray-200 flex justify-end">
             <button 
               onClick={handleSave}
-              className="bg-[#ff3b3b] hover:bg-red-600 text-white px-6 py-2 rounded-lg font-medium flex items-center shadow-sm transition-colors"
+              className="bg-bronze hover:bg-bronze/80 text-white px-6 py-2 rounded-lg font-medium flex items-center shadow-sm transition-colors"
             >
               <Save className="mr-2" size={18} /> Save Item
             </button>
@@ -293,7 +350,7 @@ const AdminMenu: React.FC = () => {
         </div>
         <button 
           onClick={handleAddNew}
-          className="px-5 py-2 bg-[#ff3b3b] hover:bg-red-600 text-white rounded-lg font-medium flex items-center shadow-sm transition-colors"
+          className="px-5 py-2 bg-bronze hover:bg-bronze/80 text-white rounded-lg font-medium flex items-center shadow-sm transition-colors"
         >
           <Plus className="mr-2" size={18} /> Add New Item
         </button>
@@ -313,6 +370,7 @@ const AdminMenu: React.FC = () => {
                       <th className="px-6 py-3 font-medium">Item Details</th>
                       <th className="px-6 py-3 font-medium">Price (Reg)</th>
                       <th className="px-6 py-3 font-medium">Price (Med)</th>
+                      <th className="px-6 py-3 font-medium">Status</th>
                       <th className="px-6 py-3 font-medium text-right">Actions</th>
                     </tr>
                   </thead>
@@ -339,6 +397,27 @@ const AdminMenu: React.FC = () => {
                         </td>
                         <td className="px-6 py-3 text-sm text-gray-600">
                            {item.priceMed ? `₹${item.priceMed.toLocaleString()}` : '-'}
+                        </td>
+                        <td className="px-6 py-3">
+                           <div className="flex flex-col gap-1">
+                             <span className={`inline-flex items-center w-fit px-2.5 py-0.5 rounded-full text-[10px] font-medium ${
+                                 item.inStock !== false 
+                                 ? 'bg-green-100 text-green-800' 
+                                 : 'bg-red-100 text-red-800'
+                             }`}>
+                                 {item.inStock !== false ? 'In Stock' : 'Out of Stock'}
+                             </span>
+                             <div className="flex gap-1">
+                                {item.isVeg !== false ? (
+                                    <span className="w-3 h-3 rounded-full bg-green-500 border border-white" title="Veg"></span>
+                                ) : (
+                                    <span className="w-3 h-3 rounded-full bg-red-500 border border-white" title="Non-Veg"></span>
+                                )}
+                                {item.isPopular && (
+                                    <span className="w-3 h-3 rounded-full bg-yellow-400 border border-white" title="Popular"></span>
+                                )}
+                             </div>
+                           </div>
                         </td>
                         <td className="px-6 py-3 text-right">
                           <button 

@@ -97,7 +97,7 @@ const AdminBlog: React.FC = () => {
                   type="text"
                   value={currentPost.title || ''}
                   onChange={(e) => setCurrentPost({ ...currentPost, title: e.target.value, slug: generateSlug(e.target.value) })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] focus:border-[#ff3b3b] outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze focus:border-bronze outline-none"
                   placeholder="Post title"
                 />
               </div>
@@ -107,7 +107,7 @@ const AdminBlog: React.FC = () => {
                 <select 
                   value={currentPost.category || 'Sports'}
                   onChange={(e) => setCurrentPost({ ...currentPost, category: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 >
                   {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
                 </select>
@@ -119,7 +119,7 @@ const AdminBlog: React.FC = () => {
                   type="text"
                   value={currentPost.author || ''}
                   onChange={(e) => setCurrentPost({ ...currentPost, author: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                 />
               </div>
               
@@ -133,7 +133,7 @@ const AdminBlog: React.FC = () => {
                         type="text"
                         value={currentPost.slug || ''}
                         onChange={(e) => setCurrentPost({ ...currentPost, slug: e.target.value })}
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-bronze outline-none"
                       />
                     </div>
                     <div>
@@ -143,7 +143,7 @@ const AdminBlog: React.FC = () => {
                         value={currentPost.metaTitle || ''}
                         onChange={(e) => setCurrentPost({ ...currentPost, metaTitle: e.target.value })}
                         placeholder="Leave blank to use Post Title"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-bronze outline-none"
                       />
                     </div>
                     <div>
@@ -153,7 +153,7 @@ const AdminBlog: React.FC = () => {
                         value={currentPost.metaDescription || ''}
                         onChange={(e) => setCurrentPost({ ...currentPost, metaDescription: e.target.value })}
                         placeholder="Leave blank to use Excerpt"
-                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                        className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-bronze outline-none"
                       />
                     </div>
                   </div>
@@ -169,7 +169,7 @@ const AdminBlog: React.FC = () => {
                       id="attachEvent"
                       checked={currentPost.isEventAttached || false}
                       onChange={(e) => setCurrentPost({ ...currentPost, isEventAttached: e.target.checked })}
-                      className="w-4 h-4 text-[#ff3b3b] bg-gray-100 border-gray-300 rounded focus:ring-[#ff3b3b]"
+                      className="w-4 h-4 text-bronze bg-gray-100 border-gray-300 rounded focus:ring-bronze"
                     />
                     <label htmlFor="attachEvent" className="ml-2 text-sm font-bold text-gray-800 uppercase tracking-wider">
                       Attach Event Details
@@ -185,7 +185,7 @@ const AdminBlog: React.FC = () => {
                           value={currentPost.eventDate || ''}
                           onChange={(e) => setCurrentPost({ ...currentPost, eventDate: e.target.value })}
                           placeholder="e.g. Oct 24, 2026"
-                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-bronze outline-none"
                         />
                       </div>
                       <div>
@@ -195,7 +195,7 @@ const AdminBlog: React.FC = () => {
                           value={currentPost.eventTime || ''}
                           onChange={(e) => setCurrentPost({ ...currentPost, eventTime: e.target.value })}
                           placeholder="e.g. 8:00 PM"
-                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-bronze outline-none"
                         />
                       </div>
                       <div>
@@ -205,7 +205,7 @@ const AdminBlog: React.FC = () => {
                           value={currentPost.eventSeatsLeft || ''}
                           onChange={(e) => setCurrentPost({ ...currentPost, eventSeatsLeft: e.target.value })}
                           placeholder="e.g. 24"
-                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                          className="w-full border border-gray-300 rounded-lg px-4 py-2 bg-white focus:ring-2 focus:ring-bronze outline-none"
                         />
                       </div>
                     </div>
@@ -233,7 +233,7 @@ const AdminBlog: React.FC = () => {
                 <textarea 
                   value={currentPost.excerpt || ''}
                   onChange={(e) => setCurrentPost({ ...currentPost, excerpt: e.target.value })}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-[#ff3b3b] outline-none"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
                   rows={2}
                   placeholder="Short summary for the listing page..."
                 />
@@ -255,7 +255,7 @@ const AdminBlog: React.FC = () => {
               <div className="pt-6 border-t border-gray-200 flex justify-end">
               <button 
                 onClick={handleSave}
-                className="bg-[#ff3b3b] hover:bg-red-600 text-white px-6 py-2 rounded-lg font-medium flex items-center transition-colors shadow-sm"
+                className="bg-bronze hover:bg-bronze/80 text-white px-6 py-2 rounded-lg font-medium flex items-center transition-colors shadow-sm"
               >
                 <Save className="mr-2" size={18} /> Save Post
               </button>
@@ -275,7 +275,7 @@ const AdminBlog: React.FC = () => {
         <div className="flex gap-4">
           <button 
             onClick={handleAddNew}
-            className="px-5 py-2 bg-[#ff3b3b] hover:bg-red-600 text-white rounded-lg font-medium flex items-center shadow-sm transition-colors"
+            className="px-5 py-2 bg-bronze hover:bg-bronze/80 text-white rounded-lg font-medium flex items-center shadow-sm transition-colors"
           >
             <Plus className="mr-2" size={18} /> Add New Post
           </button>

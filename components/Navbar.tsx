@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingBag, Menu as MenuIcon, X } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Navbar: React.FC = () => {
   const { cart, toggleDrawer } = useCart();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -23,7 +25,7 @@ const Navbar: React.FC = () => {
     { name: 'Home', href: '/' },
     { name: 'Menu', href: '/menu' },
     { name: 'Gallery', href: '/gallery' },
-    { name: 'Events', href: '/#shows' },
+    { name: 'Events', href: '/events' },
     { name: 'Our Story', href: '/about' },
     { name: 'Blog', href: '/blog' },
   ];
@@ -40,7 +42,7 @@ const Navbar: React.FC = () => {
       <div className="container mx-auto px-6 flex items-center justify-between">
 
         {/* Logo Area */}
-        <a href="#home" className="flex items-center gap-3 group">
+        <a href="/" className="flex items-center gap-3 group" aria-label="KOS Sports Café Home">
           <img
             src="/images/LOGO.jpg"
             alt="KOS Café Logo"
@@ -51,24 +53,26 @@ const Navbar: React.FC = () => {
         {/* Desktop Nav */}
         <ul className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <li key={link.name}>
-              <a
-                href={link.href}
-                className={`font-sans text-sm tracking-widest uppercase transition-colors ${isScrolled
-                  ? 'text-obsidian/70 hover:text-bronze'
-                  : 'text-white hover:text-cream'
-                  }`}
-              >
-                {link.name}
-              </a>
-            </li>
+              <li key={link.name}>
+                <a
+                  href={link.href}
+                  aria-current={location.pathname === link.href ? "page" : undefined}
+                  className={`font-sans text-sm tracking-widest uppercase transition-colors ${isScrolled
+                    ? 'text-obsidian/70 hover:text-bronze'
+                    : 'text-white hover:text-cream'
+                    } ${location.pathname === link.href ? 'text-bronze' : ''}`}
+                >
+                  {link.name}
+                </a>
+              </li>
           ))}
         </ul>
 
         {/* Actions */}
         <div className="flex items-center gap-6">
           <a
-            href="/#shows"
+            href="/events"
+            aria-label="Book a live comedy show or event"
             className={`hidden md:block font-sans text-xs tracking-widest uppercase px-5 py-2 border transition-colors ${
               isScrolled
                 ? 'border-obsidian text-obsidian hover:bg-obsidian hover:text-white'
@@ -113,15 +117,16 @@ const Navbar: React.FC = () => {
           >
             <ul className="flex flex-col p-6 space-y-4">
               {navLinks.map((link) => (
-                <li key={link.name}>
-                  <a
-                    href={link.href}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="font-serif text-xl text-obsidian"
-                  >
-                    {link.name}
-                  </a>
-                </li>
+                  <li key={link.name}>
+                    <a
+                      href={link.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      aria-current={location.pathname === link.href ? "page" : undefined}
+                      className={`font-serif text-xl ${location.pathname === link.href ? 'text-bronze' : 'text-obsidian'}`}
+                    >
+                      {link.name}
+                    </a>
+                  </li>
               ))}
             </ul>
           </Motion.div>

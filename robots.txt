@@ -1,4 +1,18 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/*
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
 
 Sitemap: https://www.kosportscafe.com/sitemap.xml

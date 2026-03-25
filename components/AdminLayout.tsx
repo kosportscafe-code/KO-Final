@@ -34,7 +34,7 @@ const AdminLayout: React.FC = () => {
       <aside className="w-full md:w-64 bg-white border-r border-gray-200 flex-shrink-0 flex flex-col">
         <div className="p-6 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <LayoutDashboard className="text-[#ff3b3b]" />
+            <LayoutDashboard className="text-bronze" />
             <h1 className="font-bold text-gray-900 text-xl tracking-tight">KOS Admin</h1>
           </div>
         </div>
@@ -48,7 +48,7 @@ const AdminLayout: React.FC = () => {
                 to={item.path}
                 className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive 
-                    ? 'bg-[#ff3b3b]/10 text-[#ff3b3b]' 
+                    ? 'bg-bronze/10 text-bronze' 
                     : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                 }`}
               >

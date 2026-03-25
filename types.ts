@@ -6,6 +6,9 @@ export interface MenuItem {
   priceReg: number;
   priceMed?: number; // Some items in PDF have two prices
   image_url?: string;
+  inStock?: boolean;
+  isVeg?: boolean;
+  isPopular?: boolean;
 }
 
 export interface CartItem extends MenuItem {

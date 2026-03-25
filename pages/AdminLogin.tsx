@@ -28,7 +28,7 @@ const AdminLogin: React.FC = () => {
       <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
         <div className="text-center mb-8">
           <div className="bg-[#ff3b3b]/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Lock className="text-[#ff3b3b]" size={32} />
+            <Lock className="text-bronze" size={32} />
           </div>
           <h2 className="text-2xl font-bold text-gray-900">Admin Login</h2>
           <p className="text-gray-500 mt-2">Enter your password to access the dashboard</p>
@@ -49,7 +49,7 @@ const AdminLogin: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-[#ff3b3b] text-white font-bold py-3 px-4 rounded-lg hover:bg-red-600 transition-colors"
+            className="w-full bg-bronze text-white font-bold py-3 px-4 rounded-lg hover:bg-bronze/80 transition-colors"
           >
             Sign In
           </button>

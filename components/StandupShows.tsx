@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getDriveImage } from '../utils/helpers';
+import { getDriveImage, generateAltText, generateEventSchema, getOptimizedImageUrl } from '../utils/helpers';
 
 interface Show {
   id: string;
@@ -185,9 +185,16 @@ const StandupShows: React.FC = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {shows.map((show) => (
-               <div key={show.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col">
+               <article key={show.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col">
                 <div className="h-48 overflow-hidden relative">
-                  <img src={show.image} alt={show.title} className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+                  <img 
+                    src={getOptimizedImageUrl(show.image, 600)} 
+                    alt={generateAltText(show.image, show.title, 'Standup Show')} 
+                    className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
+                    loading="lazy"
+                    width="600"
+                    height="400"
+                  />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-obsidian">
                     ₹{show.price} / Seat
                   </div>
@@ -210,13 +217,21 @@ const StandupShows: React.FC = () => {
                   <button 
                     onClick={() => setSelectedShow(show)}
                     className="w-full bg-transparent border border-obsidian text-obsidian py-3 font-sans uppercase tracking-widest text-xs hover:bg-obsidian hover:text-white transition-colors"
+                    aria-label={`Book tickets for ${show.title}`}
                   >
                     Book Now
                   </button>
                 </div>
-              </div>
+              </article>
             ))}
           </div>
+        )}
+        
+        {/* Dynamic Event Schema (JSON-LD) */}
+        {shows.length > 0 && (
+          <script type="application/ld+json">
+            {JSON.stringify(shows.map(show => generateEventSchema(show)))}
+          </script>
         )}
       </div>
 
@@ -240,7 +255,11 @@ const StandupShows: React.FC = () => {
                   <h3 className="font-serif text-2xl text-obsidian">Book Tickets</h3>
                   <p className="text-sm text-stone-500">{selectedShow.title}</p>
                 </div>
-                <button onClick={() => setSelectedShow(null)} className="p-2 hover:bg-stone-200 rounded-full transition-colors">
+                <button 
+                  onClick={() => setSelectedShow(null)} 
+                  className="p-2 hover:bg-stone-200 rounded-full transition-colors"
+                  aria-label="Close booking modal"
+                >
                   <X className="w-5 h-5 text-stone-500" aria-hidden="true" />
                 </button>
               </div>
