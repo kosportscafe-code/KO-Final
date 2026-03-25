@@ -9,7 +9,7 @@ const GalleryPage: React.FC = () => {
     <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#ff3b3b] selection:text-white">
       <SEO 
         title="Gallery | KOS Sports Café" 
-        description="Explore our live gallery of food, sports events, and moments from KOS Sports Café Meerut. Updated in real-time."
+        description="A visual journey through KOS Sports Café. See our vibrant sports atmosphere, delicious food, and live event highlights in Meerut."
       />
       
       

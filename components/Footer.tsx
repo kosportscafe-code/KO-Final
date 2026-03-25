@@ -1,6 +1,7 @@
 import React from 'react';
 import { CONTACT_PHONE, CONTACT_WEBSITE, CAFE_NAME } from '../constants';
 import { Instagram, Facebook, MapPin } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
