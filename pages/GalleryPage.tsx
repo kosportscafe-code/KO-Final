@@ -60,14 +60,21 @@ const GalleryPage: React.FC = () => {
             </div>
             
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-                {[1,2,3,4,5,6].map(i => (
+                {[
+                  "1543807535-eceef0bc6599", // Burger
+                  "1517248135467-4c7edcad34c4", // Interior
+                  "1504674900247-0877df9cc836", // Food spread
+                  "1574629810360-7efbbe195018", // Football
+                  "1493711662062-f5001e74e7cc", // Gaming
+                  "1511671782779-c97d3d27a1d4"  // Microphones
+                ].map((id, i) => (
                     <div key={i} className="aspect-square rounded-xl bg-white/5 border border-white/5 group overflow-hidden cursor-pointer relative">
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">View Post</span>
+                            <span className="text-white text-xs font-bold font-sans">View Post</span>
                         </div>
                         <img 
-                            src={`https://images.unsplash.com/photo-${1500000000000 + i}?auto=format&fit=crop&q=80&w=300`} 
-                            alt="Social"
+                            src={`https://images.unsplash.com/photo-${id}?auto=format&fit=crop&q=80&w=300`} 
+                            alt={`Social Instagram post ${i + 1}`}
                             className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
                         />
                     </div>
