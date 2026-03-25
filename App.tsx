@@ -39,6 +39,9 @@ function App() {
               <Navbar />
               <Routes>
                 <Route path="/" element={<Home />} />
+                <Route path="/about" element={<Home />} />
+                <Route path="/menu" element={<Home />} />
+                <Route path="/contact" element={<Home />} />
                 <Route path="/gallery" element={<GalleryPage />} />
                 <Route path="/blog" element={<BlogListing />} />
                 <Route path="/blog/:slug" element={<BlogDetail />} />

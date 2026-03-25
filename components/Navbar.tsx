@@ -20,11 +20,11 @@ const Navbar: React.FC = () => {
   }, []);
 
   const navLinks = [
-    { name: 'Home', href: '/#home' },
-    { name: 'Menu', href: '/#menu' },
+    { name: 'Home', href: '/' },
+    { name: 'Menu', href: '/menu' },
     { name: 'Gallery', href: '/gallery' },
     { name: 'Events', href: '/#shows' },
-    { name: 'Our Story', href: '/#story' },
+    { name: 'Our Story', href: '/about' },
     { name: 'Blog', href: '/blog' },
   ];
 
