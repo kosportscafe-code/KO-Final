@@ -72,6 +72,46 @@
         scroll-behavior: smooth;
       }
     </style>
+  <!-- Static Restaurant Schema (readable by crawlers without JS) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": ["Restaurant", "FoodEstablishment"],
+    "@id": "https://www.kosportscafe.com/#restaurant",
+    "name": "KOS Sports Café",
+    "alternateName": "KOS Café",
+    "description": "A premium sports café in Meerut serving Indian, Mexican, Chinese and Italian cuisine. Enjoy live gaming, standup comedy and world-class food.",
+    "url": "https://www.kosportscafe.com",
+    "telephone": "+917060403965",
+    "priceRange": "₹30–₹279",
+    "servesCuisine": ["Indian", "Mexican", "Chinese", "Italian", "Street Food"],
+    "hasMenu": "https://www.kosportscafe.com/#menu",
+    "acceptsReservations": true,
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Meerut",
+      "addressRegion": "Uttar Pradesh",
+      "addressCountry": "IN"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "addressCountry": "IN"
+    },
+    "sameAs": [
+      "https://www.instagram.com/kosportscafe",
+      "https://www.zomato.com"
+    ],
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"],
+        "opens": "11:00",
+        "closes": "23:00"
+      }
+    ]
+  }
+  </script>
+
   <script type="importmap">
 {
   "imports": {

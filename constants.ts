@@ -2,10 +2,10 @@ import { MenuItem } from './types';
 
 // CONFIGURATION
 // Replace this with your published Google Sheet CSV link
-export const GOOGLE_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQRIxcb0O9WvQrbEiSBHAl1UUxC8GidCDaOP3sKrrVZVTxUKhpDtcRFVv3CsecM9KhsTE4D0MjoO-LK/pub?output=csv";
+export const GOOGLE_SHEET_CSV_URL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL || "https://docs.google.com/spreadsheets/d/e/2PACX-1vQRIxcb0O9WvQrbEiSBHAl1UUxC8GidCDaOP3sKrrVZVTxUKhpDtcRFVv3CsecM9KhsTE4D0MjoO-LK/pub?output=csv";
 
 // Replace this with your Make.com (or similar) Webhook URL
-export const WEBHOOK_URL = "https://hook.us1.make.com/your-webhook-id";
+export const WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL || "https://hook.us1.make.com/your-webhook-id";
 
 export const CAFE_NAME = "KOS Café";
 export const CONTACT_PHONE = "+91 7060 40 3965";

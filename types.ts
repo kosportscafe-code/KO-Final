@@ -52,6 +52,7 @@ export interface CafeEvent {
   time: string;
   description: string;
   image: string;
+  price?: number;
 }
 
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';

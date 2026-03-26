@@ -5,7 +5,8 @@ export const isAuthenticated = (): boolean => {
 };
 
 export const login = (password: string): boolean => {
-  if (password === 'admin123') { // Simple hardcoded auth for demo
+  const adminPassword = import.meta.env.VITE_ADMIN_PASSWORD || 'admin123';
+  if (password === adminPassword) {
     localStorage.setItem(AUTH_KEY, 'true');
     return true;
   }

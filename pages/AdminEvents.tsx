@@ -153,6 +153,17 @@ const AdminEvents: React.FC = () => {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Price (Optional)</label>
+              <input 
+                type="number"
+                value={currentEvent.price || ''}
+                onChange={(e) => setCurrentEvent({ ...currentEvent, price: parseInt(e.target.value) || 0 })}
+                className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-bronze outline-none"
+                placeholder="e.g. 499"
+              />
+            </div>
+
             <div className="col-span-1 md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Event Image Header</label>
               <div className="flex items-center gap-4">
@@ -260,6 +271,7 @@ const AdminEvents: React.FC = () => {
               <tr className="bg-gray-50 text-gray-500 text-sm uppercase tracking-wider border-b border-gray-200">
                 <th className="px-6 py-4 font-medium">Event Name</th>
                 <th className="px-6 py-4 font-medium">Date & Time</th>
+                <th className="px-6 py-4 font-medium">Price</th>
                 <th className="px-6 py-4 font-medium text-right">Actions</th>
               </tr>
             </thead>
@@ -279,6 +291,9 @@ const AdminEvents: React.FC = () => {
                   <td className="px-6 py-4 text-sm text-gray-600">
                     <span className="block font-medium">{evt.date}</span>
                     <span className="text-xs text-gray-500">{evt.time}</span>
+                  </td>
+                  <td className="px-6 py-4 text-sm text-gray-600 font-medium">
+                    {evt.price ? `₹${evt.price}` : 'Free'}
                   </td>
                   <td className="px-6 py-4 text-right">
                     <button 

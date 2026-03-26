@@ -26,6 +26,7 @@ const Navbar: React.FC = () => {
     { name: 'Menu', href: '/menu' },
     { name: 'Gallery', href: '/gallery' },
     { name: 'Events', href: '/events' },
+    { name: 'Book Table', href: '#booking' },
     { name: 'Our Story', href: '/about' },
     { name: 'Blog', href: '/blog' },
   ];

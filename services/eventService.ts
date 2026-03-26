@@ -11,6 +11,7 @@ const INITIAL_EVENTS: CafeEvent[] = [
     time: '8:00 PM',
     description: 'Join us for a hilarious night featuring local talent!',
     image: 'https://images.unsplash.com/photo-1585699324551-f6c30f065779?auto=format&fit=crop&q=80',
+    price: 499
   }
 ];
 

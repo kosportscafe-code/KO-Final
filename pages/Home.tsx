@@ -5,9 +5,11 @@ import AboutStory from '../components/AboutStory';
 import Menu from '../components/Menu';
 import Gallery from '../components/Gallery';
 import StandupShows from '../components/StandupShows';
+import BookingForm from '../components/BookingForm';
 import Testimonials from '../components/Testimonials';
 import FAQ from '../components/FAQ';
 import SEO from '../components/SEO';
+import { Calendar, Users, ArrowRight } from 'lucide-react';
 
 const Home: React.FC = () => {
   const location = useLocation();
@@ -23,6 +25,8 @@ const Home: React.FC = () => {
         document.getElementById('menu')?.scrollIntoView({ behavior: 'smooth' });
       } else if (pathname === '/events') {
         document.getElementById('shows')?.scrollIntoView({ behavior: 'smooth' });
+      } else if (pathname === '/book' || hash === '#booking') {
+        document.getElementById('booking')?.scrollIntoView({ behavior: 'smooth' });
       } else if (pathname === '/faq') {
         document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' });
       } else if (pathname === '/contact') {
@@ -183,6 +187,71 @@ const Home: React.FC = () => {
       <Menu />
       <Gallery />
       <StandupShows />
+
+      {/* Booking Section */}
+      <section id="booking" className="py-24 bg-white relative overflow-hidden">
+        {/* Background elements */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-bronze/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-bronze/5 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bronze/10 border border-bronze/20 text-bronze mb-6">
+              <Calendar size={16} aria-hidden="true" />
+              <span className="text-xs font-bold uppercase tracking-widest">Reservations</span>
+            </div>
+            <h2 className="font-serif text-4xl md:text-5xl text-obsidian mb-4">Book a Table</h2>
+            <p className="text-stone-500 max-w-2xl mx-auto font-sans leading-relaxed">
+              Planning a visit, a private event, or just want to ensure your favorite spot is ready? 
+              Fill out the form below and we'll confirm your booking on WhatsApp.
+            </p>
+            <div className="w-16 h-[1px] bg-bronze mx-auto mt-8"></div>
+          </div>
+
+          <div className="bg-alabaster p-8 md:p-12 rounded-3xl border border-stone-100 shadow-xl max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+              <div className="lg:col-span-5 space-y-8">
+                <div>
+                  <h3 className="font-serif text-2xl text-obsidian mb-4">Why Book with Us?</h3>
+                  <ul className="space-y-4">
+                    <li className="flex items-start gap-4">
+                      <div className="w-6 h-6 rounded-full bg-bronze/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <Users className="w-3 h-3 text-bronze" />
+                      </div>
+                      <div>
+                        <p className="text-stone-800 font-bold text-sm">Priority Seating</p>
+                        <p className="text-stone-500 text-xs">Get the best views during major sports screenings.</p>
+                      </div>
+                    </li>
+                    <li className="flex items-start gap-4">
+                      <div className="w-6 h-6 rounded-full bg-bronze/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <Calendar className="w-3 h-3 text-bronze" />
+                      </div>
+                      <div>
+                        <p className="text-stone-800 font-bold text-sm">Event Coordination</p>
+                        <p className="text-stone-500 text-xs">Tailored menus for birthdays and group gatherings.</p>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                
+                <div className="p-6 bg-obsidian rounded-2xl text-white">
+                  <p className="text-cream/60 text-[10px] uppercase tracking-widest font-bold mb-2">Need immediate help?</p>
+                  <p className="font-serif text-xl mb-4">Chat with our team directly for instant updates.</p>
+                  <a href="https://wa.me/917060403965" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-bronze hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">
+                    WhatsApp Chat <ArrowRight size={14} />
+                  </a>
+                </div>
+              </div>
+
+              <div className="lg:col-span-7">
+                <BookingForm />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <Testimonials />
       
       {/* FAQ Section - Optically identical to original if it was hidden, 

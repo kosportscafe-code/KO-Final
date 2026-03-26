@@ -2,19 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Calendar, Clock, MapPin, X, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getDriveImage, generateAltText, generateEventSchema, getOptimizedImageUrl } from '../utils/helpers';
+import BookingForm from './BookingForm';
+import { getEvents } from '../services/eventService';
+import { CafeEvent } from '../types';
 
-interface Show {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
+interface Show extends CafeEvent {
   price: number;
-  description: string;
-  image: string;
-  maxSeats: number | null;
 }
-
-const PUBLIC_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1wAzoqtqTOqr8ZCSZHVsny5URpehSBVI6IOAz4hhxdfE/gviz/tq?tqx=out:csv&gid=0";
 
 const StandupShows: React.FC = () => {
   const [shows, setShows] = useState<Show[]>([]);
@@ -23,57 +17,32 @@ const StandupShows: React.FC = () => {
 
   const [selectedShow, setSelectedShow] = useState<Show | null>(null);
   
-  // Form state
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [seats, setSeats] = useState(1);
-  const [request, setRequest] = useState('');
-  
-  // Geolocation state
-  const [locationStatus, setLocationStatus] = useState<'idle' | 'fetching' | 'captured' | 'denied'>('idle');
-  const [locationObj, setLocationObj] = useState<{lat: number, lng: number} | null>(null);
-  
-  // Booking submit status
-  const [isSending, setIsSending] = useState(false);
-
   const Motion = motion as any;
 
   useEffect(() => {
-    const fetchShows = async () => {
+    const fetchShows = () => {
       try {
-        // Add cache-busting parameter to always get the latest sheet data
-        const response = await fetch(`${PUBLIC_SHEET_CSV_URL}&t=${new Date().getTime()}`);
-        if (!response.ok) throw new Error("Failed to fetch sheet");
-        
-        const csvText = await response.text();
-        const rows = csvText.split('\n').map(row => row.trim()).filter(row => row.length > 0);
-        
-        if (rows.length <= 1) {
-           setShows([]);
-           setLoading(false);
-           return;
-        }
+        const allEvents = getEvents();
+        const now = new Date();
+        now.setHours(0, 0, 0, 0);
 
-        const data: Show[] = rows.slice(1).map((row, index) => {
-          // Robust regex to split commas outside of quotes
-          const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-          
-          let rawImage = cols[5]?.replace(/^"|"$/g, '').trim();
-          const finalImage = rawImage ? getDriveImage(rawImage) : `https://images.unsplash.com/photo-1527224857830-43a7eaa58c5f?auto=format&fit=crop&w=800&q=80&rand=${index}`;
+        const upcomingEvents: Show[] = allEvents
+          .map(evt => ({
+            ...evt,
+            title: evt.name, // Mapping Admin 'name' to UI 'title'
+            price: evt.price || 0
+          }))
+          .filter(evt => {
+            try {
+              const eventDate = new Date(evt.date);
+              return eventDate >= now;
+            } catch (e) {
+              return true; // If parsing fails, show it anyway to be safe
+            }
+          })
+          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-          return {
-            id: `dym-show-${index}`,
-            title: cols[0]?.replace(/^"|"$/g, '').trim() || 'Upcoming Show',
-            date: cols[1]?.replace(/^"|"$/g, '').trim() || 'TBA',
-            time: cols[2]?.replace(/^"|"$/g, '').trim() || 'TBA',
-            price: parseInt(cols[3]?.replace(/\D/g, '') || '0', 10),
-            description: cols[4]?.replace(/^"|"$/g, '').trim() || '',
-            image: finalImage,
-            maxSeats: parseInt(cols[6]?.replace(/\D/g, ''), 10) || null
-          };
-        });
-
-        setShows(data);
+        setShows(upcomingEvents);
         setError(null);
       } catch (err) {
         console.error("Error loading shows:", err);
@@ -86,76 +55,6 @@ const StandupShows: React.FC = () => {
     fetchShows();
   }, []);
 
-  const handleGetLocation = () => {
-    setLocationStatus('fetching');
-    if (!navigator.geolocation) {
-      setLocationStatus('denied');
-      return;
-    }
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setLocationObj({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude
-        });
-        setLocationStatus('captured');
-      },
-      (error) => {
-        setLocationStatus('denied');
-      },
-      { timeout: 5000 }
-    );
-  };
-
-  const handleBookSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedShow) return;
-    if (!name.trim() || !phone.trim() || seats < 1) {
-      alert("Please provide the required details (Name, Phone, Seats).");
-      return;
-    }
-
-    setIsSending(true);
-
-    const total = seats * selectedShow.price;
-    
-    let message = `Hello, I would like to book seats for a standup show:\n\n`;
-    message += `\uD83C\uDFA4 Show: ${selectedShow.title}\n`;
-    message += `\uD83D\uDCC5 Date: ${selectedShow.date}\n`;
-    message += `\u23F0 Time: ${selectedShow.time}\n\n`;
-    
-    message += `\uD83D\uDC64 Name: ${name}\n`;
-    message += `\uD83D\uDCDE Phone: ${phone}\n`;
-    message += `\uD83C\uDFAB Seats: ${seats}\n`;
-    if (request.trim()) {
-      message += `\uD83D\uDCDD Special Request: ${request}\n`;
-    }
-    
-    message += `\n\uD83D\uDCB0 Total: \u20B9${total}\n\n`;
-    
-    if (locationStatus === 'captured' && locationObj) {
-      message += `\uD83D\uDCCD Location:\nhttps://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}`;
-    } else {
-      message += `\uD83D\uDCCD Location: Not shared`;
-    }
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
-
-    alert("Redirecting to WhatsApp to place your booking...");
-    window.location.href = whatsappUrl;
-
-    setTimeout(() => {
-        setIsSending(false);
-        setSelectedShow(null);
-        setName('');
-        setPhone('');
-        setSeats(1);
-        setRequest('');
-        setLocationStatus('idle');
-        setLocationObj(null);
-    }, 1000);
-  };
 
   return (
     <section id="shows" className="py-24 bg-stone-50">
@@ -265,91 +164,12 @@ const StandupShows: React.FC = () => {
               </div>
 
               <div className="p-6 overflow-y-auto">
-                <form onSubmit={handleBookSubmit} className="space-y-5">
-                  <div className="space-y-4">
-                    <input 
-                      required
-                      type="text" 
-                      placeholder="Your Name (Required)" 
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                      className="w-full bg-transparent border-b border-stone-300 py-3 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
-                    />
-                    
-                    <input 
-                      required
-                      type="tel" 
-                      placeholder="Phone Number (Required)" 
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full bg-transparent border-b border-stone-300 py-3 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
-                    />
-
-                    <div className="flex gap-4 items-end">
-                      <div className="flex-1 border-b border-stone-300 py-3">
-                        <label className="block text-xs uppercase tracking-wider text-stone-500 mb-1">
-                          Number of Seats {selectedShow.maxSeats ? `(Max ${selectedShow.maxSeats})` : ''}
-                        </label>
-                        <input 
-                          required
-                          type="number" 
-                          min="1"
-                          max={selectedShow.maxSeats || undefined}
-                          value={seats}
-                          onChange={(e) => {
-                            const val = parseInt(e.target.value) || 1;
-                            setSeats(selectedShow.maxSeats && val > selectedShow.maxSeats ? selectedShow.maxSeats : val);
-                          }}
-                          className="w-full bg-transparent text-obsidian focus:outline-none"
-                        />
-                      </div>
-                      <div className="flex-1 border-b border-stone-300 py-3 text-right">
-                        <label className="block text-xs uppercase tracking-wider text-stone-500 mb-1">Total Amount</label>
-                        <span className="text-xl font-medium text-obsidian">₹{seats * selectedShow.price}</span>
-                      </div>
-                    </div>
-
-                    <input 
-                      type="text" 
-                      placeholder="Special Request (Optional)" 
-                      value={request}
-                      onChange={(e) => setRequest(e.target.value)}
-                      className="w-full bg-transparent border-b border-stone-300 py-3 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
-                    />
-                  </div>
-
-                  {/* Geolocation Section */}
-                  <div className="pt-4 pb-2">
-                    <div className="flex items-center justify-between p-4 bg-stone-50 rounded-lg border border-stone-100">
-                      <div className="flex items-center gap-3">
-                        <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-stone-400'}`} />
-                        <span className="text-sm font-medium text-stone-600">
-                          {locationStatus === 'idle' && "Share your live location"}
-                          {locationStatus === 'fetching' && "Fetching location..."}
-                          {locationStatus === 'captured' && "Location captured \u2705"}
-                          {locationStatus === 'denied' && "Location not shared"}
-                        </span>
-                      </div>
-                      {locationStatus !== 'captured' && locationStatus !== 'fetching' && (
-                        <button 
-                          type="button" 
-                          onClick={handleGetLocation}
-                          className="text-xs uppercase tracking-wider font-semibold text-bronze hover:text-obsidian transition-colors"
-                        >
-                          Get Location
-                        </button>
-                      )}
-                    </div>
-                  </div>
-
-                  <button 
-                    type="submit"
-                    disabled={isSending}
-                    className="w-full bg-obsidian text-white py-4 font-sans uppercase tracking-widest text-xs hover:bg-stone-800 transition-colors mt-4 disabled:opacity-70"
-                  >
-                    {isSending ? 'Redirecting...' : 'Confirm Booking on WhatsApp'}
-                  </button>
-                </form>
+                <BookingForm 
+                  initialType={`Event: ${selectedShow.title} (${selectedShow.date})`}
+                  price={selectedShow.price}
+                  isModal={true}
+                  onSuccess={() => setSelectedShow(null)}
+                />
               </div>
             </Motion.div>
           </Motion.div>
