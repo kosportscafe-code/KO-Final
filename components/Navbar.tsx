@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
     { name: 'Menu', href: '/menu' },
     { name: 'Gallery', href: '/gallery' },
     { name: 'Events', href: '/events' },
-    { name: 'Book Table', href: '#booking' },
+    { name: 'Book Table', href: '/book' },
     { name: 'Our Story', href: '/about' },
     { name: 'Blog', href: '/blog' },
   ];
@@ -72,7 +72,7 @@ const Navbar: React.FC = () => {
         {/* Actions */}
         <div className="flex items-center gap-6">
           <a
-            href="/events"
+            href="/book"
             aria-label="Book a live comedy show or event"
             className={`hidden md:block font-sans text-xs tracking-widest uppercase px-5 py-2 border transition-colors ${
               isScrolled

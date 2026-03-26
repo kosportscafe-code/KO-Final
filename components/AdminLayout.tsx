@@ -26,6 +26,7 @@ const AdminLayout: React.FC = () => {
     { name: 'Gallery', path: '/gallery', icon: <ImageIcon size={20} /> },
     { name: 'Media', path: '/admin/media', icon: <ImageIcon size={20} /> },
     { name: 'Menu', path: '/admin/menu', icon: <Utensils size={20} /> },
+    { name: 'Bookings', path: '/admin/bookings', icon: <Calendar size={20} /> },
   ];
 
   return (

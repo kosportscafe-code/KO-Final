@@ -34,13 +34,21 @@ const StandupShows: React.FC = () => {
           }))
           .filter(evt => {
             try {
+              if (!evt.date) return false;
               const eventDate = new Date(evt.date);
+              if (isNaN(eventDate.getTime())) return true; // Show if unparseable (e.g. "Coming Soon")
               return eventDate >= now;
             } catch (e) {
-              return true; // If parsing fails, show it anyway to be safe
+              return true; 
             }
           })
-          .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+          .sort((a, b) => {
+            const dateA = new Date(a.date).getTime();
+            const dateB = new Date(b.date).getTime();
+            if (isNaN(dateA)) return 1;
+            if (isNaN(dateB)) return -1;
+            return dateA - dateB;
+          });
 
         setShows(upcomingEvents);
         setError(null);
@@ -55,6 +63,26 @@ const StandupShows: React.FC = () => {
     fetchShows();
   }, []);
 
+
+  useEffect(() => {
+    if (shows.length === 0) return;
+
+    const schema = shows.map(show => generateEventSchema(show));
+    
+    let script = document.querySelector('script[id="events-jsonld"]');
+    if (!script) {
+      script = document.createElement('script');
+      script.setAttribute('id', 'events-jsonld');
+      script.setAttribute('type', 'application/ld+json');
+      document.head.appendChild(script);
+    }
+    script.textContent = JSON.stringify(schema);
+
+    return () => {
+      const el = document.querySelector('script[id="events-jsonld"]');
+      if (el) el.remove();
+    };
+  }, [shows]);
 
   return (
     <section id="shows" className="py-24 bg-stone-50">
@@ -87,7 +115,7 @@ const StandupShows: React.FC = () => {
                <article key={show.id} className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-stone-100 flex flex-col">
                 <div className="h-48 overflow-hidden relative">
                   <img 
-                    src={getOptimizedImageUrl(show.image, 600)} 
+                    src={getOptimizedImageUrl(show.image || 'https://images.unsplash.com/photo-1514525253361-b83f8b9627c5?auto=format&fit=crop&q=80', 600)} 
                     alt={generateAltText(show.image, show.title, 'Standup Show')} 
                     className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" 
                     loading="lazy"
@@ -126,12 +154,6 @@ const StandupShows: React.FC = () => {
           </div>
         )}
         
-        {/* Dynamic Event Schema (JSON-LD) */}
-        {shows.length > 0 && (
-          <script type="application/ld+json">
-            {JSON.stringify(shows.map(show => generateEventSchema(show)))}
-          </script>
-        )}
       </div>
 
       {/* Booking Modal */}

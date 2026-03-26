@@ -39,7 +39,7 @@ const INTENTS: Array<{
     id: 'menu',
     keywords: ['menu', 'food', 'eat', 'dish', 'item', 'cuisine', 'what do you serve', 'what food'],
     text: 'Our menu has something for everyone! 😋\n\n**Categories:**\nBurgers · Pizzas · Sandwiches · Momos · Rolls · Chinese · Pasta · Tacos · Nachos · Thalis · Drinks · Shakes',
-    links: [{ label: 'View Full Menu', href: '/menu', scroll: 'menu' }],
+    links: [{ label: 'View Full Menu', href: '#menu', scroll: 'menu' }],
     chips: ['Burger prices', 'Pizza prices', "What's cheapest?"],
   },
   {
@@ -53,7 +53,7 @@ const INTENTS: Array<{
     id: 'events',
     keywords: ['event', 'show', 'comedy', 'standup', 'stand-up', 'live', 'screening', 'gaming', 'entertainment', 'upcoming'],
     text: 'We host amazing events regularly! 🎭\n\n• **Live Standup Comedy** nights\n• **Sports Screenings** (cricket, football & more)\n• **Gaming Tournaments**\n• **Private Events**\n\nCheck the Events page for the latest schedule!',
-    links: [{ label: 'See Upcoming Events', href: '/events' }],
+    links: [{ label: 'See Upcoming Events', href: '#shows', scroll: 'shows' }],
     chips: ['Book Now', 'Contact'],
   },
   {
@@ -87,7 +87,7 @@ const INTENTS: Array<{
     id: 'veg',
     keywords: ['veg', 'vegetar', 'plant', 'no meat', 'without meat', 'vegan'],
     text: KB.veg,
-    links: [{ label: 'View Menu', href: '/menu', scroll: 'menu' }],
+    links: [{ label: 'View Menu', href: '#menu', scroll: 'menu' }],
   },
   {
     id: 'social',
@@ -191,9 +191,9 @@ function getResponse(input: string): Omit<Message, 'id' | 'timestamp' | 'role'> 
   return {
     text: `Hmm, I didn\'t quite catch that! 🤔 Here\'s what I *can* help with:`,
     links: [
-      { label: 'View Menu', href: '/menu', scroll: 'menu' },
-      { label: 'Book a Table', href: 'https://wa.me/917060403965?text=Hi!%20I%20want%20to%20book%20a%20table.' },
-      { label: 'See Events', href: '/events' },
+      { label: 'View Menu', href: '#menu', scroll: 'menu' },
+      { label: 'Book a Table', href: '#booking', scroll: 'booking' },
+      { label: 'See Events', href: '#shows', scroll: 'shows' },
       { label: 'WhatsApp Us', href: 'https://wa.me/917060403965' },
     ],
     chips: [...CORE_CHIPS],

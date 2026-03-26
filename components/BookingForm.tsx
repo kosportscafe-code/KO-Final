@@ -3,6 +3,7 @@ import { Calendar, Users, Phone, User, MessageSquare, ArrowRight, Music } from '
 import { motion } from 'framer-motion';
 import { CONTACT_PHONE } from '../constants';
 import { getEvents } from '../services/eventService';
+import { saveBooking } from '../services/bookingService';
 import { CafeEvent } from '../types';
 
 interface BookingFormProps {
@@ -30,6 +31,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const Motion = motion as any;
 
   React.useEffect(() => {
@@ -41,29 +43,54 @@ const BookingForm: React.FC<BookingFormProps> = ({
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
+  const generateWhatsAppMessage = () => {
     const { name, phone, people, date, type, selectedEvent, message } = formData;
-    const guestCount = parseInt(people) || 1;
-    const total = price * guestCount;
-    
-    let waMessage = `*New Booking Request from Website*\n\n`;
-    waMessage += `*Type:* ${type === 'Event Booking' && selectedEvent ? `Event: ${selectedEvent}` : type}\n`;
+    let title = "General Inquiry";
+    if (type === 'Table Reservation') title = "Table Reservation";
+    if (type === 'Event Booking') title = `Event Booking: ${selectedEvent || 'Upcoming Show'}`;
+
+    let waMessage = `*NEW BOOKING REQUEST - KOS CAFÉ*\n`;
+    waMessage += `━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+    waMessage += `*Type:* ${title}\n`;
     waMessage += `*Date:* ${date}\n`;
-    waMessage += `*Guests:* ${people}\n`;
-    if (total > 0) {
-      waMessage += `*Total Estimate:* ₹${total}\n`;
+    if (type !== 'General Inquiry') {
+        waMessage += `*Guests:* ${people} People\n`;
     }
-    waMessage += `\n`;
-    waMessage += `---\n`;
+    
+    waMessage += `\n*CUSTOMER DETAILS*\n`;
     waMessage += `*Name:* ${name}\n`;
     waMessage += `*Phone:* ${phone}\n`;
+    
     if (message.trim()) {
-      waMessage += `*Special Request:* ${message}\n`;
+      waMessage += `\n*SPECIAL REQUEST*\n${message}\n`;
     }
+    
+    waMessage += `\n━━━━━━━━━━━━━━━━━━━━━━\n`;
+    waMessage += `_Sent via Website Booking System_`;
 
+    return waMessage;
+  };
+
+  const handleInitialSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setShowConfirmation(true);
+  };
+
+  const handleFinalConfirm = () => {
+    setIsSubmitting(true);
+    
+    // Save to LocalStorage for Admin Dashboard
+    saveBooking({
+      customerName: formData.name,
+      phone: formData.phone,
+      guests: parseInt(formData.people.toString()) || 1,
+      date: formData.date,
+      type: formData.type as any,
+      eventName: formData.selectedEvent,
+      message: formData.message
+    });
+
+    const waMessage = generateWhatsAppMessage();
     const encodedMessage = encodeURIComponent(waMessage);
     const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
 
@@ -72,15 +99,84 @@ const BookingForm: React.FC<BookingFormProps> = ({
     
     setTimeout(() => {
       setIsSubmitting(false);
+      setShowConfirmation(false);
       if (onSuccess) onSuccess();
     }, 1000);
+  };
+
+  const formatDateNice = (dateStr: string) => {
+    try {
+      const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
+      return new Date(dateStr).toLocaleDateString('en-IN', options);
+    } catch (e) {
+      return dateStr;
+    }
   };
 
   const inputClasses = "w-full bg-white/50 border border-stone-200 rounded-lg px-4 py-3 font-sans text-obsidian focus:outline-none focus:border-bronze focus:ring-1 focus:ring-bronze/20 transition-all placeholder:text-stone-400";
   const labelClasses = "block text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 ml-1";
 
+  if (showConfirmation) {
+    return (
+      <Motion.div 
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        className="space-y-8 py-4 px-1"
+      >
+        <div className="bg-bronze/5 border border-bronze/20 rounded-2xl p-6 space-y-4">
+          <h3 className="font-serif text-xl text-obsidian flex items-center gap-2">
+            Review Your Request
+          </h3>
+          <div className="grid grid-cols-2 gap-y-4 text-sm font-sans">
+            <div>
+              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Type</p>
+              <p className="text-obsidian font-bold">{formData.type}</p>
+            </div>
+            <div>
+              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Date</p>
+              <p className="text-obsidian font-bold">{formatDateNice(formData.date)}</p>
+            </div>
+            <div>
+              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Name</p>
+              <p className="text-obsidian font-bold">{formData.name}</p>
+            </div>
+            {formData.type !== 'General Inquiry' && (
+              <div>
+                <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Guests</p>
+                <p className="text-obsidian font-bold">{formData.people} People</p>
+              </div>
+            )}
+          </div>
+          {formData.selectedEvent && (
+            <div className="pt-2 border-t border-bronze/10">
+              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Selected Event</p>
+              <p className="text-bronze font-bold">{formData.selectedEvent}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          <button
+            onClick={handleFinalConfirm}
+            disabled={isSubmitting}
+            className="w-full bg-obsidian text-white py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:bg-bronze transition-all flex items-center justify-center gap-3 disabled:opacity-70 group"
+          >
+            {isSubmitting ? 'Opening WhatsApp...' : 'Confirm & Open WhatsApp'}
+            <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+          </button>
+          <button
+            onClick={() => setShowConfirmation(false)}
+            className="w-full bg-white text-stone-500 py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:text-obsidian transition-colors text-center"
+          >
+            Go Back & Edit
+          </button>
+        </div>
+      </Motion.div>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit} className={`space-y-6 ${isModal ? '' : 'max-w-2xl mx-auto'}`}>
+    <form onSubmit={handleInitialSubmit} className={`space-y-6 ${isModal ? '' : 'max-w-2xl mx-auto'}`}>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Name */}
         <div className="space-y-1">
@@ -155,7 +251,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
           </div>
           {price > 0 && (
             <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-bronze uppercase bg-bronze/10 px-2 py-1 rounded">
-              Total: ₹{price * (parseInt(formData.people) || 1)}
+              Total: ₹{price * (parseInt(formData.people.toString().replace('+', '')) || 0)}
             </div>
           )}
         </div>
@@ -166,11 +262,11 @@ const BookingForm: React.FC<BookingFormProps> = ({
         <div className="space-y-4">
           <div className="space-y-1">
             <label htmlFor="type" className={labelClasses}>What are you booking for?</label>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, type: 'Table Reservation', selectedEvent: '' }))}
-                className={`py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all border ${
+                className={`py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
                   formData.type === 'Table Reservation' 
                     ? 'bg-obsidian text-white border-obsidian' 
                     : 'bg-white text-stone-500 border-stone-200 hover:border-bronze'
@@ -181,13 +277,24 @@ const BookingForm: React.FC<BookingFormProps> = ({
               <button
                 type="button"
                 onClick={() => setFormData(prev => ({ ...prev, type: 'Event Booking' }))}
-                className={`py-3 rounded-lg text-xs font-bold uppercase tracking-wider transition-all border ${
+                className={`py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
                   formData.type === 'Event Booking' 
                     ? 'bg-obsidian text-white border-obsidian' 
                     : 'bg-white text-stone-500 border-stone-200 hover:border-bronze'
                 }`}
               >
                 Event Booking
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData(prev => ({ ...prev, type: 'General Inquiry', selectedEvent: '' }))}
+                className={`py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
+                  formData.type === 'General Inquiry' 
+                    ? 'bg-obsidian text-white border-obsidian' 
+                    : 'bg-white text-stone-500 border-stone-200 hover:border-bronze'
+                }`}
+              >
+                General Inquiry
               </button>
             </div>
           </div>
@@ -256,10 +363,9 @@ const BookingForm: React.FC<BookingFormProps> = ({
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         type="submit"
-        disabled={isSubmitting}
-        className="w-full bg-obsidian text-white py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:bg-bronze transition-all flex items-center justify-center gap-3 disabled:opacity-70 group"
+        className="w-full bg-obsidian text-white py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:bg-bronze transition-all flex items-center justify-center gap-3 group"
       >
-        {isSubmitting ? 'Processing...' : 'Request Booking on WhatsApp'}
+        Continue to Confirmation
         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </Motion.button>
 

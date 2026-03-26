@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { MenuItem } from '../types';
 import { fetchMenuData } from '../services/sheetService';
 import { FALLBACK_MENU, MENU_PDF_URL } from '../constants';
@@ -518,8 +518,7 @@ const Menu: React.FC = () => {
               <p className="text-stone-500 mb-6 font-sans italic">Craving something special while watching the game?</p>
               <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
                 <a
-                  href="/events"
-                  rel="noopener"
+                  href="#shows"
                   className="inline-block px-8 py-3 bg-obsidian text-white rounded-full font-sans text-xs tracking-widest uppercase hover:bg-bronze transition-all shadow-lg"
                   aria-label="Book a table or event space at KOS Sports Café"
                 >

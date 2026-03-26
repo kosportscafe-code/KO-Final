@@ -14,9 +14,11 @@ import AdminEvents from './pages/AdminEvents';
 import AdminBlog from './pages/AdminBlog';
 import AdminMedia from './pages/AdminMedia';
 import AdminMenu from './pages/AdminMenu';
+import AdminBookings from './pages/admin/AdminBookings';
 import GalleryPage from './pages/GalleryPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
+import BookingPage from './pages/BookingPage';
 
 function App() {
   return (
@@ -35,6 +37,7 @@ function App() {
             <Route path="events" element={<AdminEvents />} />
             <Route path="media" element={<AdminMedia />} />
             <Route path="menu" element={<AdminMenu />} />
+            <Route path="bookings" element={<AdminBookings />} />
           </Route>
           
           <Route path="/*" element={
@@ -45,6 +48,7 @@ function App() {
                 <Route path="/about" element={<Home />} />
                 <Route path="/menu" element={<Home />} />
                 <Route path="/events" element={<Home />} />
+                <Route path="/book" element={<BookingPage />} />
                 <Route path="/contact" element={<Home />} />
                 <Route path="/gallery" element={<GalleryPage />} />
                 <Route path="/blog" element={<BlogListing />} />
