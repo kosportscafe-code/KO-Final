@@ -33,23 +33,23 @@
           extend: {
             colors: {
               // Core Remapping
-              alabaster: '#F5EDE3', // Main Background
-              obsidian: '#2B1E16',  // Headings / Dark Text
-              bronze: '#D96A2B',    // Primary / Brand
+              alabaster: 'var(--bg-color)', 
+              obsidian: 'var(--text-heading)', 
+              bronze: 'var(--primary-color)',
               
               // New Semantic Palette
-              primary: '#D96A2B',
-              background: '#F5EDE3',
-              sidebar: '#EFE4D6',
-              cart: '#FFF8F1',
+              primary: 'var(--primary-color)',
+              background: 'var(--bg-color)',
+              sidebar: 'var(--sidebar-color)',
+              cart: 'var(--card-color)',
               
               // Text Shades
-              heading: '#2B1E16',
-              body: '#5C4033',
-              muted: '#9A7B65',
+              heading: 'var(--text-heading)',
+              body: 'var(--text-body)',
+              muted: 'var(--text-muted)',
               
               // Borders & Accents
-              'border-base': '#E6D5C3',
+              'border-base': 'var(--border-color)',
               
               slate: '#5D5C61',
               cream: '#FFFDD0',
@@ -70,45 +70,172 @@
       }
     </script>
     <style>
-      /* Global Design Theme Transitions */
+      /* --- CORE THEME VARIABLES --- */
+      :root {
+        /* Default: Light/Cream - Refined */
+        --bg-color: #F5EDE3;
+        --card-color: #FFFFFF;
+        --sidebar-color: #F8F1EA;
+        --text-heading: #2B1E16;
+        --text-body: #5C4033;
+        --text-muted: #9A7B65;
+        --primary-color: #D96A2B;
+        --border-color: #E6D5C3;
+      }
+
+      .theme-dark {
+        --bg-color: #121212;
+        --bg-secondary: #1E1B18;
+        --card-color: #2A2623;
+        --sidebar-color: #1E1B18;
+        --text-heading: #F5EDE3;
+        --text-body: #D1D1D1;
+        --text-muted: #888888;
+        --primary-color: #FF7A2F;
+        --border-color: #3A2E28;
+        --glow-color: rgba(255, 122, 47, 0.3);
+      }
+
+      .theme-dark body {
+        background-image: radial-gradient(circle at 50% -20%, #2A2623 0%, #121212 70%);
+        background-attachment: fixed;
+      }
+
+      .theme-dark button:not(.no-glow), 
+      .theme-dark .order-now-button {
+        box-shadow: 0 0 15px var(--glow-color);
+        transition: box-shadow 0.3s ease, transform 0.2s ease;
+      }
+
+      .theme-dark button:hover:not(.no-glow) {
+        box-shadow: 0 0 25px var(--glow-color);
+      }
+
+      .theme-ipl {
+        --bg-color: #000B1E;
+        --bg-secondary: #001635;
+        --card-color: #001C44;
+        --sidebar-color: #002D6E;
+        --text-heading: #FFFFFF;
+        --text-body: #E0E0E0;
+        --text-muted: #8BB0E5;
+        --primary-color: #FF6B00;
+        --accent-color: #007BFF;
+        --border-color: #004DBB;
+        --glow-color: rgba(255, 107, 0, 0.4);
+      }
+
+      .theme-ipl body {
+        background-image: 
+          radial-gradient(circle at 50% -20%, #004DBB 0%, #000B1E 80%),
+          linear-gradient(to bottom, transparent, rgba(0, 123, 255, 0.05));
+        background-attachment: fixed;
+      }
+
+      .theme-ipl button:not(.no-glow):not(.secondary-btn), 
+      .theme-ipl .order-now-button {
+        box-shadow: 0 0 20px var(--glow-color);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      @keyframes ipl-pulse {
+        0% { transform: scale(1); box-shadow: 0 0 15px var(--glow-color); }
+        50% { transform: scale(1.02); box-shadow: 0 0 30px var(--glow-color); }
+        100% { transform: scale(1); box-shadow: 0 0 15px var(--glow-color); }
+      }
+
+      .theme-ipl .pulse-button {
+        animation: ipl-pulse 2s infinite ease-in-out;
+      }
+
+      @keyframes live-pulse {
+        0% { opacity: 1; transform: scale(1); }
+        50% { opacity: 0.5; transform: scale(0.9); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+
+      .live-badge-pulse {
+        animation: live-pulse 1.5s infinite ease-in-out;
+      }
+
+      .theme-festival {
+        --bg-color: #5C0000;
+        --bg-secondary: #800000;
+        --card-color: #FFF8E7;
+        --sidebar-color: #FFF1D1;
+        --text-heading: #3A1F0F;
+        --text-body: #4A2F1F;
+        --text-muted: #9A7B65;
+        --primary-color: #D4AF37;
+        --accent-color: #C75B12;
+        --border-color: #E6D5C3;
+        --glow-color: rgba(212, 175, 55, 0.3);
+      }
+
+      .theme-festival body {
+        background: 
+          radial-gradient(circle at 50% 0%, #C75B12 0%, #5C0000 100%);
+        background-attachment: fixed;
+      }
+
+      /* Subtle Festive Pattern Layer */
+      .theme-festival body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-image: radial-gradient(#D4AF37 0.5px, transparent 0.5px);
+        background-size: 30px 30px;
+        opacity: 0.1;
+        pointer-events: none;
+      }
+
+      .theme-festival .card, 
+      .theme-festival button:not(.no-glow) {
+        box-shadow: 0 0 15px var(--glow-color);
+        border: 1px solid rgba(212, 175, 55, 0.2);
+      }
+      body, 
+      section,
+      header,
+      footer,
+      nav,
+      button,
+      a,
+      .card,
+      h1, h2, h3, h4, h5, h6,
+      p, span, i {
+        transition: background-color 0.3s ease, 
+                    color 0.3s ease, 
+                    border-color 0.3s ease, 
+                    box-shadow 0.3s ease;
+      }
+
       body {
-        background-color: #F5EDE3;
-        color: #5C4033;
+        background-color: var(--bg-color);
+        color: var(--text-body);
         font-family: 'Inter', sans-serif;
-        transition: background-color 0.3s ease, color 0.3s ease;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
       }
       
       h1, h2, h3, h4, h5, h6 {
-        color: #2B1E16;
+        color: var(--text-heading);
         font-family: 'Bebas Neue', sans-serif;
         text-transform: uppercase;
         letter-spacing: 0.05em;
         line-height: 1;
       }
 
-      h1 { font-size: 3.5rem; }
-      h2 { font-size: 2.75rem; }
-      h3 { font-size: 2rem; }
-
-      /* Custom Scrollbar for Webkit */
-      ::-webkit-scrollbar {
-        width: 6px;
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 6px; }
+      ::-webkit-scrollbar-track { background: var(--bg-color); }
+      ::-webkit-scrollbar-thumb { 
+        background: var(--border-color); 
+        border-radius: 3px; 
       }
-      ::-webkit-scrollbar-track {
-        background: #F5EDE3;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #E6D5C3; 
-        border-radius: 3px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: #D96A2B;
-      }
-      html {
-        scroll-behavior: smooth;
-      }
+      ::-webkit-scrollbar-thumb:hover { background: var(--primary-color); }
+      
+      html { scroll-behavior: smooth; }
     </style>
   <!-- Static Restaurant Schema (readable by crawlers without JS) -->
   <script type="application/ld+json">

@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useCart } from '../context/CartContext';
 import { ShoppingBag, ChevronRight, Search, SlidersHorizontal } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -19,7 +19,7 @@ const OrderPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState(initialSearch);
   const [isVegOnly, setIsVegOnly] = useState(false);
 
-  const { cart, cartTotal, toggleDrawer } = useCart();
+  const { cart, cartTotal, toggleDrawer, tableNumber } = useCart();
   const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
 
@@ -59,7 +59,14 @@ const OrderPage: React.FC = () => {
           
           <div className="relative z-10 flex flex-col md:flex-row justify-between items-center gap-8">
             <div className="text-center md:text-left">
-              <h1 className="font-serif text-5xl md:text-6xl text-white tracking-widest uppercase mb-3">Order Online</h1>
+              <div className="flex flex-col md:flex-row md:items-end gap-3 mb-3">
+                <h1 className="font-serif text-5xl md:text-6xl text-white tracking-widest uppercase">Order Online</h1>
+                {tableNumber && (
+                  <div className="bg-bronze/20 backdrop-blur-md border border-bronze/30 px-4 py-1.5 rounded-full mb-1 md:mb-2 self-center md:self-auto">
+                    <p className="text-bronze font-black text-xs uppercase tracking-[0.2em]">Serving Table {tableNumber}</p>
+                  </div>
+                )}
+              </div>
               <p className="text-white/70 text-lg font-sans max-w-md">Freshly prepared, delivered with love. Choose from our wide selection of sports-inspired delights.</p>
             </div>
           </div>

@@ -48,7 +48,7 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
               exit={{ opacity: 0, scale: 0.98 }}
               whileHover={{ y: -6, transition: { duration: 0.2 } }}
               key={item.id}
-              className="bg-white rounded-2xl p-4 shadow-md hover:shadow-2xl transition-all duration-300 border border-border-base flex flex-col group relative"
+              className="bg-cart rounded-2xl p-4 shadow-md hover:shadow-2xl transition-all duration-300 border border-border-base flex flex-col group relative"
             >
               {/* Image Section */}
               <div className="relative aspect-square rounded-2xl overflow-hidden mb-4 bg-background">
@@ -61,7 +61,7 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
                 
                 {/* Diet Badge */}
                 <div className="absolute top-3 right-3">
-                  <div className={`w-5 h-5 bg-white/90 backdrop-blur-md rounded-md border flex items-center justify-center ${item.isVeg ? 'border-green-500' : 'border-red-500 shadow-sm'}`}>
+                  <div className={`w-5 h-5 bg-cart/90 backdrop-blur-md rounded-md border flex items-center justify-center ${item.isVeg ? 'border-green-500' : 'border-red-500 shadow-sm'}`}>
                     <div className={`w-2 h-2 rounded-full ${item.isVeg ? 'bg-green-600' : 'bg-red-600'}`} />
                   </div>
                 </div>
@@ -77,8 +77,8 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
 
                 {/* Stock Overlay */}
                 {item.inStock === false && (
-                  <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] flex items-center justify-center z-10">
-                    <span className="bg-heading text-white text-[10px] uppercase tracking-widest font-black px-4 py-2 rounded-xl rotate-[-5deg] shadow-2xl">
+                  <div className="absolute inset-0 bg-cart/80 backdrop-blur-[2px] flex items-center justify-center z-10">
+                    <span className="bg-heading text-background text-[10px] uppercase tracking-widest font-black px-4 py-2 rounded-xl rotate-[-5deg] shadow-2xl">
                       Sold Out
                     </span>
                   </div>
@@ -122,31 +122,31 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
                   <div className="flex gap-2">
                     <Motion.button
                       whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.95 }}
+                      whileTap={{ scale: 0.9 }}
                       onClick={() => item.inStock !== false && addToCart(item as any, labels.fullReg as any)}
                       disabled={item.inStock === false}
-                      className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all text-[11px] uppercase tracking-widest font-black shadow-lg ${
+                      className={`flex-1 py-5 rounded-[20px] flex items-center justify-center gap-2 transition-all text-xs uppercase tracking-widest font-black shadow-lg ${
                         item.inStock === false
                           ? 'bg-background text-muted/30 border-border-base/20 cursor-not-allowed'
-                          : 'bg-bronze text-white hover:bg-[#B85722] shadow-bronze/20'
+                          : 'bg-primary text-background hover:opacity-90 shadow-[0_10px_20px_rgba(0,0,0,0.15)] active:scale-95'
                       }`}
                     >
-                      <Plus size={16} strokeWidth={3} /> {item.priceMed ? labels.reg : 'Add'}
+                      <Plus size={18} strokeWidth={4} /> {item.priceMed ? labels.reg : 'Add to Cart'}
                     </Motion.button>
 
                     {item.priceMed && (
                       <Motion.button
                         whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.95 }}
+                        whileTap={{ scale: 0.9 }}
                         onClick={() => item.inStock !== false && addToCart(item as any, labels.fullMed as any)}
                         disabled={item.inStock === false}
-                        className={`flex-1 py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all text-[11px] uppercase tracking-widest font-black shadow-lg ${
+                        className={`flex-1 py-5 rounded-[20px] flex items-center justify-center gap-2 transition-all text-xs uppercase tracking-widest font-black shadow-lg ${
                           item.inStock === false
                             ? 'bg-background text-muted/50 cursor-not-allowed'
-                            : 'bg-bronze text-white hover:bg-[#B85722] shadow-bronze/20'
+                            : 'bg-primary text-background hover:opacity-90 shadow-[0_10px_20_rgba(0,0,0,0.15)] active:scale-95'
                         }`}
                       >
-                        <Plus size={16} strokeWidth={3} /> {labels.med}
+                        <Plus size={18} strokeWidth={4} /> {labels.med}
                       </Motion.button>
                     )}
                   </div>

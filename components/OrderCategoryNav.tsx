@@ -26,8 +26,8 @@ const OrderCategoryNav: React.FC<OrderCategoryNavProps> = ({
             onClick={() => onCategoryChange(cat)}
             className={`text-left px-6 py-3 rounded-full font-serif text-lg uppercase tracking-widest transition-all duration-300 border ${
               activeCategory === cat
-                ? 'bg-bronze text-white border-bronze shadow-lg shadow-bronze/20'
-                : 'bg-sidebar text-body border-transparent hover:bg-bronze/10 hover:text-bronze'
+                ? 'bg-primary text-background border-primary shadow-lg shadow-primary/20'
+                : 'bg-sidebar text-body border-transparent hover:bg-primary/10 hover:text-primary'
             }`}
           >
             {cat}
@@ -49,8 +49,8 @@ const OrderCategoryNav: React.FC<OrderCategoryNavProps> = ({
           onClick={() => onCategoryChange(cat)}
           className={`flex-shrink-0 px-6 py-2.5 rounded-full font-serif text-sm uppercase tracking-widest transition-all duration-300 border ${
             activeCategory === cat
-              ? 'bg-bronze text-white border-bronze shadow-md'
-              : 'bg-sidebar text-body border-transparent hover:bg-bronze/10 hover:text-bronze'
+              ? 'bg-primary text-background border-primary shadow-md'
+              : 'bg-sidebar text-body border-transparent hover:bg-primary/10 hover:text-primary'
           }`}
         >
           {cat}

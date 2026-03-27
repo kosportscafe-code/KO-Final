@@ -189,56 +189,56 @@ const Home: React.FC = () => {
       <StandupShows />
 
       {/* Booking Section */}
-      <section id="booking" className="py-24 bg-white relative overflow-hidden">
+      <section id="booking" className="py-24 bg-background relative overflow-hidden">
         {/* Background elements */}
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-bronze/5 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-bronze/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-bronze/10 border border-bronze/20 text-bronze mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 border border-primary/20 text-primary mb-6">
               <Calendar size={16} aria-hidden="true" />
               <span className="text-xs font-bold uppercase tracking-widest">Reservations</span>
             </div>
-            <h2 className="font-serif text-4xl md:text-5xl text-obsidian mb-4">Book a Table</h2>
-            <p className="text-stone-500 max-w-2xl mx-auto font-sans leading-relaxed">
+            <h2 className="font-serif text-4xl md:text-5xl text-heading mb-4">Book a Table</h2>
+            <p className="text-muted max-w-2xl mx-auto font-sans leading-relaxed">
               Planning a visit, a private event, or just want to ensure your favorite spot is ready? 
               Fill out the form below and we'll confirm your booking on WhatsApp.
             </p>
-            <div className="w-16 h-[1px] bg-bronze mx-auto mt-8"></div>
+            <div className="w-16 h-[1px] bg-primary mx-auto mt-8"></div>
           </div>
 
-          <div className="bg-alabaster p-8 md:p-12 rounded-3xl border border-stone-100 shadow-xl max-w-4xl mx-auto">
+          <div className="bg-cart p-8 md:p-12 rounded-3xl border border-border-base shadow-xl max-w-4xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
               <div className="lg:col-span-5 space-y-8">
                 <div>
-                  <h3 className="font-serif text-2xl text-obsidian mb-4">Why Book with Us?</h3>
+                  <h3 className="font-serif text-2xl text-heading mb-4">Why Book with Us?</h3>
                   <ul className="space-y-4">
                     <li className="flex items-start gap-4">
-                      <div className="w-6 h-6 rounded-full bg-bronze/10 flex items-center justify-center flex-shrink-0 mt-1">
-                        <Users className="w-3 h-3 text-bronze" />
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <Users className="w-3 h-3 text-primary" />
                       </div>
                       <div>
-                        <p className="text-stone-800 font-bold text-sm">Priority Seating</p>
-                        <p className="text-stone-500 text-xs">Get the best views during major sports screenings.</p>
+                        <p className="text-heading font-bold text-sm">Priority Seating</p>
+                        <p className="text-muted text-xs">Get the best views during major sports screenings.</p>
                       </div>
                     </li>
                     <li className="flex items-start gap-4">
-                      <div className="w-6 h-6 rounded-full bg-bronze/10 flex items-center justify-center flex-shrink-0 mt-1">
-                        <Calendar className="w-3 h-3 text-bronze" />
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-1">
+                        <Calendar className="w-3 h-3 text-primary" />
                       </div>
                       <div>
-                        <p className="text-stone-800 font-bold text-sm">Event Coordination</p>
-                        <p className="text-stone-500 text-xs">Tailored menus for birthdays and group gatherings.</p>
+                        <p className="text-heading font-bold text-sm">Event Coordination</p>
+                        <p className="text-muted text-xs">Tailored menus for birthdays and group gatherings.</p>
                       </div>
                     </li>
                   </ul>
                 </div>
                 
-                <div className="p-6 bg-obsidian rounded-2xl text-white">
-                  <p className="text-cream/60 text-[10px] uppercase tracking-widest font-bold mb-2">Need immediate help?</p>
+                <div className="p-6 bg-sidebar rounded-2xl text-heading">
+                  <p className="text-muted/60 text-[10px] uppercase tracking-widest font-bold mb-2">Need immediate help?</p>
                   <p className="font-serif text-xl mb-4">Chat with our team directly for instant updates.</p>
-                  <a href="https://wa.me/917060403965" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-bronze hover:text-white transition-colors text-sm font-bold uppercase tracking-widest">
+                  <a href="https://wa.me/917060403965" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary hover:text-heading transition-colors text-sm font-bold uppercase tracking-widest">
                     WhatsApp Chat <ArrowRight size={14} />
                   </a>
                 </div>
@@ -255,30 +255,30 @@ const Home: React.FC = () => {
       <Testimonials />
 
       {/* Global Order CTA */}
-      <section className="py-24 bg-obsidian relative overflow-hidden">
+      <section className="py-24 bg-sidebar relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center grayscale" />
-          <div className="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-sidebar via-sidebar/80 to-transparent" />
         </div>
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="max-w-2xl">
-            <h2 className="font-serif text-4xl md:text-6xl text-white mb-6 leading-tight">
-              Ready to <span className="text-bronze italic">Fuel</span> Your Game?
+            <h2 className="font-serif text-4xl md:text-6xl text-heading mb-6 leading-tight">
+              Ready to <span className="text-primary italic">Fuel</span> Your Game?
             </h2>
-            <p className="text-cream/60 text-lg mb-10 font-sans leading-relaxed">
+            <p className="text-muted/60 text-lg mb-10 font-sans leading-relaxed">
               Order your favorites now and enjoy the ultimate sports cafe experience at home or in our stadium-vibe lounge.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <a 
                 href="/order" 
-                className="inline-flex items-center justify-center gap-3 bg-bronze text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-white hover:text-obsidian transition-all shadow-2xl active:scale-95"
+                className="inline-flex items-center justify-center gap-3 bg-primary text-background px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-heading hover:text-background transition-all shadow-2xl active:scale-95"
               >
                 Order Online Now <ShoppingBag size={18} />
               </a>
               <a 
                 href="/book" 
-                className="inline-flex items-center justify-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-white/20 transition-all active:scale-95"
+                className="inline-flex items-center justify-center gap-3 bg-heading/10 backdrop-blur-md border border-heading/20 text-heading px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-heading/20 transition-all active:scale-95"
               >
                 Book a Table
               </a>

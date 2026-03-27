@@ -4,12 +4,20 @@ import { CartItem, MenuItem } from '../types';
 
 interface CartContextType {
   cart: CartItem[];
+  tableNumber: string | null;
+  setTableNumber: (table: string | null) => void;
   isDrawerOpen: boolean;
   toggleDrawer: (open?: boolean) => void;
   addToCart: (item: MenuItem, size: 'Regular' | 'Medium' | 'Half' | 'Full') => void;
   removeFromCart: (cartId: string) => void;
   updateQuantity: (cartId: string, delta: number) => void;
   clearCart: () => void;
+  placeOrder: (customerDetails: {
+    name: string;
+    phone: string;
+    address: string;
+    location?: { lat: number; lng: number };
+  }) => Promise<any>;
   cartTotal: number;
 }
 

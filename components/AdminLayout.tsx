@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { LayoutDashboard, FileText, Calendar, ImageIcon, LogOut, Utensils } from 'lucide-react';
+import { LayoutDashboard, FileText, Calendar, ImageIcon, LogOut, Utensils, ChefHat } from 'lucide-react';
 import { isAuthenticated, logout } from '../services/authService';
 
 const AdminLayout: React.FC = () => {
@@ -26,6 +26,8 @@ const AdminLayout: React.FC = () => {
     { name: 'Gallery', path: '/gallery', icon: <ImageIcon size={20} /> },
     { name: 'Media', path: '/admin/media', icon: <ImageIcon size={20} /> },
     { name: 'Menu', path: '/admin/menu', icon: <Utensils size={20} /> },
+    { name: 'Kitchen', path: '/kitchen', icon: <ChefHat size={20} /> },
+    { name: 'Orders', path: '/admin/orders', icon: <LayoutDashboard size={20} /> },
     { name: 'Bookings', path: '/admin/bookings', icon: <Calendar size={20} /> },
   ];
 

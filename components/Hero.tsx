@@ -24,7 +24,7 @@ const Hero: React.FC = () => {
           className="w-full h-[120%] object-cover opacity-100"
         />
         <div className="absolute inset-0 bg-white/0 mix-blend-overlay" />
-        <div className="absolute inset-0 bg-gradient-to-t from-alabaster via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       </Motion.div>
 
       {/* Content */}
@@ -36,7 +36,7 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="block font-sans text-sm md:text-base tracking-[0.2em] uppercase text-cream mb-4"
+          className="block font-sans text-sm md:text-base tracking-[0.2em] uppercase text-primary mb-4"
         >
           Where Sports Meet Taste
         </Motion.span>
@@ -45,17 +45,17 @@ const Hero: React.FC = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="font-serif text-5xl md:text-7xl lg:text-8xl text-white mb-8 leading-tight"
+          className="font-serif text-5xl md:text-7xl lg:text-8xl text-heading mb-8 leading-tight"
         >
           Game On.<br />
-          <span className="italic text-slate">Eat Well.</span>
+          <span className="italic text-primary">Eat Well.</span>
         </Motion.h1>
 
         <Motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6 }}
-          className="font-sans text-stone-700 max-w-lg mx-auto mb-10 text-white font-light"
+          className="font-sans text-muted max-w-lg mx-auto mb-10 text-heading/70 font-light"
         >
           An unparalleled experience where world-class gaming meets world-class cuisine.
         </Motion.p>
@@ -68,13 +68,13 @@ const Hero: React.FC = () => {
         >
           <a
             href="/order"
-            className="w-full sm:w-auto px-10 py-5 bg-bronze text-white font-black uppercase tracking-widest text-[10px] hover:bg-white hover:text-obsidian transition-all duration-300 shadow-2xl flex items-center justify-center gap-2 group/btn"
+            className="w-full sm:w-auto px-10 py-5 bg-primary text-background font-black uppercase tracking-widest text-[10px] hover:bg-heading hover:text-background transition-all duration-300 shadow-2xl flex items-center justify-center gap-2 group/btn"
           >
             Order Online <ShoppingBag size={14} className="group-hover/btn:scale-110 transition-transform" />
           </a>
           <a
             href="/book"
-            className="w-full sm:w-auto px-10 py-5 border border-white/30 bg-white/5 backdrop-blur-sm text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center justify-center"
+            className="w-full sm:w-auto px-10 py-5 border border-heading/30 bg-heading/5 backdrop-blur-sm text-heading font-black uppercase tracking-widest text-[10px] hover:bg-heading/10 hover:border-heading transition-all duration-300 flex items-center justify-center"
           >
             Book a Table
           </a>

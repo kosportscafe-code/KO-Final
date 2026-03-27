@@ -85,21 +85,21 @@ const StandupShows: React.FC = () => {
   }, [shows]);
 
   return (
-    <section id="shows" className="py-24 bg-stone-50">
+    <section id="shows" className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
-          <h2 className="font-serif text-4xl md:text-5xl text-obsidian mb-6">
+          <h2 className="font-serif text-4xl md:text-5xl text-heading mb-6">
             🎤 Live Standup Shows
           </h2>
-          <p className="text-stone-500 max-w-2xl mx-auto font-sans">
+          <p className="text-muted max-w-2xl mx-auto font-sans">
             Grab a drink and get ready for a night of non-stop laughter. Check out our upcoming live comedy events!
           </p>
         </div>
 
         {loading ? (
            <div className="flex flex-col items-center justify-center py-20 min-h-[400px]">
-              <Loader2 className="w-10 h-10 text-bronze animate-spin mb-4" />
-              <p className="font-sans text-stone-500 uppercase tracking-widest text-sm">Loading Shows...</p>
+              <Loader2 className="w-10 h-10 text-primary animate-spin mb-4" />
+              <p className="font-sans text-muted uppercase tracking-widest text-sm">Loading Shows...</p>
            </div>
         ) : error ? (
            <div className="text-center py-20 min-h-[400px] flex items-center justify-center">
@@ -122,28 +122,28 @@ const StandupShows: React.FC = () => {
                     width="600"
                     height="400"
                   />
-                  <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-obsidian">
+                  <div className="absolute top-4 right-4 bg-cart/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider text-heading">
                     ₹{show.price} / Seat
                   </div>
                 </div>
                 <div className="p-6 flex-1 flex flex-col">
-                  <h3 className="font-serif text-xl text-obsidian mb-2">{show.title}</h3>
-                  <p className="text-stone-500 text-sm mb-5 flex-1">{show.description}</p>
+                  <h3 className="font-serif text-xl text-heading mb-2">{show.title}</h3>
+                  <p className="text-muted text-sm mb-5 flex-1">{show.description}</p>
                   
                   <div className="space-y-3 mb-8">
-                    <div className="flex items-center text-sm text-stone-600">
-                      <Calendar className="w-4 h-4 mr-3 text-bronze" aria-hidden="true" />
+                    <div className="flex items-center text-sm text-body">
+                      <Calendar className="w-4 h-4 mr-3 text-primary" aria-hidden="true" />
                       {show.date}
                     </div>
-                    <div className="flex items-center text-sm text-stone-600">
-                      <Clock className="w-4 h-4 mr-3 text-bronze" aria-hidden="true" />
+                    <div className="flex items-center text-sm text-body">
+                      <Clock className="w-4 h-4 mr-3 text-primary" aria-hidden="true" />
                       {show.time}
                     </div>
                   </div>
 
                   <button 
                     onClick={() => setSelectedShow(show)}
-                    className="w-full bg-transparent border border-obsidian text-obsidian py-3 font-sans uppercase tracking-widest text-xs hover:bg-obsidian hover:text-white transition-colors"
+                    className="w-full bg-transparent border border-heading text-heading py-3 font-sans uppercase tracking-widest text-xs hover:bg-heading hover:text-background transition-colors"
                     aria-label={`Book tickets for ${show.title}`}
                   >
                     Book Now
@@ -169,19 +169,19 @@ const StandupShows: React.FC = () => {
               initial={{ scale: 0.95, y: 20 }}
               animate={{ scale: 1, y: 0 }}
               exit={{ scale: 0.95, y: 20 }}
-              className="bg-white w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+              className="bg-cart w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
             >
-              <div className="p-6 border-b border-stone-100 flex justify-between items-center bg-alabaster">
+              <div className="p-6 border-b border-border-base flex justify-between items-center bg-background">
                 <div>
-                  <h3 className="font-serif text-2xl text-obsidian">Book Tickets</h3>
-                  <p className="text-sm text-stone-500">{selectedShow.title}</p>
+                  <h3 className="font-serif text-2xl text-heading">Book Tickets</h3>
+                  <p className="text-sm text-muted">{selectedShow.title}</p>
                 </div>
                 <button 
                   onClick={() => setSelectedShow(null)} 
-                  className="p-2 hover:bg-stone-200 rounded-full transition-colors"
+                  className="p-2 hover:bg-sidebar rounded-full transition-colors"
                   aria-label="Close booking modal"
                 >
-                  <X className="w-5 h-5 text-stone-500" aria-hidden="true" />
+                  <X className="w-5 h-5 text-muted" aria-hidden="true" />
                 </button>
               </div>
 

@@ -6,6 +6,7 @@ export const GOOGLE_SHEET_CSV_URL = import.meta.env.VITE_GOOGLE_SHEET_CSV_URL ||
 
 // Replace this with your Make.com (or similar) Webhook URL
 export const WEBHOOK_URL = import.meta.env.VITE_WEBHOOK_URL || "https://hook.us1.make.com/your-webhook-id";
+export const ORDERS_CSV_URL = import.meta.env.VITE_ORDERS_CSV_URL || ""; // Placeholder for shared orders sheet
 
 export const CAFE_NAME = "KOS Café";
 export const CONTACT_PHONE = "+91 7060 40 3965";

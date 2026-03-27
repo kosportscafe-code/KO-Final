@@ -10,7 +10,7 @@ const BackgroundDecor: React.FC = () => {
       />
       
       {/* Warm Gradient Texture */}
-      <div className="absolute inset-0 bg-gradient-to-br from-bronze/5 via-transparent to-obsidian/5 opacity-30" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-heading/5 opacity-30" />
       
       {/* Light Cream Overlay (#F5EDE3) */}
       <div className="absolute inset-0 bg-background/85" />

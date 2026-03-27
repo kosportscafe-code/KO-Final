@@ -5,13 +5,13 @@ import { Link } from 'react-router-dom';
 
 const Footer: React.FC = () => {
   return (
-    <footer id="footer" className="bg-obsidian text-alabaster py-20">
+    <footer id="footer" className="bg-sidebar text-body py-20 border-t border-border-base/50">
       <div className="container mx-auto px-6">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left">
 
           {/* Brand */}
           <div className="space-y-6">
-            <h3 className="font-serif text-3xl text-white">{CAFE_NAME}</h3>
+            <h3 className="font-serif text-3xl text-heading">{CAFE_NAME}</h3>
             <p className="font-sans text-muted font-light text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               The ultimate gathering place for sports enthusiasts and food lovers alike.
             </p>
@@ -19,11 +19,11 @@ const Footer: React.FC = () => {
 
           {/* Contact */}
           <address className="not-italic space-y-4">
-            <h4 className="font-sans text-xs uppercase tracking-widest text-bronze">Contact Us</h4>
+            <h4 className="font-sans text-xs uppercase tracking-widest text-primary">Contact Us</h4>
             <div className="flex justify-center md:justify-start items-center gap-3">
               <a
                 href="tel:+917060403965"
-                className="font-serif text-xl hover:text-bronze transition-colors text-white"
+                className="font-serif text-xl hover:text-primary transition-colors text-heading"
               >
                 {CONTACT_PHONE}
               </a>
@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
             </div>
             <a
               href="mailto:info@kosportscafe.com"
-              className="block font-sans text-muted font-light text-sm hover:text-bronze transition-colors underline"
+              className="block font-sans text-muted font-light text-sm hover:text-primary transition-colors underline"
             >
               {CONTACT_WEBSITE}
             </a>
@@ -51,7 +51,7 @@ const Footer: React.FC = () => {
                 href="https://www.google.com/maps/search/KO+Sports+Cafe+Meerut"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-bronze transition-colors underline"
+                className="hover:text-primary transition-colors underline"
               >
                 Find us on Google Maps
               </a>
@@ -60,13 +60,13 @@ const Footer: React.FC = () => {
 
           {/* Social */}
           <div className="space-y-4">
-            <h4 className="font-sans text-xs uppercase tracking-widest text-bronze">Follow Us</h4>
+            <h4 className="font-sans text-xs uppercase tracking-widest text-primary">Follow Us</h4>
             <div className="flex justify-center md:justify-start gap-6">
               <a
                 href="https://www.instagram.com/kosportscafe/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-bronze transition-colors"
+                className="hover:text-primary transition-colors"
                 title="Follow us on Instagram"
               >
                 <Instagram className="w-6 h-6" aria-hidden="true" />
@@ -75,7 +75,7 @@ const Footer: React.FC = () => {
                 href="https://www.facebook.com/kosportscafe/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hover:text-bronze transition-colors"
+                className="hover:text-primary transition-colors"
                 title="Follow us on Facebook"
               >
                 <Facebook className="w-6 h-6" aria-hidden="true" />
@@ -87,7 +87,7 @@ const Footer: React.FC = () => {
               </p>
               <a 
                 href="/admin" 
-                className="inline-flex items-center justify-center px-4 py-2 border border-muted/30 text-muted text-xs font-bold uppercase tracking-widest hover:border-bronze hover:text-bronze transition-colors rounded"
+                className="inline-flex items-center justify-center px-4 py-2 border border-muted/30 text-muted text-xs font-bold uppercase tracking-widest hover:border-primary hover:text-primary transition-colors rounded"
               >
                 Admin Login
               </a>

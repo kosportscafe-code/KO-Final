@@ -74,3 +74,26 @@ export interface ChatMessage {
   text: string;
   groundingSources?: Array<{ uri: string; title: string }>;
 }
+
+export interface OrderItem {
+  id: string;
+  name: string;
+  qty: number;
+  price: number;
+  size: string;
+}
+
+export interface Order {
+  id: string;
+  tableId: string | null;
+  items: OrderItem[];
+  subtotal: number;
+  tax: number;
+  total: number;
+  status: 'NEW' | 'PREPARING' | 'READY' | 'SERVED' | 'CANCELLED';
+  timestamp: string;
+  customerName?: string;
+  customerPhone?: string;
+  customerAddress?: string;
+  location?: { lat: number; lng: number };
+}

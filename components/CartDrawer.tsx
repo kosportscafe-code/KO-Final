@@ -13,7 +13,9 @@ const CartDrawer: React.FC = () => {
     removeFromCart, 
     updateQuantity, 
     cartTotal,
-    clearCart
+    clearCart,
+    tableNumber,
+    placeOrder
   } = useCart();
 
   const [name, setName] = useState('');
@@ -65,12 +67,8 @@ const CartDrawer: React.FC = () => {
     );
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Calculate taxes
-    const taxAmount = Math.round(cartTotal * 0.05); // 5% total tax
-    const grandTotal = cartTotal + taxAmount;
     
     if (!name.trim() || !phone.trim() || !address.trim()) {
       alert("Please fill in all details before placing the order.");
@@ -79,40 +77,55 @@ const CartDrawer: React.FC = () => {
 
     setStatus('sending');
 
-    let message = `Hello, I want to place an order:\n\n`;
-    
-    cart.forEach(item => {
-      const price = Number(item.price) || 0;
-      const qty = Number(item.qty) || 0;
-      message += `${item.name} x ${qty} = ₹${price * qty}\n`;
-    });
-    
-    message += `\nTotal: ₹${grandTotal}\n\n`;
-    message += `Name: ${name}\n`;
-    message += `Address: ${address}\n`;
-    
-    if (locationObj) {
-      message += `Live Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
+    try {
+      const order = await placeOrder({
+        name,
+        phone,
+        address,
+        location: locationObj || undefined
+      });
+
+      if (order) {
+        setStatus('success');
+        
+        // Prepare WhatsApp message
+        const taxAmount = Math.round(cartTotal * 0.05);
+        const grandTotal = cartTotal + taxAmount;
+        
+        let message = `Hello, I want to place an order:\n\n`;
+        if (tableNumber) message += `SERVING TABLE: ${tableNumber}\n\n`;
+        
+        cart.forEach(item => {
+          message += `${item.name} x ${item.qty} = ₹${item.price * item.qty}\n`;
+        });
+        
+        message += `\nTotal: ₹${grandTotal}\n`;
+        message += `Order ID: ${order.id}\n`;
+        message += `Name: ${name}\n`;
+        message += `Address: ${address}\n`;
+        if (locationObj) message += `Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
+        message += `\nPlease confirm.`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappUrl = `https://api.whatsapp.com/send?phone=917060403965&text=${encodedMessage}`;
+
+        setTimeout(() => {
+          window.location.href = whatsappUrl;
+          toggleDrawer(false);
+          setStatus('idle');
+          setName('');
+          setPhone('');
+          setAddress('');
+          setLocationStatus('idle');
+          setLocationObj(null);
+        }, 1500);
+      } else {
+        setStatus('error');
+      }
+    } catch (error) {
+      console.error('Order placement failed:', error);
+      setStatus('error');
     }
-
-    message += `\nPlease confirm.`;
-
-    const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://api.whatsapp.com/send?phone=917060403965&text=${encodedMessage}`;
-
-    // Small delay/ensure state is not cleared BEFORE message is built
-    window.location.href = whatsappUrl;
-    
-    setTimeout(() => {
-      clearCart();
-      toggleDrawer(false);
-      setStatus('idle');
-      setName('');
-      setPhone('');
-      setAddress('');
-      setLocationStatus('idle');
-      setLocationObj(null);
-    }, 100);
   };
 
   const [isMobile, setIsMobile] = React.useState(false);
@@ -164,15 +177,22 @@ const CartDrawer: React.FC = () => {
             )}
 
             {/* Header */}
-            <div className={`flex justify-between items-center border-b border-border-base/50 ${isMobile ? 'px-6 py-4' : 'p-6'}`}>
-              <h2 className="font-serif text-2xl text-heading">Your Order</h2>
-              <button 
-                onClick={() => toggleDrawer(false)} 
-                className="p-2 hover:bg-background rounded-full transition-colors"
-                aria-label="Close cart"
-              >
-                <X className="w-5 h-5 text-muted" aria-hidden="true" />
-              </button>
+            <div className={`border-b border-border-base/50 ${isMobile ? 'px-6 py-4' : 'p-6'}`}>
+              <div className="flex justify-between items-center mb-2">
+                <h2 className="font-serif text-2xl text-heading">Your Order</h2>
+                <button 
+                  onClick={() => toggleDrawer(false)} 
+                  className="p-2 hover:bg-background rounded-full transition-colors"
+                  aria-label="Close cart"
+                >
+                  <X className="w-5 h-5 text-muted" aria-hidden="true" />
+                </button>
+              </div>
+              {tableNumber && (
+                <div className="inline-flex px-4 py-2 bg-primary text-background rounded-xl shadow-lg shadow-primary/20">
+                  <span className="text-[11px] font-black uppercase tracking-[0.2em]">Serving Table {tableNumber}</span>
+                </div>
+              )}
             </div>
 
             {/* Cart Items */}
@@ -190,29 +210,29 @@ const CartDrawer: React.FC = () => {
                   <div key={item.cartId} className="flex gap-4">
                     <div className="flex-grow">
                       <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-serif text-lg text-obsidian">{item.name}</h4>
+                        <h4 className="font-serif text-lg text-heading">{item.name}</h4>
                         <span className="font-sans font-medium text-sm">{formatCurrency((Number(item.price) || 0) * (Number(item.qty) || 0))}</span>
                       </div>
-                      <p className="text-xs text-stone-500 mb-2 uppercase tracking-wide">
+                      <p className="text-xs text-muted mb-2 uppercase tracking-wide">
                         {item.selectedSize} 
                       </p>
                       <div className="flex items-center gap-4">
-                        <div className="flex items-center border border-stone-300 rounded-full">
+                        <div className="flex items-center border border-border-base rounded-full">
                           <button 
                             onClick={() => updateQuantity(item.cartId, -1)}
-                            className="px-3 py-1 hover:bg-stone-200 rounded-l-full transition-colors"
+                            className="px-3 py-1 hover:bg-sidebar rounded-l-full transition-colors"
                             aria-label="Decrease quantity"
                           >-</button>
                           <span className="px-1 text-sm font-sans w-6 text-center">{item.qty}</span>
                           <button 
                             onClick={() => updateQuantity(item.cartId, 1)}
-                            className="px-3 py-1 hover:bg-stone-200 rounded-r-full transition-colors"
+                            className="px-3 py-1 hover:bg-sidebar rounded-r-full transition-colors"
                             aria-label="Increase quantity"
                           >+</button>
                         </div>
                         <button 
                           onClick={() => removeFromCart(item.cartId)}
-                          className="text-stone-400 hover:text-red-400 transition-colors"
+                          className="text-muted/40 hover:text-red-400 transition-colors"
                           aria-label={`Remove ${item.name} from cart`}
                         >
                           <Trash2 className="w-4 h-4" aria-hidden="true" />
@@ -226,7 +246,7 @@ const CartDrawer: React.FC = () => {
 
             {/* Footer / Checkout Form */}
             {cart.length > 0 && (
-              <div className="p-6 bg-white border-t border-stone-200">
+              <div className="p-6 bg-cart border-t border-border-base">
                 {status === 'success' ? (
                   <div className="text-center py-8">
                     <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -243,7 +263,7 @@ const CartDrawer: React.FC = () => {
                       placeholder="Customer Name" 
                       value={name}
                       onChange={e => setName(e.target.value)}
-                      className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b border-border-base py-2 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors"
                     />
                     <input 
                       required
@@ -251,7 +271,7 @@ const CartDrawer: React.FC = () => {
                       placeholder="Delivery Address" 
                       value={address}
                       onChange={e => setAddress(e.target.value)}
-                      className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b border-border-base py-4 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors text-lg"
                     />
                     <input 
                       required
@@ -259,15 +279,15 @@ const CartDrawer: React.FC = () => {
                       placeholder="Phone Number" 
                       value={phone}
                       onChange={e => setPhone(e.target.value)}
-                      className="w-full bg-transparent border-b border-stone-300 py-2 text-obsidian placeholder-stone-400 focus:border-bronze focus:outline-none transition-colors"
+                      className="w-full bg-transparent border-b border-border-base py-4 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors text-lg"
                     />
                     
                     {/* Geolocation Section */}
                     <div className="pt-2 pb-2">
-                      <div className="flex items-center justify-between p-3 bg-stone-50 rounded-lg border border-stone-100">
+                      <div className="flex items-center justify-between p-3 bg-sidebar rounded-lg border border-border-base/50">
                         <div className="flex items-center gap-3">
-                          <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-stone-400'}`} aria-hidden="true" />
-                          <span className="text-sm font-medium text-stone-600">
+                          <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-muted/40'}`} aria-hidden="true" />
+                          <span className="text-sm font-medium text-muted">
                             {locationStatus === 'idle' && "Share your live location"}
                             {locationStatus === 'fetching' && "Fetching location..."}
                             {locationStatus === 'captured' && (
@@ -282,7 +302,7 @@ const CartDrawer: React.FC = () => {
                           <button 
                             type="button" 
                             onClick={handleGetLocation}
-                            className="px-3 py-1.5 bg-bronze/10 text-bronze rounded-lg text-xs uppercase tracking-wider font-bold hover:bg-bronze hover:text-white transition-all active:scale-95"
+                            className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs uppercase tracking-wider font-bold hover:bg-primary hover:text-background transition-all active:scale-95"
                           >
                             Get Location
                           </button>
@@ -301,7 +321,7 @@ const CartDrawer: React.FC = () => {
                       </div>
                       <div className="flex justify-between items-center pt-2 border-t border-border-base/30 mt-2">
                         <span className="text-muted font-serif text-lg uppercase tracking-wider">Total</span>
-                        <span className="text-2xl font-sans text-bronze font-black">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
+                        <span className="text-2xl font-sans text-primary font-black">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
                       </div>
                       <p className="text-[10px] text-muted text-center italic leading-tight px-4 pb-2">
                         2.5% SGST + 2.5% CGST added in the bill when order is placed.
@@ -310,13 +330,45 @@ const CartDrawer: React.FC = () => {
 
                     <button 
                       type="submit"
-                      disabled={status === 'sending'}
-                      className="w-full bg-[#25D366] text-white py-5 rounded-[20px] font-black uppercase tracking-[0.2em] text-sm hover:bg-[#128C7E] transition-all duration-300 flex justify-center items-center gap-3 disabled:opacity-70 active:scale-95 shadow-[0_10px_30px_rgba(37,211,102,0.3)]"
-                      aria-label="Confirm and send order via WhatsApp"
+                      disabled={status === 'sending' || status === 'success'}
+                      className={`w-full text-background py-5 rounded-[20px] font-black uppercase tracking-[0.2em] text-sm transition-all duration-300 flex justify-center items-center gap-3 active:scale-95 shadow-lg ${
+                        status === 'success' 
+                          ? 'bg-green-500 shadow-green-200' 
+                          : 'bg-primary hover:opacity-90 shadow-[0_10px_30px_rgba(0,0,0,0.15)]'
+                      }`}
+                      aria-label="Confirm and place order"
                     >
-                      {status === 'sending' ? 'Redirecting...' : 'Order on WhatsApp'}
-                      {status === 'idle' && <ChevronRight className="w-5 h-5" aria-hidden="true" />}
+                      {status === 'sending' && 'Placing Order...'}
+                      {status === 'success' && 'Order Placed! ✅'}
+                      {status === 'idle' && 'Place Order & Notify'}
+                      {status === 'error' && 'Retry Order'}
+                      {(status === 'idle' || status === 'error') && <ChevronRight className="w-5 h-5" aria-hidden="true" />}
                     </button>
+
+                    <div className="pt-2">
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const taxAmount = Math.round(cartTotal * 0.05);
+                          const grandTotal = cartTotal + taxAmount;
+                          let msg = `Hello KOS Café, I want to order:\n\n`;
+                          if (tableNumber) msg += `*TABLE: ${tableNumber}*\n\n`;
+                          cart.forEach(item => {
+                            msg += `• ${item.name} (${item.selectedSize}) x ${item.qty} = ₹${item.price * item.qty}\n`;
+                          });
+                          msg += `\n*Total: ₹${grandTotal}*\n`;
+                          msg += `\nName: ${name || 'Not provided'}\n`;
+                          msg += `Address: ${address || 'Not provided'}\n`;
+                          if (locationObj) msg += `Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
+                          
+                          window.open(`https://wa.me/917060403965?text=${encodeURIComponent(msg)}`, '_blank');
+                        }}
+                        className="w-full bg-[#25D366]/10 text-[#25D366] py-4 rounded-[20px] font-bold uppercase tracking-widest text-[10px] border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all flex justify-center items-center gap-2"
+                      >
+                        Order via WhatsApp (Fallback)
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793 0-.853.448-1.273.607-1.446.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298L11.006 11.2c.101.209.02.378-.051.52-.071.141-.151.233-.254.34-.103.107-.217.221-.31.334-.107.13-.218.271-.091.488.127.216.563.928 1.211 1.503.834.743 1.54.972 1.761 1.081.221.109.351.091.484-.061.132-.153.565-.658.718-.881.153-.223.307-.187.518-.109.21.078 1.332.628 1.56.744.227.116.379.174.434.268.055.094.055.544-.089.949z"/></svg>
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>

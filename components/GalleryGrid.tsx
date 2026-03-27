@@ -58,8 +58,8 @@ const GalleryGrid: React.FC = () => {
               onClick={() => setFilter(cat.id)}
               className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all whitespace-nowrap flex items-center gap-2 ${
                 filter === cat.id
-                  ? 'bg-bronze text-white shadow-lg shadow-bronze/20 scale-105'
-                  : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200 shadow-sm'
+                  ? 'bg-primary text-background shadow-lg shadow-primary/20 scale-105'
+                  : 'bg-cart text-body hover:bg-sidebar border border-border-base shadow-sm'
               }`}
             >
               <Filter size={14} aria-hidden="true" />
@@ -71,7 +71,7 @@ const GalleryGrid: React.FC = () => {
         <div className="flex items-center gap-3 w-full md:w-auto justify-end">
             <button 
                 onClick={loadImages}
-                className="p-2.5 rounded-full bg-white border border-gray-200 text-gray-500 hover:bg-gray-50 hover:text-bronze transition-all shadow-sm"
+                className="p-2.5 rounded-full bg-cart border border-border-base text-muted hover:bg-sidebar hover:text-primary transition-all shadow-sm"
                 title="Refresh Gallery"
             >
                 <RefreshCw size={20} className={loading ? 'animate-spin' : ''} aria-hidden="true" />
@@ -80,7 +80,7 @@ const GalleryGrid: React.FC = () => {
             {isAdmin && (
                 <button
                 onClick={handleUpload}
-                className="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all shadow-xl bg-bronze text-white hover:bg-bronze/80 hover:-translate-y-1 active:scale-95"
+                className="flex items-center gap-2 px-6 py-2.5 rounded-full font-bold transition-all shadow-xl bg-primary text-background hover:opacity-90 hover:-translate-y-1 active:scale-95"
                 >
                 <Upload size={18} aria-hidden="true" />
                 Upload {filter !== 'all' ? `to ${filter}` : 'Image'}
@@ -92,8 +92,8 @@ const GalleryGrid: React.FC = () => {
       {/* Grid */}
       {loading ? (
         <div className="flex flex-col items-center justify-center py-24 gap-4">
-          <Loader2 size={48} className="text-bronze animate-spin" aria-hidden="true" />
-          <p className="text-gray-400 font-medium animate-pulse">Fetching visuals...</p>
+          <Loader2 size={48} className="text-primary animate-spin" aria-hidden="true" />
+          <p className="text-muted font-medium animate-pulse">Fetching visuals...</p>
         </div>
       ) : items.length > 0 ? (
         <motion.div 
@@ -121,7 +121,7 @@ const GalleryGrid: React.FC = () => {
                   height="600"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6">
-                  <span className="text-[10px] uppercase tracking-widest text-bronze font-black mb-1">
+                  <span className="text-[10px] uppercase tracking-widest text-primary font-black mb-1">
                     {item.category}
                   </span>
                   <div className="flex justify-between items-center">
@@ -134,9 +134,9 @@ const GalleryGrid: React.FC = () => {
           </AnimatePresence>
         </motion.div>
       ) : (
-        <div className="text-center py-24 bg-white/5 rounded-3xl border border-dashed border-white/10">
-          <p className="text-gray-400 text-lg">No images found in this category yet.</p>
-          {isAdmin && <p className="text-sm text-gray-500 mt-2">Start by uploading something epic!</p>}
+        <div className="text-center py-24 bg-cart/5 rounded-3xl border border-dashed border-border-base/10">
+          <p className="text-muted text-lg">No images found in this category yet.</p>
+          {isAdmin && <p className="text-sm text-muted/60 mt-2">Start by uploading something epic!</p>}
         </div>
       )}
 
@@ -164,7 +164,7 @@ const GalleryGrid: React.FC = () => {
               className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
             />
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-center text-white">
-                <p className="text-bronze font-black tracking-widest uppercase text-xs mb-2">{selectedImage.category}</p>
+                <p className="text-primary font-black tracking-widest uppercase text-xs mb-2">{selectedImage.category}</p>
                 <p className="text-white/60 text-sm">{new Date(selectedImage.createdAt).toLocaleDateString()}</p>
             </div>
           </motion.div>

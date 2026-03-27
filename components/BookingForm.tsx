@@ -113,8 +113,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
     }
   };
 
-  const inputClasses = "w-full bg-white/50 border border-stone-200 rounded-lg px-4 py-3 font-sans text-obsidian focus:outline-none focus:border-bronze focus:ring-1 focus:ring-bronze/20 transition-all placeholder:text-stone-400";
-  const labelClasses = "block text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 ml-1";
+  const inputClasses = "w-full bg-cart/50 border border-border-base rounded-lg px-4 py-3 font-sans text-heading focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all placeholder:text-muted/50";
+  const labelClasses = "block text-xs uppercase tracking-widest text-muted font-bold mb-2 ml-1";
 
   if (showConfirmation) {
     return (
@@ -123,34 +123,34 @@ const BookingForm: React.FC<BookingFormProps> = ({
         animate={{ opacity: 1, x: 0 }}
         className="space-y-8 py-4 px-1"
       >
-        <div className="bg-bronze/5 border border-bronze/20 rounded-2xl p-6 space-y-4">
-          <h3 className="font-serif text-xl text-obsidian flex items-center gap-2">
+        <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 space-y-4">
+          <h3 className="font-serif text-xl text-heading flex items-center gap-2">
             Review Your Request
           </h3>
           <div className="grid grid-cols-2 gap-y-4 text-sm font-sans">
             <div>
-              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Type</p>
-              <p className="text-obsidian font-bold">{formData.type}</p>
+              <p className="text-muted text-[10px] uppercase font-bold tracking-widest">Type</p>
+              <p className="text-heading font-bold">{formData.type}</p>
             </div>
             <div>
-              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Date</p>
-              <p className="text-obsidian font-bold">{formatDateNice(formData.date)}</p>
+              <p className="text-muted text-[10px] uppercase font-bold tracking-widest">Date</p>
+              <p className="text-heading font-bold">{formatDateNice(formData.date)}</p>
             </div>
             <div>
-              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Name</p>
-              <p className="text-obsidian font-bold">{formData.name}</p>
+              <p className="text-muted text-[10px] uppercase font-bold tracking-widest">Name</p>
+              <p className="text-heading font-bold">{formData.name}</p>
             </div>
             {formData.type !== 'General Inquiry' && (
               <div>
-                <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Guests</p>
-                <p className="text-obsidian font-bold">{formData.people} People</p>
+                <p className="text-muted text-[10px] uppercase font-bold tracking-widest">Guests</p>
+                <p className="text-heading font-bold">{formData.people} People</p>
               </div>
             )}
           </div>
           {formData.selectedEvent && (
-            <div className="pt-2 border-t border-bronze/10">
-              <p className="text-stone-400 text-[10px] uppercase font-bold tracking-widest">Selected Event</p>
-              <p className="text-bronze font-bold">{formData.selectedEvent}</p>
+            <div className="pt-2 border-t border-primary/10">
+              <p className="text-muted text-[10px] uppercase font-bold tracking-widest">Selected Event</p>
+              <p className="text-primary font-bold">{formData.selectedEvent}</p>
             </div>
           )}
         </div>
@@ -159,14 +159,14 @@ const BookingForm: React.FC<BookingFormProps> = ({
           <button
             onClick={handleFinalConfirm}
             disabled={isSubmitting}
-            className="w-full bg-obsidian text-white py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:bg-bronze transition-all flex items-center justify-center gap-3 disabled:opacity-70 group"
+            className="w-full bg-primary text-background py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 disabled:opacity-70 group"
           >
             {isSubmitting ? 'Opening WhatsApp...' : 'Confirm & Open WhatsApp'}
             <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
           </button>
           <button
             onClick={() => setShowConfirmation(false)}
-            className="w-full bg-white text-stone-500 py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:text-obsidian transition-colors text-center"
+            className="w-full bg-cart text-muted py-3 rounded-lg text-xs font-bold uppercase tracking-widest hover:text-heading transition-colors text-center"
           >
             Go Back & Edit
           </button>
@@ -182,7 +182,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         <div className="space-y-1">
           <label htmlFor="name" className={labelClasses}>Your Name</label>
           <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/50" />
             <input
               required
               id="name"
@@ -200,7 +200,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         <div className="space-y-1">
           <label htmlFor="phone" className={labelClasses}>Phone Number</label>
           <div className="relative">
-            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/50" />
             <input
               required
               id="phone"
@@ -218,7 +218,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         <div className="space-y-1">
           <label htmlFor="date" className={labelClasses}>Preferred Date</label>
           <div className="relative">
-            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/50" />
             <input
               required
               id="date"
@@ -236,7 +236,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
         <div className="space-y-1">
           <label htmlFor="people" className={labelClasses}>Number of Guests</label>
           <div className="relative">
-            <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/50" />
             <select
               id="people"
               name="people"
@@ -250,7 +250,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             </select>
           </div>
           {price > 0 && (
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-bronze uppercase bg-bronze/10 px-2 py-1 rounded">
+            <div className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-primary uppercase bg-primary/10 px-2 py-1 rounded">
               Total: ₹{price * (parseInt(formData.people.toString().replace('+', '')) || 0)}
             </div>
           )}
@@ -268,8 +268,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 onClick={() => setFormData(prev => ({ ...prev, type: 'Table Reservation', selectedEvent: '' }))}
                 className={`py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
                   formData.type === 'Table Reservation' 
-                    ? 'bg-obsidian text-white border-obsidian' 
-                    : 'bg-white text-stone-500 border-stone-200 hover:border-bronze'
+                    ? 'bg-primary text-background border-primary' 
+                    : 'bg-cart text-muted border-border-base hover:border-primary'
                 }`}
               >
                 Table Reservation
@@ -279,8 +279,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 onClick={() => setFormData(prev => ({ ...prev, type: 'Event Booking' }))}
                 className={`py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
                   formData.type === 'Event Booking' 
-                    ? 'bg-obsidian text-white border-obsidian' 
-                    : 'bg-white text-stone-500 border-stone-200 hover:border-bronze'
+                    ? 'bg-primary text-background border-primary' 
+                    : 'bg-cart text-muted border-border-base hover:border-primary'
                 }`}
               >
                 Event Booking
@@ -290,8 +290,8 @@ const BookingForm: React.FC<BookingFormProps> = ({
                 onClick={() => setFormData(prev => ({ ...prev, type: 'General Inquiry', selectedEvent: '' }))}
                 className={`py-3 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all border ${
                   formData.type === 'General Inquiry' 
-                    ? 'bg-obsidian text-white border-obsidian' 
-                    : 'bg-white text-stone-500 border-stone-200 hover:border-bronze'
+                    ? 'bg-primary text-background border-primary' 
+                    : 'bg-cart text-muted border-border-base hover:border-primary'
                 }`}
               >
                 General Inquiry
@@ -304,7 +304,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
             <div className="space-y-1 animate-in fade-in slide-in-from-top-2 duration-300">
               <label htmlFor="selectedEvent" className={labelClasses}>Select Event</label>
               <div className="relative">
-                <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                <Music className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted/50" />
                 <select
                   required
                   id="selectedEvent"
@@ -346,7 +346,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
       <div className="space-y-1">
         <label htmlFor="message" className={labelClasses}>Special Request (Optional)</label>
         <div className="relative">
-          <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-stone-400" />
+          <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-muted/50" />
           <textarea
             id="message"
             name="message"
@@ -363,13 +363,13 @@ const BookingForm: React.FC<BookingFormProps> = ({
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         type="submit"
-        className="w-full bg-obsidian text-white py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:bg-bronze transition-all flex items-center justify-center gap-3 group"
+        className="w-full bg-primary text-background py-4 rounded-lg font-sans text-sm font-bold uppercase tracking-widest hover:opacity-90 transition-all flex items-center justify-center gap-3 group"
       >
         Continue to Confirmation
         <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
       </Motion.button>
 
-      <p className="text-center text-[10px] text-stone-400 font-sans uppercase tracking-widest mt-4">
+      <p className="text-center text-[10px] text-muted font-sans uppercase tracking-widest mt-4">
         Direct confirmation via WhatsApp with KOS Sports Café
       </p>
     </form>
