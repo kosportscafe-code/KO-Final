@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, X, Save, ImageIcon } from 'lucide-react';
 import { MenuItem } from '../types';
-import { fetchMenuData } from '../services/sheetService';
+import { fetchMenuData } from '../services/menuService';
 import { saveAdminMenuItem, deleteAdminMenuItem, generateItemId } from '../services/menuAdminService';
 import { getMediaItems, MediaItem } from '../services/mediaService';
 
@@ -96,28 +96,33 @@ const AdminMenu: React.FC = () => {
     });
   };
 
-  const handleLocalFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLocalFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const dataUrl = reader.result as string;
-        setCurrentItem({ ...currentItem, image_url: dataUrl });
+      try {
+        setLoading(true); // Show some loading state while uploading
+        const service = await import('../services/galleryService');
+        const url = await service.uploadToCloudinary(file, 'food');
+        
+        setCurrentItem({ ...currentItem, image_url: url });
         
         // Also save to media library for future use
-        import('../services/mediaService').then(service => {
-            service.saveMediaItem({
-                id: `media_${Date.now()}`,
-                filename: file.name,
-                type: file.type,
-                dataUrl,
-                uploadedAt: new Date().toISOString(),
-                sizeBytes: file.size
-            });
-            refreshMedia();
+        const mediaService = await import('../services/mediaService');
+        mediaService.saveMediaItem({
+            id: `media_${Date.now()}`,
+            filename: file.name,
+            type: file.type,
+            dataUrl: url, // Store the Cloudinary URL in the dataUrl field
+            uploadedAt: new Date().toISOString(),
+            sizeBytes: file.size
         });
-      };
-      reader.readAsDataURL(file);
+        refreshMedia();
+      } catch (error) {
+        console.error('Failed to upload to Cloudinary:', error);
+        alert('Failed to upload image. Please try again.');
+      } finally {
+        setLoading(false);
+      }
     }
   };
 

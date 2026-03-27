@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
           {/* Brand */}
           <div className="space-y-6">
             <h3 className="font-serif text-3xl text-white">{CAFE_NAME}</h3>
-            <p className="font-sans text-stone-400 font-light text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
+            <p className="font-sans text-muted font-light text-sm leading-relaxed max-w-xs mx-auto md:mx-0">
               The ultimate gathering place for sports enthusiasts and food lovers alike.
             </p>
           </div>
@@ -41,11 +41,11 @@ const Footer: React.FC = () => {
             </div>
             <a
               href="mailto:info@kosportscafe.com"
-              className="block font-sans text-stone-400 font-light text-sm hover:text-bronze transition-colors underline"
+              className="block font-sans text-muted font-light text-sm hover:text-bronze transition-colors underline"
             >
               {CONTACT_WEBSITE}
             </a>
-            <div className="flex justify-center md:justify-start items-center gap-2 text-stone-400 text-sm">
+            <div className="flex justify-center md:justify-start items-center gap-2 text-muted text-sm">
               <MapPin className="w-4 h-4" aria-hidden="true" />
               <a
                 href="https://www.google.com/maps/search/KO+Sports+Cafe+Meerut"
@@ -82,17 +82,17 @@ const Footer: React.FC = () => {
               </a>
             </div>
             <div className="pt-8 flex flex-col items-center md:items-start space-y-4">
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-muted">
                 © {new Date().getFullYear()} KOS Café. All rights reserved.
               </p>
               <a 
                 href="/admin" 
-                className="inline-flex items-center justify-center px-4 py-2 border border-stone-600 text-stone-300 text-xs font-bold uppercase tracking-widest hover:border-bronze hover:text-bronze transition-colors rounded"
+                className="inline-flex items-center justify-center px-4 py-2 border border-muted/30 text-muted text-xs font-bold uppercase tracking-widest hover:border-bronze hover:text-bronze transition-colors rounded"
               >
                 Admin Login
               </a>
             </div>
-            <div className="pt-4 flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest text-stone-500 font-bold">
+            <div className="pt-4 flex flex-wrap justify-center md:justify-start gap-x-6 gap-y-2 text-[10px] uppercase tracking-widest text-muted font-bold">
               <a href="#booking" className="hover:text-white transition-colors">Book a Table</a>
               <a href="#shows" className="hover:text-white transition-colors">Upcoming Events</a>
               <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>

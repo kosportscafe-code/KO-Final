@@ -49,36 +49,28 @@ const AdminMedia: React.FC = () => {
     setUploading(true);
     let successCount = 0;
 
+    const { uploadToCloudinary } = await import('../services/galleryService');
+
     for (const file of validFiles) {
-      await new Promise<void>((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const dataUrl = e.target?.result as string;
-          const item: MediaItem = {
-            id: `media_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-            filename: file.name,
-            type: file.type,
-            dataUrl,
-            uploadedAt: new Date().toISOString(),
-            sizeBytes: file.size,
-          };
-          try {
-            saveMediaItem(item);
-            setMediaItems(getMediaItems());
-            successCount++;
-          } catch {
-            addToast('error', `Failed to save "${file.name}". Storage may be full.`);
-          }
-          resolve();
+      try {
+        const url = await uploadToCloudinary(file, 'general');
+        const item: MediaItem = {
+          id: `media_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+          filename: file.name,
+          type: file.type,
+          dataUrl: url, // Store the global Cloudinary URL
+          uploadedAt: new Date().toISOString(),
+          sizeBytes: file.size,
         };
-        reader.onerror = () => {
-          addToast('error', `Failed to read "${file.name}".`);
-          resolve();
-        };
-        reader.readAsDataURL(file);
-      });
+        saveMediaItem(item);
+        successCount++;
+      } catch (error) {
+        console.error('Failed to upload to Cloudinary:', error);
+        addToast('error', `Failed to upload "${file.name}" to Cloudinary.`);
+      }
     }
 
+    setMediaItems(getMediaItems());
     setUploading(false);
     if (successCount > 0) {
       addToast('success', `${successCount} image${successCount > 1 ? 's' : ''} uploaded successfully.`);

@@ -15,7 +15,7 @@ export interface CartItem extends MenuItem {
   cartId: string;
   selectedSize: 'Regular' | 'Medium' | 'Half' | 'Full';
   price: number;
-  quantity: number;
+  qty: number;
 }
 
 export interface SheetRow {

@@ -2,14 +2,14 @@ import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Hero from '../components/Hero';
 import AboutStory from '../components/AboutStory';
-import Menu from '../components/Menu';
+import MenuHighlights from '../components/MenuHighlights';
 import Gallery from '../components/Gallery';
 import StandupShows from '../components/StandupShows';
 import BookingForm from '../components/BookingForm';
 import Testimonials from '../components/Testimonials';
 import FAQ from '../components/FAQ';
 import SEO from '../components/SEO';
-import { Calendar, Users, ArrowRight } from 'lucide-react';
+import { Calendar, Users, ArrowRight, ShoppingBag } from 'lucide-react';
 
 const Home: React.FC = () => {
   const location = useLocation();
@@ -184,7 +184,7 @@ const Home: React.FC = () => {
 
       <Hero />
       <AboutStory />
-      <Menu />
+      <MenuHighlights />
       <Gallery />
       <StandupShows />
 
@@ -253,12 +253,40 @@ const Home: React.FC = () => {
       </section>
 
       <Testimonials />
+
+      {/* Global Order CTA */}
+      <section className="py-24 bg-obsidian relative overflow-hidden">
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1504450758481-7338eba7524a?q=80&w=1600&auto=format&fit=crop')] bg-cover bg-center grayscale" />
+          <div className="absolute inset-0 bg-gradient-to-r from-obsidian via-obsidian/80 to-transparent" />
+        </div>
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="max-w-2xl">
+            <h2 className="font-serif text-4xl md:text-6xl text-white mb-6 leading-tight">
+              Ready to <span className="text-bronze italic">Fuel</span> Your Game?
+            </h2>
+            <p className="text-cream/60 text-lg mb-10 font-sans leading-relaxed">
+              Order your favorites now and enjoy the ultimate sports cafe experience at home or in our stadium-vibe lounge.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a 
+                href="/order" 
+                className="inline-flex items-center justify-center gap-3 bg-bronze text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-white hover:text-obsidian transition-all shadow-2xl active:scale-95"
+              >
+                Order Online Now <ShoppingBag size={18} />
+              </a>
+              <a 
+                href="/book" 
+                className="inline-flex items-center justify-center gap-3 bg-white/10 backdrop-blur-md border border-white/20 text-white px-10 py-5 rounded-full font-black uppercase tracking-widest text-xs hover:bg-white/20 transition-all active:scale-95"
+              >
+                Book a Table
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
       
-      {/* FAQ Section - Optically identical to original if it was hidden, 
-          or ensuring it's semantically correct now. 
-          Actually, the user asked to ADD FAQ schema AND content. 
-          I will add it as a new section at the bottom to avoid changing existing section order.
-      */}
       <FAQ />
       
       {/* Semantic Address - Invisible but AIO-rich */}

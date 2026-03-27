@@ -39,7 +39,7 @@ const INTENTS: Array<{
     id: 'menu',
     keywords: ['menu', 'food', 'eat', 'dish', 'item', 'cuisine', 'what do you serve', 'what food'],
     text: 'Our menu has something for everyone! 😋\n\n**Categories:**\nBurgers · Pizzas · Sandwiches · Momos · Rolls · Chinese · Pasta · Tacos · Nachos · Thalis · Drinks · Shakes',
-    links: [{ label: 'View Full Menu', href: '#menu', scroll: 'menu' }],
+    links: [{ label: 'View Full Menu', href: '/order' }],
     chips: ['Burger prices', 'Pizza prices', "What's cheapest?"],
   },
   {
@@ -87,7 +87,7 @@ const INTENTS: Array<{
     id: 'veg',
     keywords: ['veg', 'vegetar', 'plant', 'no meat', 'without meat', 'vegan'],
     text: KB.veg,
-    links: [{ label: 'View Menu', href: '#menu', scroll: 'menu' }],
+    links: [{ label: 'View Menu', href: '/order' }],
   },
   {
     id: 'social',
@@ -155,7 +155,7 @@ function getResponse(input: string): Omit<Message, 'id' | 'timestamp' | 'role'> 
         const more = items.length > 6 ? `\n_...and ${items.length - 6} more on the menu!_` : '';
         return {
           text: `Here are our **${cat}**:\n${list}${more}`,
-          links: [{ label: 'View Full Menu', href: '/menu', scroll: 'menu' }],
+          links: [{ label: 'View Full Menu', href: '/order' }],
           chips: ['Book Now', 'Upcoming Events'],
         };
       }
@@ -177,14 +177,14 @@ function getResponse(input: string): Omit<Message, 'id' | 'timestamp' | 'role'> 
     };
   } else if (matched.length > 1 && matched.length <= 5) {
     const list = matched.map(i => `• **${i.name}** (${i.category}) — ₹${i.priceReg}`).join('\n');
-    return { text: `Found a few matches:\n${list}`, links: [{ label: 'View Full Menu', href: '/menu', scroll: 'menu' }] };
+    return { text: `Found a few matches:\n${list}`, links: [{ label: 'View Full Menu', href: '/order' }] };
   }
 
   // 5. Price queries
   if (has('price', 'cost', 'how much', 'rate', 'cheap', 'expensive', 'cheapest', 'afford'))
     return {
       text: 'Our prices start from just **₹20** (Tea) up to **₹279** (large pizza). Most snacks & meals are between **₹39–₹199**! 😊',
-      links: [{ label: 'Browse Prices on Menu', href: '/menu', scroll: 'menu' }],
+      links: [{ label: 'Browse Prices on Menu', href: '/order' }],
     };
 
   // 6. Fallback — always offer all 4 core intents

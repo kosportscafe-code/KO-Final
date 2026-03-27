@@ -23,7 +23,7 @@ const Navbar: React.FC = () => {
 
   const navLinks = [
     { name: 'Home', href: '/' },
-    { name: 'Menu', href: '/menu' },
+    { name: 'Menu', href: '/order' },
     { name: 'Gallery', href: '/gallery' },
     { name: 'Events', href: '/events' },
     { name: 'Book Table', href: '/book' },
@@ -31,13 +31,13 @@ const Navbar: React.FC = () => {
     { name: 'Blog', href: '/blog' },
   ];
 
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const cartCount = cart.reduce((sum, item) => sum + item.qty, 0);
 
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 border-b ${isScrolled
-        ? 'bg-alabaster/80 backdrop-blur-md border-stone-200 py-3'
-        : 'bg-transparent border-transparent py-6'
+        ? 'bg-background/95 backdrop-blur-md border-border-base/30 py-3 shadow-sm'
+        : 'bg-background/50 backdrop-blur-sm border-transparent py-5'
         }`}
     >
       <div className="container mx-auto px-6 flex items-center justify-between">
@@ -58,10 +58,7 @@ const Navbar: React.FC = () => {
                 <a
                   href={link.href}
                   aria-current={location.pathname === link.href ? "page" : undefined}
-                  className={`font-sans text-sm tracking-widest uppercase transition-colors ${isScrolled
-                    ? 'text-obsidian/70 hover:text-bronze'
-                    : 'text-white hover:text-cream'
-                    } ${location.pathname === link.href ? 'text-bronze' : ''}`}
+                  className={`font-serif text-lg tracking-widest uppercase transition-colors text-heading hover:text-bronze ${location.pathname === link.href ? 'text-bronze' : ''}`}
                 >
                   {link.name}
                 </a>
@@ -74,31 +71,34 @@ const Navbar: React.FC = () => {
           <a
             href="/book"
             aria-label="Book a live comedy show or event"
-            className={`hidden md:block font-sans text-xs tracking-widest uppercase px-5 py-2 border transition-colors ${
-              isScrolled
-                ? 'border-obsidian text-obsidian hover:bg-obsidian hover:text-white'
-                : 'border-white text-white hover:bg-white hover:text-obsidian'
-            }`}
+            className="hidden md:block font-sans text-xs tracking-widest uppercase px-5 py-2 border border-heading text-heading hover:bg-heading hover:text-white transition-all rounded-full"
           >
             Book Show
           </a>
-
-          <button
-            onClick={() => toggleDrawer(true)}
-            className="relative p-2 hover:bg-stone-200/50 rounded-full transition-colors"
-            aria-label="Open shopping cart"
+          
+          <a
+            href="/order"
+            className="hidden md:flex items-center gap-2 font-sans text-[10px] tracking-[0.15em] uppercase px-7 py-3 rounded-full font-black transition-all duration-300 shadow-md hover:shadow-xl active:scale-95 bg-bronze text-white hover:bg-heading"
           >
-            <ShoppingBag className="w-5 h-5 text-obsidian" strokeWidth={1.5} aria-hidden="true" />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-bronze text-white text-[10px] w-4 h-4 flex items-center justify-center rounded-full">
-                {totalItems}
+            Order Now
+          </a>
+
+          <a
+            href="/order"
+            className="relative p-2 hover:bg-stone-200/50 rounded-full transition-colors flex items-center justify-center text-heading"
+            aria-label="View shopping cart and order online"
+          >
+            <ShoppingBag className="w-5 h-5 text-heading" strokeWidth={1.5} aria-hidden="true" />
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-bronze text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+                {cartCount}
               </span>
             )}
-          </button>
+          </a>
 
           {/* Mobile Menu Trigger */}
           <button
-            className="md:hidden"
+            className="md:hidden text-heading"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label={isMobileMenuOpen ? "Close mobile menu" : "Open mobile menu"}
           >
@@ -114,7 +114,7 @@ const Navbar: React.FC = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="md:hidden bg-alabaster border-t border-stone-200 overflow-hidden"
+            className="md:hidden bg-background border-t border-border-base overflow-hidden shadow-xl"
           >
             <ul className="flex flex-col p-6 space-y-4">
               {navLinks.map((link) => (
@@ -123,12 +123,21 @@ const Navbar: React.FC = () => {
                       href={link.href}
                       onClick={() => setIsMobileMenuOpen(false)}
                       aria-current={location.pathname === link.href ? "page" : undefined}
-                      className={`font-serif text-xl ${location.pathname === link.href ? 'text-bronze' : 'text-obsidian'}`}
+                      className={`font-serif text-xl ${location.pathname === link.href ? 'text-bronze' : 'text-heading'}`}
                     >
                       {link.name}
                     </a>
                   </li>
               ))}
+              <li className="pt-4">
+                <a
+                  href="/order"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-3 w-full bg-bronze text-white py-4 rounded-xl font-serif text-xl shadow-lg active:shadow-inner transition-all"
+                >
+                  Order Now 🛒
+                </a>
+              </li>
             </ul>
           </Motion.div>
         )}

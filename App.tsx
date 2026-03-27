@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import { CartProvider } from './context/CartContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
-import CartDrawer from './components/CartDrawer';
 import ChatBot from './components/ChatBot';
 import Home from './pages/Home';
 import BlogListing from './pages/BlogListing';
@@ -19,6 +18,8 @@ import GalleryPage from './pages/GalleryPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import TermsOfService from './pages/TermsOfService';
 import BookingPage from './pages/BookingPage';
+import OrderPage from './pages/OrderPage';
+import BackgroundDecor from './components/BackgroundDecor';
 
 function App() {
   return (
@@ -43,19 +44,20 @@ function App() {
           <Route path="/*" element={
             <>
               <Navbar />
+              <BackgroundDecor />
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<Home />} />
-                <Route path="/menu" element={<Home />} />
+                <Route path="/menu" element={<OrderPage />} />
                 <Route path="/events" element={<Home />} />
                 <Route path="/book" element={<BookingPage />} />
+                <Route path="/order" element={<OrderPage />} />
                 <Route path="/contact" element={<Home />} />
                 <Route path="/gallery" element={<GalleryPage />} />
                 <Route path="/blog" element={<BlogListing />} />
                 <Route path="/blog/:slug" element={<BlogDetail />} />
               </Routes>
               <Footer />
-              <CartDrawer />
               <ChatBot />
             </>
           } />

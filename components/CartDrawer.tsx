@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Trash2, ChevronRight, Check, MapPin } from 'lucide-react';
+import { X, Trash2, ChevronRight, Check, MapPin, ShoppingBag } from 'lucide-react';
 import { formatCurrency } from '../utils/helpers';
 import { WEBHOOK_URL } from '../constants';
 
@@ -61,29 +61,22 @@ const CartDrawer: React.FC = () => {
 
     setStatus('sending');
 
-    let message = `Hello, I would like to place an order:\n\n\uD83D\uDED2 Order Details:\n`;
+    let message = `Hello, I want to place an order:\n\n`;
     
     cart.forEach(item => {
-      message += `- ${item.name} (Qty: ${item.quantity}) - \u20B9${item.price * item.quantity}\n`;
+      const price = Number(item.price) || 0;
+      const qty = Number(item.qty) || 0;
+      message += `${item.name} x ${qty} = ₹${price * qty}\n`;
     });
-
-    message += `\nSubtotal: \u20B9${cartTotal}\n`;
-    message += `Taxes (2.5% CGST + 2.5% SGST): \u20B9${taxAmount}\n`;
-    message += `\uD83D\uDCB0 Grand Total: \u20B9${grandTotal}\n\n`;
-    message += `*Note: 2.5% SGST + 2.5% CGST added in the bill when order is placed.*\n\n`;
-    message += `\uD83D\uDCCD Delivery Address: ${address}\n`;
-    message += `\uD83D\uDCDE Contact Number: ${phone}\n`;
-
-    if (locationStatus === 'captured' && locationObj) {
-      message += `\n\uD83D\uDCCD Live Location:\nhttps://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}`;
-    } else {
-      message += `\n\uD83D\uDCCD Location: Not shared`;
-    }
+    
+    message += `\nTotal: ₹${grandTotal}\n\n`;
+    message += `Name: ${name}\n`;
+    message += `Address: ${address}\n`;
+    message += `\nPlease confirm.`;
 
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
 
-    alert("Redirecting to WhatsApp to place your order");
     window.location.href = whatsappUrl;
     
     clearCart();
@@ -96,6 +89,21 @@ const CartDrawer: React.FC = () => {
     setLocationObj(null);
   };
 
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const drawerVariants = {
+    hidden: isMobile ? { y: '100%', x: 0 } : { x: '100%', y: 0 },
+    visible: { y: 0, x: 0 },
+    exit: isMobile ? { y: '100%', x: 0 } : { x: '100%', y: 0 }
+  };
+
   return (
     <AnimatePresence>
       {isDrawerOpen && (
@@ -106,35 +114,50 @@ const CartDrawer: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => toggleDrawer(false)}
-            className="fixed inset-0 bg-obsidian/20 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-obsidian/40 backdrop-blur-sm z-[100]"
           />
 
           {/* Drawer */}
           <Motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            variants={drawerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 h-full w-full md:w-[450px] bg-alabaster/95 shadow-2xl z-50 flex flex-col border-l border-white/50"
+            className={`fixed z-[101] bg-cart shadow-2xl flex flex-col transition-all duration-300 ${
+              isMobile 
+                ? 'bottom-0 left-0 right-0 h-auto max-h-[92vh] rounded-t-[2.5rem]' 
+                : 'top-0 right-0 h-full w-[450px] border-l border-border-base'
+            }`}
           >
+            {/* Mobile Drag Handle */}
+            {isMobile && (
+              <div className="w-full flex justify-center pt-3 pb-1">
+                <div className="w-12 h-1.5 bg-border-base rounded-full" />
+              </div>
+            )}
+
             {/* Header */}
-            <div className="p-6 flex justify-between items-center border-b border-stone-200">
-              <h2 className="font-serif text-2xl text-obsidian">Your Order</h2>
+            <div className={`flex justify-between items-center border-b border-border-base/50 ${isMobile ? 'px-6 py-4' : 'p-6'}`}>
+              <h2 className="font-serif text-2xl text-heading">Your Order</h2>
               <button 
                 onClick={() => toggleDrawer(false)} 
-                className="p-2 hover:bg-stone-200 rounded-full"
+                className="p-2 hover:bg-background rounded-full transition-colors"
                 aria-label="Close cart"
               >
-                <X className="w-5 h-5 text-stone-500" aria-hidden="true" />
+                <X className="w-5 h-5 text-muted" aria-hidden="true" />
               </button>
             </div>
 
             {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
               {cart.length === 0 ? (
-                <div className="h-full flex flex-col justify-center items-center text-stone-400">
-                  <span className="font-serif italic text-xl mb-2">Cart is empty</span>
-                  <p className="text-sm">Add some delicious items from the menu.</p>
+                <div className="h-full min-h-[200px] flex flex-col justify-center items-center text-muted text-center">
+                  <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4">
+                    <ShoppingBag size={32} className="text-muted/30" />
+                  </div>
+                  <h3 className="font-serif text-xl text-heading mb-2">Your cart is empty 🛒</h3>
+                  <p className="text-muted text-sm">Start adding food!</p>
                 </div>
               ) : (
                 cart.map((item) => (
@@ -142,7 +165,7 @@ const CartDrawer: React.FC = () => {
                     <div className="flex-grow">
                       <div className="flex justify-between items-start mb-1">
                         <h4 className="font-serif text-lg text-obsidian">{item.name}</h4>
-                        <span className="font-sans font-medium text-sm">{formatCurrency(item.price * item.quantity)}</span>
+                        <span className="font-sans font-medium text-sm">{formatCurrency((Number(item.price) || 0) * (Number(item.qty) || 0))}</span>
                       </div>
                       <p className="text-xs text-stone-500 mb-2 uppercase tracking-wide">
                         {item.selectedSize} 
@@ -154,7 +177,7 @@ const CartDrawer: React.FC = () => {
                             className="px-3 py-1 hover:bg-stone-200 rounded-l-full transition-colors"
                             aria-label="Decrease quantity"
                           >-</button>
-                          <span className="px-1 text-sm font-sans w-6 text-center">{item.quantity}</span>
+                          <span className="px-1 text-sm font-sans w-6 text-center">{item.qty}</span>
                           <button 
                             onClick={() => updateQuantity(item.cartId, 1)}
                             className="px-3 py-1 hover:bg-stone-200 rounded-r-full transition-colors"
@@ -246,11 +269,11 @@ const CartDrawer: React.FC = () => {
                         <span>Taxes (5%)</span>
                         <span>{formatCurrency(Math.round(cartTotal * 0.05))}</span>
                       </div>
-                      <div className="flex justify-between items-center pt-2 border-t border-stone-200 mt-2">
-                        <span className="text-stone-500 font-serif text-lg">Grand Total</span>
-                        <span className="text-2xl font-sans text-obsidian font-medium">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
+                      <div className="flex justify-between items-center pt-2 border-t border-border-base/30 mt-2">
+                        <span className="text-muted font-serif text-lg uppercase tracking-wider">Total</span>
+                        <span className="text-2xl font-sans text-bronze font-black">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
                       </div>
-                      <p className="text-[10px] text-stone-400 text-center italic leading-tight px-4 pb-2">
+                      <p className="text-[10px] text-muted text-center italic leading-tight px-4 pb-2">
                         2.5% SGST + 2.5% CGST added in the bill when order is placed.
                       </p>
                     </div>
@@ -258,11 +281,11 @@ const CartDrawer: React.FC = () => {
                     <button 
                       type="submit"
                       disabled={status === 'sending'}
-                      className="w-full bg-obsidian text-white py-4 font-sans uppercase tracking-widest text-xs hover:bg-stone-800 transition-all duration-300 flex justify-center items-center gap-2 disabled:opacity-70 active:scale-95 shadow-lg"
+                      className="w-full bg-[#25D366] text-white py-5 rounded-[20px] font-black uppercase tracking-[0.2em] text-sm hover:bg-[#128C7E] transition-all duration-300 flex justify-center items-center gap-3 disabled:opacity-70 active:scale-95 shadow-[0_10px_30px_rgba(37,211,102,0.3)]"
                       aria-label="Confirm and send order via WhatsApp"
                     >
                       {status === 'sending' ? 'Redirecting...' : 'Order on WhatsApp'}
-                      {!status.startsWith('send') && <ChevronRight className="w-4 h-4" aria-hidden="true" />}
+                      {status === 'idle' && <ChevronRight className="w-5 h-5" aria-hidden="true" />}
                     </button>
                   </form>
                 )}

@@ -1,34 +1,16 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { MenuItem } from '../types';
-import { fetchMenuData } from '../services/sheetService';
+import { fetchMenuData, getSizeLabels, generateMenuSchema } from '../services/menuService';
 import { FALLBACK_MENU, MENU_PDF_URL } from '../constants';
 import { formatCurrency, getDriveImage, generateAltText, getOptimizedImageUrl } from '../utils/helpers';
 import { useCart } from '../context/CartContext';
 import { Plus, X, Search, ArrowUpDown, Leaf } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// Default images for menu categories
-const categoryImages: Record<string, string> = {
-  'Sandwiches': '/images/menu/sandwich.jpg',
-  'Rolls & Wraps': '/images/menu/burrito.jpg',
-  'Bowls & Meals': '/images/menu/bowl.jpg',
-  'Pizzas': '/images/menu/pizza.jpg',
-  'Burgers': '/images/menu/burger.jpg',
-  'Momos': '/images/menu/momos.jpg',
-  'Chinese & Noodles': '/images/menu/noodles.jpg',
-  'Drinks': '/images/menu/drinks.jpg',
-  'Thalis': '/images/menu/thali.jpg',
-};
+import { useMenuData } from '../hooks/useMenuData';
 
 // Placeholder image if no specific image is found
 const placeholderImage = 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?q=80&w=400&auto=format&fit=crop';
-
-const getSizeLabels = (category: string) => {
-  if (['Sandwiches', 'Momos', 'Chinese & Noodles'].includes(category)) {
-    return { reg: 'Half', med: 'Full', fullReg: 'Half', fullMed: 'Full' };
-  }
-  return { reg: 'Reg', med: 'Med', fullReg: 'Regular', fullMed: 'Medium' };
-};
 
 interface ImageModalProps {
   isOpen: boolean;
@@ -107,10 +89,8 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, onClose, item, imageSrc
 };
 
 const Menu: React.FC = () => {
-  const [items, setItems] = useState<MenuItem[]>([]);
-  const [categories, setCategories] = useState<string[]>([]);
+  const { rawItems: items, categories, loading } = useMenuData();
   const [activeCategory, setActiveCategory] = useState<string>('');
-  const [loading, setLoading] = useState(true);
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -122,18 +102,10 @@ const Menu: React.FC = () => {
   const Motion = motion as any;
 
   useEffect(() => {
-    const loadData = async () => {
-      const data = await fetchMenuData();
-      setItems(data);
-
-      const uniqueCats = Array.from(new Set(data.map(i => i.category)));
-      setCategories(uniqueCats);
-      if (uniqueCats.length > 0) setActiveCategory(uniqueCats[0]);
-
-      setLoading(false);
-    };
-    loadData();
-  }, []);
+    if (categories.length > 0 && !activeCategory) {
+      setActiveCategory(categories[0]);
+    }
+  }, [categories, activeCategory]);
 
   const filteredAndSortedItems = useMemo(() => {
     let result = items.filter(item => {
@@ -167,78 +139,10 @@ const Menu: React.FC = () => {
     setSelectedItem(null);
   };
 
-  // ── Enhanced JSON-LD Menu Schema ──────────────────────────────────────────
-  // Answers AI queries like "Does KOS Café serve burgers?" and "Price of sandwiches?"
+  // Update SEO Schema via Service
   useEffect(() => {
-    if (items.length === 0) return;
-
-    const getDietType = (item: MenuItem): string[] => {
-      if (item.isVeg !== false) return ["https://schema.org/VegetarianDiet"];
-      return [];
-    };
-
-    const buildOffers = (item: MenuItem): object => {
-      const availability = item.inStock !== false
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock";
-
-      if (item.priceMed) {
-        const labels = getSizeLabels(item.category);
-        return [
-          {
-            "@type": "Offer",
-            "name": labels.fullReg,
-            "price": item.priceReg,
-            "priceCurrency": "INR",
-            "availability": availability
-          },
-          {
-            "@type": "Offer",
-            "name": labels.fullMed,
-            "price": item.priceMed,
-            "priceCurrency": "INR",
-            "availability": availability
-          }
-        ];
-      }
-      return {
-        "@type": "Offer",
-        "price": item.priceReg,
-        "priceCurrency": "INR",
-        "availability": availability
-      };
-    };
-
-    const grouped = items.reduce((acc, item) => {
-      if (!acc[item.category]) acc[item.category] = [];
-      acc[item.category].push(item);
-      return acc;
-    }, {} as Record<string, MenuItem[]>);
-
-    const menuSchema = {
-      "@context": "https://schema.org",
-      "@type": "Menu",
-      "@id": "https://www.kosportscafe.com/#menu",
-      "name": "KOS Sports Café Menu",
-      "description": "Full food and drink menu at KOS Sports Café in Meerut. Includes Burgers, Sandwiches, Pizzas, Momos, Chinese, Drinks and more.",
-      "url": "https://www.kosportscafe.com/#menu",
-      "inLanguage": "en",
-      "isPartOf": { "@id": "https://www.kosportscafe.com/#restaurant" },
-      "hasMenuSection": Object.entries(grouped).map(([category, sectionItems]) => ({
-        "@type": "MenuSection",
-        "name": category,
-        "description": `${category} available at KOS Sports Café in Meerut`,
-        "hasMenuItem": (sectionItems as MenuItem[]).map(item => ({
-          "@type": "MenuItem",
-          "name": item.name,
-          "description": item.description || `${item.name} — a ${category} item at KOS Sports Café`,
-          "url": "https://www.kosportscafe.com/#menu",
-          ...(item.image_url ? { "image": item.image_url } : {}),
-          ...(getDietType(item).length > 0 ? { "suitableForDiet": getDietType(item) } : {}),
-          "offers": buildOffers(item)
-        }))
-      }))
-    };
+    const menuSchema = generateMenuSchema(items);
+    if (!menuSchema) return;
 
     let script = document.querySelector('script[id="menu-jsonld"]');
     if (!script) {
@@ -395,7 +299,9 @@ const Menu: React.FC = () => {
                     )}
 
                     {/* Image Top */}
-                    <div
+                    <Motion.div
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.98 }}
                       className="aspect-[4/3] w-full flex-shrink-0 overflow-hidden bg-stone-50 cursor-pointer relative"
                       onClick={() => openModal(item)}
                     >
@@ -435,7 +341,7 @@ const Menu: React.FC = () => {
                           <div className={`w-2.5 h-2.5 rounded-full ${item.isVeg !== false ? 'bg-green-600' : 'bg-red-600'}`} />
                         </div>
                       </div>
-                    </div>
+                    </Motion.div>
 
                     <div className="p-6 flex flex-col flex-grow">
                       <div className="flex justify-between items-start mb-3">
@@ -474,7 +380,8 @@ const Menu: React.FC = () => {
                         </div>
 
                         <div className="flex gap-2">
-                          <button
+                          <Motion.button
+                            whileTap={{ scale: 0.95 }}
                             onClick={() => item.inStock !== false && addToCart(item, labels.fullReg as any)}
                             disabled={item.inStock === false}
                             className={`flex-1 py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 group/btn ${
@@ -486,10 +393,11 @@ const Menu: React.FC = () => {
                           >
                             <Plus className="w-4 h-4 group-hover/btn:rotate-90 transition-transform duration-300" aria-hidden="true" />
                             <span className="text-[10px] uppercase tracking-widest font-semibold">{item.priceMed ? labels.reg : 'Add'}</span>
-                          </button>
+                          </Motion.button>
 
                           {item.priceMed && (
-                            <button
+                            <Motion.button
+                              whileTap={{ scale: 0.95 }}
                               onClick={() => item.inStock !== false && addToCart(item, labels.fullMed as any)}
                               disabled={item.inStock === false}
                               className={`flex-1 py-3 rounded-md transition-all duration-300 flex items-center justify-center gap-2 ${
@@ -501,7 +409,7 @@ const Menu: React.FC = () => {
                             >
                               <Plus className="w-4 h-4" aria-hidden="true" />
                               <span className="text-[10px] uppercase tracking-widest font-semibold">{labels.med}</span>
-                            </button>
+                            </Motion.button>
                           )}
                         </div>
                       </div>

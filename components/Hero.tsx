@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { ShoppingBag } from 'lucide-react';
 
 const Hero: React.FC = () => {
   const { scrollY } = useScroll();
@@ -59,15 +60,25 @@ const Hero: React.FC = () => {
           An unparalleled experience where world-class gaming meets world-class cuisine.
         </Motion.p>
 
-        <Motion.a
-          href="/menu"
+        <Motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.8 }}
-          className="inline-block px-10 py-4 border border-obsidian text-obsidian font-sans uppercase tracking-widest text-xs hover:bg-obsidian hover:text-white transition-all duration-300"
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
         >
-          View Menu
-        </Motion.a>
+          <a
+            href="/order"
+            className="w-full sm:w-auto px-10 py-5 bg-bronze text-white font-black uppercase tracking-widest text-[10px] hover:bg-white hover:text-obsidian transition-all duration-300 shadow-2xl flex items-center justify-center gap-2 group/btn"
+          >
+            Order Online <ShoppingBag size={14} className="group-hover/btn:scale-110 transition-transform" />
+          </a>
+          <a
+            href="/book"
+            className="w-full sm:w-auto px-10 py-5 border border-white/30 bg-white/5 backdrop-blur-sm text-white font-black uppercase tracking-widest text-[10px] hover:bg-white/10 hover:border-white transition-all duration-300 flex items-center justify-center"
+          >
+            Book a Table
+          </a>
+        </Motion.div>
       </Motion.div>
     </section>
   );

@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowRight } from 'lucide-react';
 
 const AboutStory: React.FC = () => {
     return (
@@ -22,10 +23,10 @@ const AboutStory: React.FC = () => {
                                 To deliver an unparalleled experience where world-class gaming meets world-class cuisine. Quality isn't just important to us—it's everything.
                             </p>
                             <a 
-                              href="/menu" 
-                              className="inline-flex items-center text-xs uppercase tracking-widest font-black text-bronze border-b border-bronze/30 pb-1 hover:border-bronze transition-all"
+                              href="/order" 
+                              className="inline-flex items-center gap-2 bg-bronze text-white px-8 py-3 rounded-xl font-black uppercase tracking-widest text-[10px] hover:bg-obsidian transition-all shadow-lg active:scale-95 group/btn"
                             >
-                              Explore our diverse sports cafe menu
+                              Order Online Now <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
                             </a>
                         </div>
                     </div>
