@@ -24,10 +24,20 @@ const OrderCartPanel: React.FC = () => {
 
   const handleGetLocation = () => {
     setLocationStatus('fetching');
+
+    // Security Check: Geolocation requires HTTPS or localhost
+    const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+    if (!isSecure) {
+      alert("Browser Security: Live location sharing requires a secure connection (HTTPS). Please ensure your site has an SSL certificate.");
+      setLocationStatus('denied');
+      return;
+    }
+
     if (!navigator.geolocation) {
       setLocationStatus('denied');
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocationObj({
@@ -36,8 +46,18 @@ const OrderCartPanel: React.FC = () => {
         });
         setLocationStatus('captured');
       },
-      () => setLocationStatus('denied'),
-      { timeout: 10000 }
+      (error) => {
+        console.warn('Geolocation error:', error);
+        setLocationStatus('denied');
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("Location permission denied. Please allow location access in your browser settings.");
+        }
+      },
+      { 
+        enableHighAccuracy: true, 
+        timeout: 15000, 
+        maximumAge: 0 
+      }
     );
   };
 
@@ -63,18 +83,27 @@ const OrderCartPanel: React.FC = () => {
     message += `\nTotal: ₹${grandTotal}\n\n`;
     message += `Name: ${name}\n`;
     message += `Address: ${address}\n`;
+    
+    if (locationObj) {
+      message += `Live Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
+    }
+
     message += `\nPlease confirm.`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=917060403965&text=${encodedMessage}`;
     
     window.location.href = whatsappUrl;
     
-    clearCart();
-    setStatus('idle');
-    setName('');
-    setPhone('');
-    setAddress('');
+    setTimeout(() => {
+      clearCart();
+      setStatus('idle');
+      setName('');
+      setPhone('');
+      setAddress('');
+      setLocationStatus('idle');
+      setLocationObj(null);
+    }, 100);
   };
 
   if (cart.length === 0) {
@@ -169,14 +198,16 @@ const OrderCartPanel: React.FC = () => {
           <button 
             type="button" 
             onClick={handleGetLocation}
-            className={`w-full flex items-center justify-center gap-2 py-2 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all border ${
+            className={`w-full flex items-center justify-center gap-2 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all border ${
               locationStatus === 'captured' 
                 ? 'bg-green-50 text-green-600 border-green-200' 
                 : 'bg-white text-body border-border-base hover:border-muted'
             }`}
           >
             <MapPin size={14} />
-            {locationStatus === 'captured' ? "Location Shared" : "Share Live Location"}
+            {locationStatus === 'captured' 
+              ? `Location: ${locationObj?.lat.toFixed(4)}, ${locationObj?.lng.toFixed(4)} ✅` 
+              : "Share Live Location"}
           </button>
           
           <div className="py-2 space-y-1.5">

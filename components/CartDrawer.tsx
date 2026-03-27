@@ -28,10 +28,20 @@ const CartDrawer: React.FC = () => {
 
   const handleGetLocation = () => {
     setLocationStatus('fetching');
+
+    // Security Check: Geolocation requires HTTPS or localhost
+    const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
+    if (!isSecure) {
+      alert("Browser Security: Live location sharing requires a secure connection (HTTPS). Please ensure your site has an SSL certificate.");
+      setLocationStatus('denied');
+      return;
+    }
+
     if (!navigator.geolocation) {
       setLocationStatus('denied');
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setLocationObj({
@@ -41,13 +51,21 @@ const CartDrawer: React.FC = () => {
         setLocationStatus('captured');
       },
       (error) => {
+        console.warn('Geolocation error:', error);
         setLocationStatus('denied');
+        if (error.code === error.PERMISSION_DENIED) {
+          alert("Location permission denied. Please allow location access in your browser settings.");
+        }
       },
-      { timeout: 10000 }
+      { 
+        enableHighAccuracy: true, 
+        timeout: 15000, 
+        maximumAge: 0 
+      }
     );
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Calculate taxes
@@ -72,21 +90,29 @@ const CartDrawer: React.FC = () => {
     message += `\nTotal: ₹${grandTotal}\n\n`;
     message += `Name: ${name}\n`;
     message += `Address: ${address}\n`;
+    
+    if (locationObj) {
+      message += `Live Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
+    }
+
     message += `\nPlease confirm.`;
 
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/917060403965?text=${encodedMessage}`;
+    const whatsappUrl = `https://api.whatsapp.com/send?phone=917060403965&text=${encodedMessage}`;
 
+    // Small delay/ensure state is not cleared BEFORE message is built
     window.location.href = whatsappUrl;
     
-    clearCart();
-    toggleDrawer(false);
-    setStatus('idle');
-    setName('');
-    setPhone('');
-    setAddress('');
-    setLocationStatus('idle');
-    setLocationObj(null);
+    setTimeout(() => {
+      clearCart();
+      toggleDrawer(false);
+      setStatus('idle');
+      setName('');
+      setPhone('');
+      setAddress('');
+      setLocationStatus('idle');
+      setLocationObj(null);
+    }, 100);
   };
 
   const [isMobile, setIsMobile] = React.useState(false);
@@ -244,7 +270,11 @@ const CartDrawer: React.FC = () => {
                           <span className="text-sm font-medium text-stone-600">
                             {locationStatus === 'idle' && "Share your live location"}
                             {locationStatus === 'fetching' && "Fetching location..."}
-                            {locationStatus === 'captured' && "Location captured \u2705"}
+                            {locationStatus === 'captured' && (
+                              <span className="text-green-600">
+                                Location: {locationObj?.lat.toFixed(4)}, {locationObj?.lng.toFixed(4)} ✅
+                              </span>
+                            )}
                             {locationStatus === 'denied' && "Location not shared"}
                           </span>
                         </div>
@@ -252,7 +282,7 @@ const CartDrawer: React.FC = () => {
                           <button 
                             type="button" 
                             onClick={handleGetLocation}
-                            className="text-xs uppercase tracking-wider font-semibold text-bronze hover:text-obsidian transition-colors"
+                            className="px-3 py-1.5 bg-bronze/10 text-bronze rounded-lg text-xs uppercase tracking-wider font-bold hover:bg-bronze hover:text-white transition-all active:scale-95"
                           >
                             Get Location
                           </button>
