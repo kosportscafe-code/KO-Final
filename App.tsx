@@ -29,7 +29,7 @@ function App() {
   return (
     <ThemeProvider>
       <CartProvider>
-        <div className="min-h-screen bg-background flex flex-col relative text-stone-900">
+        <div className="min-h-screen bg-background flex flex-col relative">
           <CartDrawer />
           {/* We only want Navbar and Footer outside of the Admin layout, 
               so we move Navbar/Footer into conditional logic, 

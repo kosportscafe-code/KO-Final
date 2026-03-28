@@ -400,7 +400,7 @@ const ChatBot: React.FC = () => {
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-serif text-sm font-semibold leading-tight">KOS Assistant</p>
-                <p className="font-sans text-[10px] text-stone-400 uppercase tracking-widest">KOS Sports Café · Always here</p>
+                <p className="font-sans text-[10px] text-stone-300 uppercase tracking-widest">KOS Sports Café · Always here</p>
               </div>
               {/* WhatsApp handoff button */}
               <a

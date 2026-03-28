@@ -28,7 +28,7 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading, act
   if (items.length === 0) {
     return (
       <div className="flex-1 text-center py-20">
-        <p className="text-stone-400 font-serif italic text-lg">No items found in this category.</p>
+        <p className="text-muted font-serif italic text-lg">No items found in this category.</p>
       </div>
     );
   }

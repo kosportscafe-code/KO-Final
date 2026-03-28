@@ -236,7 +236,7 @@ const Home: React.FC = () => {
                 </div>
                 
                 <div className="p-6 bg-sidebar rounded-2xl text-heading">
-                  <p className="text-muted/60 text-[10px] uppercase tracking-widest font-bold mb-2">Need immediate help?</p>
+                  <p className="text-muted text-[10px] uppercase tracking-widest font-bold mb-2">Need immediate help?</p>
                   <p className="font-serif text-xl mb-4">Chat with our team directly for instant updates.</p>
                   <a href="https://wa.me/917060403965" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-primary hover:text-heading transition-colors text-sm font-bold uppercase tracking-widest">
                     WhatsApp Chat <ArrowRight size={14} />
@@ -266,7 +266,7 @@ const Home: React.FC = () => {
             <h2 className="font-serif text-4xl md:text-6xl text-heading mb-6 leading-tight">
               Ready to <span className="text-primary italic">Fuel</span> Your Game?
             </h2>
-            <p className="text-muted/60 text-lg mb-10 font-sans leading-relaxed">
+            <p className="text-muted text-lg mb-10 font-sans leading-relaxed">
               Order your favorites now and enjoy the ultimate sports cafe experience at home or in our stadium-vibe lounge.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
