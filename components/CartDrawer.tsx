@@ -3,7 +3,6 @@ import { useCart } from '../context/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Trash2, ChevronRight, Check, MapPin, ShoppingBag } from 'lucide-react';
 import { formatCurrency } from '../utils/helpers';
-import { WEBHOOK_URL } from '../constants';
 
 const CartDrawer: React.FC = () => {
   const { 
@@ -13,7 +12,6 @@ const CartDrawer: React.FC = () => {
     removeFromCart, 
     updateQuantity, 
     cartTotal,
-    clearCart,
     tableNumber,
     placeOrder
   } = useCart();
@@ -31,7 +29,6 @@ const CartDrawer: React.FC = () => {
   const handleGetLocation = () => {
     setLocationStatus('fetching');
 
-    // Security Check: Geolocation requires HTTPS or localhost
     const isSecure = window.location.protocol === 'https:' || window.location.hostname === 'localhost';
     if (!isSecure) {
       alert("Browser Security: Live location sharing requires a secure connection (HTTPS). Please ensure your site has an SSL certificate.");
@@ -88,7 +85,6 @@ const CartDrawer: React.FC = () => {
       if (order) {
         setStatus('success');
         
-        // Prepare WhatsApp message
         const taxAmount = Math.round(cartTotal * 0.05);
         const grandTotal = cartTotal + taxAmount;
         
@@ -143,6 +139,130 @@ const CartDrawer: React.FC = () => {
     exit: isMobile ? { y: '100%', x: 0 } : { x: '100%', y: 0 }
   };
 
+  const CartForm = () => (
+    <div className="space-y-4">
+      {status === 'success' ? (
+        <div className="text-center py-8">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <Check className="w-8 h-8 text-green-600" />
+          </div>
+          <h3 className="font-serif text-2xl text-obsidian mb-2">Order Placed!</h3>
+          <p className="text-stone-500">The kitchen has received your order.</p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input 
+            required
+            type="text" 
+            placeholder="Customer Name" 
+            value={name}
+            onChange={e => setName(e.target.value)}
+            className="w-full bg-transparent border-b border-border-base py-2 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors"
+          />
+          <input 
+            required
+            type="text" 
+            placeholder="Delivery Address" 
+            value={address}
+            onChange={e => setAddress(e.target.value)}
+            className={`w-full bg-transparent border-b border-border-base text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors ${isMobile ? 'py-3 text-base' : 'py-4 text-lg'}`}
+          />
+          <input 
+            required
+            type="tel" 
+            placeholder="Phone Number" 
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            className={`w-full bg-transparent border-b border-border-base text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors ${isMobile ? 'py-3 text-base' : 'py-4 text-lg'}`}
+          />
+          
+          <div className="pt-2 pb-2">
+            <div className="flex items-center justify-between p-3 bg-sidebar rounded-lg border border-border-base/50">
+              <div className="flex items-center gap-3">
+                <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-muted/40'}`} aria-hidden="true" />
+                <span className="text-sm font-medium text-muted">
+                  {locationStatus === 'idle' && "Share live location"}
+                  {locationStatus === 'fetching' && "Fetching..."}
+                  {locationStatus === 'captured' && (
+                    <span className="text-green-600 text-xs">
+                      Captured ✅
+                    </span>
+                  )}
+                  {locationStatus === 'denied' && "Denied"}
+                </span>
+              </div>
+              {locationStatus !== 'captured' && locationStatus !== 'fetching' && (
+                <button 
+                  type="button" 
+                  onClick={handleGetLocation}
+                  className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs uppercase tracking-wider font-bold"
+                >
+                  Get
+                </button>
+              )}
+            </div>
+          </div>
+          
+          <div className="space-y-1.5 py-2">
+            <div className="flex justify-between items-center text-xs text-stone-500">
+              <span>Subtotal</span>
+              <span>{formatCurrency(cartTotal)}</span>
+            </div>
+            <div className="flex justify-between items-center text-xs text-stone-500">
+              <span>Taxes (5%)</span>
+              <span>{formatCurrency(Math.round(cartTotal * 0.05))}</span>
+            </div>
+            <div className="flex justify-between items-center pt-2 border-t border-border-base/30 mt-1">
+              <span className="text-muted font-serif text-base uppercase tracking-wider">Total</span>
+              <span className="text-xl font-sans text-primary font-black">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
+            </div>
+          </div>
+
+          <button 
+            type="submit"
+            disabled={status === 'sending' || status === 'success'}
+            className={`w-full text-background py-5 rounded-[20px] font-black uppercase tracking-[0.2em] text-xs transition-all duration-300 flex justify-center items-center gap-3 active:scale-95 shadow-lg ${
+              status === 'success' 
+                ? 'bg-green-500 shadow-green-200' 
+                : 'bg-primary hover:opacity-90 shadow-[0_10px_30px_rgba(0,0,0,0.15)]'
+            }`}
+          >
+            {status === 'sending' && 'Placing...'}
+            {status === 'success' && 'Done! ✅'}
+            {status === 'idle' && 'Place Order & Notify'}
+            {status === 'error' && 'Retry'}
+            {(status === 'idle' || status === 'error') && <ChevronRight className="w-5 h-5" />}
+          </button>
+
+          <div className="pt-2">
+            <button 
+              type="button"
+              onClick={() => {
+                const taxAmount = Math.round(cartTotal * 0.05);
+                const grandTotal = cartTotal + taxAmount;
+                let msg = `Hello KOS Café, I want to order:\n\n`;
+                if (tableNumber) msg += `*TABLE: ${tableNumber}*\n\n`;
+                cart.forEach(item => {
+                  msg += `• ${item.name} (${item.selectedSize}) x ${item.qty} = ₹${item.price * item.qty}\n`;
+                });
+                msg += `\n*Total: ₹${grandTotal}*\n`;
+                msg += `\nName: ${name || 'Not provided'}\n`;
+                msg += `Address: ${address || 'Not provided'}\n`;
+                if (locationObj) msg += `Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
+                
+                window.open(`https://wa.me/917060403965?text=${encodeURIComponent(msg)}`, '_blank');
+              }}
+              className="w-full bg-[#25D366]/10 text-[#25D366] py-3 rounded-[20px] font-bold uppercase tracking-widest text-[9px] border border-[#25D366]/20 transition-all flex justify-center items-center gap-2"
+            >
+              Order via WhatsApp (Fallback)
+              <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793 0-.853.448-1.273.607-1.446.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298L11.006 11.2c.101.209.02.378-.051.52-.071.141-.151.233-.254.34-.103.107-.217.221-.31.334-.107.13-.218.271-.091.488.127.216.563.928 1.211 1.503.834.743 1.54.972 1.761 1.081.221.109.351.091.484-.061.132-.153.565-.658.718-.881.153-.223.307-.187.518-.109.21.078 1.332.628 1.56.744.227.116.379.174.434.268.055.094.055.544-.089.949z"/></svg>
+            </button>
+          </div>
+        </form>
+      )}
+    </div>
+  );
+
   return (
     <AnimatePresence>
       {isDrawerOpen && (
@@ -165,7 +285,7 @@ const CartDrawer: React.FC = () => {
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
             className={`fixed z-[101] bg-cart shadow-2xl flex flex-col transition-all duration-300 ${
               isMobile 
-                ? 'bottom-0 left-0 right-0 h-auto max-h-[92vh] rounded-t-[2.5rem]' 
+                ? 'bottom-0 left-0 right-0 h-auto max-h-[96dvh] rounded-t-[2.5rem]' 
                 : 'top-0 right-0 h-full w-[450px] border-l border-border-base'
             }`}
           >
@@ -177,8 +297,8 @@ const CartDrawer: React.FC = () => {
             )}
 
             {/* Header */}
-            <div className={`border-b border-border-base/50 ${isMobile ? 'px-6 py-4' : 'p-6'}`}>
-              <div className="flex justify-between items-center mb-2">
+            <div className={`border-b border-border-base/50 flex-shrink-0 ${isMobile ? 'px-6 py-4' : 'p-6'}`}>
+              <div className="flex justify-between items-center mb-1">
                 <h2 className="font-serif text-2xl text-heading">Your Order</h2>
                 <button 
                   onClick={() => toggleDrawer(false)} 
@@ -195,182 +315,64 @@ const CartDrawer: React.FC = () => {
               )}
             </div>
 
-            {/* Cart Items */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
-              {cart.length === 0 ? (
-                <div className="h-full min-h-[200px] flex flex-col justify-center items-center text-muted text-center">
-                  <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4">
-                    <ShoppingBag size={32} className="text-muted/30" />
+            {/* Content Area (Scrollable Items + Form on mobile) */}
+            <div className="flex-1 overflow-y-auto no-scrollbar flex flex-col">
+              <div className="p-6 space-y-6">
+                {cart.length === 0 ? (
+                  <div className="h-full min-h-[200px] flex flex-col justify-center items-center text-muted text-center">
+                    <div className="w-16 h-16 bg-background rounded-full flex items-center justify-center mb-4">
+                      <ShoppingBag size={32} className="text-muted/30" />
+                    </div>
+                    <h3 className="font-serif text-xl text-heading mb-2">Your cart is empty 🛒</h3>
+                    <p className="text-muted text-sm">Start adding food!</p>
                   </div>
-                  <h3 className="font-serif text-xl text-heading mb-2">Your cart is empty 🛒</h3>
-                  <p className="text-muted text-sm">Start adding food!</p>
-                </div>
-              ) : (
-                cart.map((item) => (
-                  <div key={item.cartId} className="flex gap-4">
-                    <div className="flex-grow">
-                      <div className="flex justify-between items-start mb-1">
-                        <h4 className="font-serif text-lg text-heading">{item.name}</h4>
-                        <span className="font-sans font-medium text-sm">{formatCurrency((Number(item.price) || 0) * (Number(item.qty) || 0))}</span>
-                      </div>
-                      <p className="text-xs text-muted mb-2 uppercase tracking-wide">
-                        {item.selectedSize} 
-                      </p>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center border border-border-base rounded-full">
-                          <button 
-                            onClick={() => updateQuantity(item.cartId, -1)}
-                            className="px-3 py-1 hover:bg-sidebar rounded-l-full transition-colors"
-                            aria-label="Decrease quantity"
-                          >-</button>
-                          <span className="px-1 text-sm font-sans w-6 text-center">{item.qty}</span>
-                          <button 
-                            onClick={() => updateQuantity(item.cartId, 1)}
-                            className="px-3 py-1 hover:bg-sidebar rounded-r-full transition-colors"
-                            aria-label="Increase quantity"
-                          >+</button>
+                ) : (
+                  cart.map((item) => (
+                    <div key={item.cartId} className="flex gap-4">
+                      <div className="flex-grow">
+                        <div className="flex justify-between items-start mb-1">
+                          <h4 className="font-serif text-lg text-heading">{item.name}</h4>
+                          <span className="font-sans font-medium text-sm">{formatCurrency((Number(item.price) || 0) * (Number(item.qty) || 0))}</span>
                         </div>
-                        <button 
-                          onClick={() => removeFromCart(item.cartId)}
-                          className="text-muted/40 hover:text-red-400 transition-colors"
-                          aria-label={`Remove ${item.name} from cart`}
-                        >
-                          <Trash2 className="w-4 h-4" aria-hidden="true" />
-                        </button>
+                        <p className="text-xs text-muted mb-2 uppercase tracking-wide">
+                          {item.selectedSize} 
+                        </p>
+                        <div className="flex items-center gap-4">
+                          <div className="flex items-center border border-border-base rounded-full">
+                            <button 
+                              onClick={() => updateQuantity(item.cartId, -1)}
+                              className="px-3 py-1 hover:bg-sidebar rounded-l-full transition-colors"
+                            >-</button>
+                            <span className="px-1 text-sm font-sans w-6 text-center">{item.qty}</span>
+                            <button 
+                              onClick={() => updateQuantity(item.cartId, 1)}
+                              className="px-3 py-1 hover:bg-sidebar rounded-r-full transition-colors"
+                            >+</button>
+                          </div>
+                          <button 
+                            onClick={() => removeFromCart(item.cartId)}
+                            className="text-muted/40 hover:text-red-400 transition-colors"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  ))
+                )}
+              </div>
+
+              {isMobile && cart.length > 0 && (
+                <div className="p-6 bg-cart border-t border-border-base pb-10">
+                  <CartForm />
+                </div>
               )}
             </div>
 
-            {/* Footer / Checkout Form */}
-            {cart.length > 0 && (
-              <div className="p-6 bg-cart border-t border-border-base">
-                {status === 'success' ? (
-                  <div className="text-center py-8">
-                    <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Check className="w-8 h-8 text-green-600" />
-                    </div>
-                    <h3 className="font-serif text-2xl text-obsidian mb-2">Order Placed!</h3>
-                    <p className="text-stone-500">The kitchen has received your order.</p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <input 
-                      required
-                      type="text" 
-                      placeholder="Customer Name" 
-                      value={name}
-                      onChange={e => setName(e.target.value)}
-                      className="w-full bg-transparent border-b border-border-base py-2 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors"
-                    />
-                    <input 
-                      required
-                      type="text" 
-                      placeholder="Delivery Address" 
-                      value={address}
-                      onChange={e => setAddress(e.target.value)}
-                      className="w-full bg-transparent border-b border-border-base py-4 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors text-lg"
-                    />
-                    <input 
-                      required
-                      type="tel" 
-                      placeholder="Phone Number" 
-                      value={phone}
-                      onChange={e => setPhone(e.target.value)}
-                      className="w-full bg-transparent border-b border-border-base py-4 text-heading placeholder-muted/50 focus:border-primary focus:outline-none transition-colors text-lg"
-                    />
-                    
-                    {/* Geolocation Section */}
-                    <div className="pt-2 pb-2">
-                      <div className="flex items-center justify-between p-3 bg-sidebar rounded-lg border border-border-base/50">
-                        <div className="flex items-center gap-3">
-                          <MapPin className={`w-5 h-5 ${locationStatus === 'captured' ? 'text-green-500' : 'text-muted/40'}`} aria-hidden="true" />
-                          <span className="text-sm font-medium text-muted">
-                            {locationStatus === 'idle' && "Share your live location"}
-                            {locationStatus === 'fetching' && "Fetching location..."}
-                            {locationStatus === 'captured' && (
-                              <span className="text-green-600">
-                                Location: {locationObj?.lat.toFixed(4)}, {locationObj?.lng.toFixed(4)} ✅
-                              </span>
-                            )}
-                            {locationStatus === 'denied' && "Location not shared"}
-                          </span>
-                        </div>
-                        {locationStatus !== 'captured' && locationStatus !== 'fetching' && (
-                          <button 
-                            type="button" 
-                            onClick={handleGetLocation}
-                            className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-xs uppercase tracking-wider font-bold hover:bg-primary hover:text-background transition-all active:scale-95"
-                          >
-                            Get Location
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 py-4">
-                      <div className="flex justify-between items-center text-sm text-stone-500">
-                        <span>Subtotal</span>
-                        <span>{formatCurrency(cartTotal)}</span>
-                      </div>
-                      <div className="flex justify-between items-center text-sm text-stone-500">
-                        <span>Taxes (5%)</span>
-                        <span>{formatCurrency(Math.round(cartTotal * 0.05))}</span>
-                      </div>
-                      <div className="flex justify-between items-center pt-2 border-t border-border-base/30 mt-2">
-                        <span className="text-muted font-serif text-lg uppercase tracking-wider">Total</span>
-                        <span className="text-2xl font-sans text-primary font-black">{formatCurrency(cartTotal + Math.round(cartTotal * 0.05))}</span>
-                      </div>
-                      <p className="text-[10px] text-muted text-center italic leading-tight px-4 pb-2">
-                        2.5% SGST + 2.5% CGST added in the bill when order is placed.
-                      </p>
-                    </div>
-
-                    <button 
-                      type="submit"
-                      disabled={status === 'sending' || status === 'success'}
-                      className={`w-full text-background py-5 rounded-[20px] font-black uppercase tracking-[0.2em] text-sm transition-all duration-300 flex justify-center items-center gap-3 active:scale-95 shadow-lg ${
-                        status === 'success' 
-                          ? 'bg-green-500 shadow-green-200' 
-                          : 'bg-primary hover:opacity-90 shadow-[0_10px_30px_rgba(0,0,0,0.15)]'
-                      }`}
-                      aria-label="Confirm and place order"
-                    >
-                      {status === 'sending' && 'Placing Order...'}
-                      {status === 'success' && 'Order Placed! ✅'}
-                      {status === 'idle' && 'Place Order & Notify'}
-                      {status === 'error' && 'Retry Order'}
-                      {(status === 'idle' || status === 'error') && <ChevronRight className="w-5 h-5" aria-hidden="true" />}
-                    </button>
-
-                    <div className="pt-2">
-                      <button 
-                        type="button"
-                        onClick={() => {
-                          const taxAmount = Math.round(cartTotal * 0.05);
-                          const grandTotal = cartTotal + taxAmount;
-                          let msg = `Hello KOS Café, I want to order:\n\n`;
-                          if (tableNumber) msg += `*TABLE: ${tableNumber}*\n\n`;
-                          cart.forEach(item => {
-                            msg += `• ${item.name} (${item.selectedSize}) x ${item.qty} = ₹${item.price * item.qty}\n`;
-                          });
-                          msg += `\n*Total: ₹${grandTotal}*\n`;
-                          msg += `\nName: ${name || 'Not provided'}\n`;
-                          msg += `Address: ${address || 'Not provided'}\n`;
-                          if (locationObj) msg += `Location: https://www.google.com/maps?q=${locationObj.lat},${locationObj.lng}\n`;
-                          
-                          window.open(`https://wa.me/917060403965?text=${encodeURIComponent(msg)}`, '_blank');
-                        }}
-                        className="w-full bg-[#25D366]/10 text-[#25D366] py-4 rounded-[20px] font-bold uppercase tracking-widest text-[10px] border border-[#25D366]/20 hover:bg-[#25D366]/20 transition-all flex justify-center items-center gap-2"
-                      >
-                        Order via WhatsApp (Fallback)
-                        <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793 0-.853.448-1.273.607-1.446.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298L11.006 11.2c.101.209.02.378-.051.52-.071.141-.151.233-.254.34-.103.107-.217.221-.31.334-.107.13-.218.271-.091.488.127.216.563.928 1.211 1.503.834.743 1.54.972 1.761 1.081.221.109.351.091.484-.061.132-.153.565-.658.718-.881.153-.223.307-.187.518-.109.21.078 1.332.628 1.56.744.227.116.379.174.434.268.055.094.055.544-.089.949z"/></svg>
-                      </button>
-                    </div>
-                  </form>
-                )}
+            {/* Desktop Fixed Form */}
+            {!isMobile && cart.length > 0 && (
+              <div className="p-6 bg-cart border-t border-border-base flex-shrink-0">
+                <CartForm />
               </div>
             )}
           </Motion.div>

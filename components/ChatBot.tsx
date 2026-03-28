@@ -343,7 +343,7 @@ const ChatBot: React.FC = () => {
   return (
     <>
       {/* ── Floating Trigger Button ── */}
-      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3">
+      <div className="fixed bottom-6 right-6 z-[60] flex flex-col items-end gap-3 pointer-events-none">
         {/* Tooltip — show before first open */}
         <AnimatePresence>
           {!hasOpened && !isOpen && (
@@ -361,7 +361,7 @@ const ChatBot: React.FC = () => {
 
         <button
           onClick={() => isOpen ? setIsOpen(false) : handleOpen()}
-          className="relative w-14 h-14 bg-bronze rounded-full shadow-2xl flex items-center justify-center text-white hover:bg-obsidian transition-all duration-300 group"
+          className="relative w-14 h-14 bg-bronze rounded-full shadow-2xl flex items-center justify-center text-white hover:bg-obsidian transition-all duration-300 group pointer-events-auto"
           aria-label={isOpen ? 'Close chat' : 'Open KOS Café chat assistant'}
         >
           {/* Pulse ring */}

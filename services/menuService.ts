@@ -57,7 +57,7 @@ export const fetchMenuData = async (): Promise<MenuItem[]> => {
                 priceReg: isNaN(priceReg) ? 0 : priceReg,
                 priceMed: priceMed !== undefined && isNaN(priceMed) ? 0 : priceMed,
                 image_url: row.ImageURL,
-                isVeg: true // Default to veg unless logic added
+                isVeg: row.IsVeg ? (row.IsVeg.toLowerCase() === 'true' || row.IsVeg === '1' || row.IsVeg.toLowerCase() === 'veg') : true
               };
             });
 

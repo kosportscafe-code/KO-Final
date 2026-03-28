@@ -9,10 +9,11 @@ import { StructuredMenuItem } from '../hooks/useMenuData';
 interface OrderProductGridProps {
   items: StructuredMenuItem[];
   loading: boolean;
+  activeCategory?: string;
   onItemClick?: (item: StructuredMenuItem) => void;
 }
 
-const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) => {
+const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading, activeCategory }) => {
   const { addToCart } = useCart();
   const Motion = motion as any;
 
@@ -38,7 +39,7 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
         {items.map((item) => {
           const labels = getSizeLabels(item.category);
           const itemImage = getOptimizedImageUrl(item.image, 400);
-          const dietLabel = item.isVeg ? 'Vegetarian' : 'Non-vegetarian';
+          const dietLabel = item.isVeg !== false ? 'Vegetarian' : 'Non-vegetarian';
 
           return (
             <Motion.div
@@ -61,8 +62,8 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
                 
                 {/* Diet Badge */}
                 <div className="absolute top-3 right-3">
-                  <div className={`w-5 h-5 bg-cart/90 backdrop-blur-md rounded-md border flex items-center justify-center ${item.isVeg ? 'border-green-500' : 'border-red-500 shadow-sm'}`}>
-                    <div className={`w-2 h-2 rounded-full ${item.isVeg ? 'bg-green-600' : 'bg-red-600'}`} />
+                  <div className={`w-5 h-5 bg-cart/90 backdrop-blur-md rounded-md border flex items-center justify-center ${item.isVeg !== false ? 'border-green-500' : 'border-red-500 shadow-sm'}`}>
+                    <div className={`w-2 h-2 rounded-full ${item.isVeg !== false ? 'bg-green-600' : 'bg-red-600'}`} />
                   </div>
                 </div>
 
@@ -90,6 +91,11 @@ const OrderProductGrid: React.FC<OrderProductGridProps> = ({ items, loading }) =
                 <div className="mb-1">
                   <h3 className="font-sans font-bold text-base md:text-lg text-heading leading-tight group-hover:text-bronze transition-colors">
                     {item.name}
+                    {activeCategory === 'All' && (
+                      <span className="text-[10px] md:text-xs text-muted font-normal ml-2 lowercase italic">
+                        ({item.category})
+                      </span>
+                    )}
                   </h3>
                 </div>
                 

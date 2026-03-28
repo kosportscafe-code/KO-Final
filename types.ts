@@ -25,6 +25,7 @@ export interface SheetRow {
   PriceReg: string;
   PriceMed?: string;
   ImageURL?: string;
+  IsVeg?: string;
 }
 
 export interface BlogPost {

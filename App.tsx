@@ -23,12 +23,14 @@ import BookingPage from './pages/BookingPage';
 import OrderPage from './pages/OrderPage';
 import KitchenPage from './pages/KitchenPage';
 import BackgroundDecor from './components/BackgroundDecor';
+import CartDrawer from './components/CartDrawer';
 
 function App() {
   return (
     <ThemeProvider>
       <CartProvider>
-        <div className="min-h-screen bg-background flex flex-col">
+        <div className="min-h-screen bg-background flex flex-col relative text-stone-900">
+          <CartDrawer />
           {/* We only want Navbar and Footer outside of the Admin layout, 
               so we move Navbar/Footer into conditional logic, 
               but using standard Routes makes it simpler. 

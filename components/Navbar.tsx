@@ -164,9 +164,9 @@ const Navbar: React.FC = () => {
             Order Now
           </Link>
 
-          <Link
-            to="/order"
-            className="relative p-2 hover:bg-sidebar/50 rounded-full transition-colors flex items-center justify-center text-heading"
+          <button
+            onClick={() => toggleDrawer(true)}
+            className="relative p-2 hover:bg-sidebar/50 rounded-full transition-colors flex items-center justify-center text-heading no-glow"
             aria-label="View shopping cart and order online"
           >
             <ShoppingBag className="w-5 h-5 text-heading" strokeWidth={1.5} aria-hidden="true" />
@@ -175,7 +175,7 @@ const Navbar: React.FC = () => {
                 {cartCount}
               </span>
             )}
-          </Link>
+          </button>
 
           {/* Mobile Menu Trigger */}
           <button
@@ -229,13 +229,15 @@ const Navbar: React.FC = () => {
                       <span className="text-[10px] font-bold uppercase">Festival</span>
                     </button>
                   </div>
-                  <Link
-                    to="/order"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-3 w-full bg-primary text-background py-4 rounded-xl font-serif text-xl shadow-lg active:shadow-inner transition-all"
+                  <button
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      toggleDrawer(true);
+                    }}
+                    className="flex items-center justify-center gap-3 w-full bg-primary text-background py-4 rounded-xl font-serif text-xl shadow-lg active:scale-95 transition-all no-glow"
                   >
-                    Order Now 🛒
-                  </Link>
+                    View Cart 🛒
+                  </button>
                 </li>
             </ul>
           </Motion.div>

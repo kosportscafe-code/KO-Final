@@ -142,7 +142,7 @@ const OrderPage: React.FC = () => {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
               >
-                <OrderProductGrid items={filteredItems} loading={loading} />
+                <OrderProductGrid items={filteredItems} loading={loading} activeCategory={activeCategory} />
               </motion.div>
             </AnimatePresence>
           </div>
@@ -154,15 +154,13 @@ const OrderPage: React.FC = () => {
         </div>
       </main>
 
-      <CartDrawer />
-
       <AnimatePresence>
         {cart.length > 0 && (
           <motion.div 
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="lg:hidden fixed bottom-6 left-1/2 -translate-x-1/2 z-40 w-[90%] max-w-sm"
+            className="lg:hidden fixed bottom-26 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm"
           >
             <button 
               onClick={() => toggleDrawer(true)}
